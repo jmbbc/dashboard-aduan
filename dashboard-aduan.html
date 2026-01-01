@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aduan</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid white;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+        }
+        
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .card-body {
+            padding: 25px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .table-responsive {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .progress-custom {
+            height: 8px;
+            border-radius: 10px;
+        }
+        
+        .search-box {
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+        
+        .filter-btn {
+            border-radius: 20px;
+            padding: 8px 20px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Skip link for accessibility */
+        .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+        .skip-link:focus { left: 10px; top: 10px; width: auto; height: auto; background: #fff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 2000; }
+        .visually-hidden-focusable { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+        .visually-hidden-focusable:focus { left: 10px; top: 10px; width: auto; height: auto; }
+        *:focus-visible { outline: 2px solid #667eea; outline-offset: 3px; }
+
+        /* Top toolbar */
+        .top-toolbar { flex-wrap: wrap; }
+        .top-toolbar .btn { height: 36px; }
+        @media (max-width: 576px) {
+            .top-toolbar .btn { width: 100%; justify-content: center; }
+        }
+
+        /* Small stat cards (sparklines) */
+        .card-light { background: linear-gradient(180deg,#ffffff,#fbfdff); border-radius:12px; box-shadow:0 6px 18px rgba(34,41,47,0.06); }
+        .card-light .stat-number { font-size: 1.8rem; margin-top:4px; }
+        canvas.sparkline { width: 100% !important; height: 48px !important; }
+
+        /* Activity feed */
+        .activity-feed .list-group-item { cursor: pointer; border:0; border-radius:8px; margin-bottom:8px; }
+        .activity-feed .list-group-item.active { background: linear-gradient(90deg, rgba(102,126,234,0.12), rgba(102,126,234,0.06)); }
+
+        /* Map card */
+        .map-card #map { border-radius:8px; overflow:hidden; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.show {
+                width: var(--sidebar-width);
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
+        <div class="text-center mb-4">
+            <i class="bi bi-file-earmark-text fs-1"></i>
+            <h4 class="mt-2">Sistem Aduan</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#dashboard">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+            <a class="nav-link" href="#aduan">
+                <i class="bi bi-inbox me-2"></i> Senarai Aduan
+            </a>
+            <a class="nav-link" href="#baru">
+                <i class="bi bi-plus-circle me-2"></i> Aduan Baru
+            </a>
+            <a class="nav-link" href="#laporan">
+                <i class="bi bi-graph-up me-2"></i> Laporan
+            </a>
+            <a class="nav-link" href="#tetapan">
+                <i class="bi bi-gear me-2"></i> Tetapan
+            </a>
+        </nav>
+        
+        <div class="position-absolute bottom-0 w-100 p-3">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle p-2 me-2">
+                    <i class="bi bi-person-fill text-primary"></i>
+                </div>
+                <div>
+                    <small>Admin</small>
+                    <br>
+                    <small class="text-white-50">admin@sistem.my</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="main-content" role="main" aria-label="Dashboard utama">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <div>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item active">Dashboard</li></ol></nav>
+                <h2 class="mb-0">Dashboard Aduan</h2>
+                <p class="text-muted small mb-0">Pantau dan urus aduan dengan mudah</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <div class="top-toolbar d-flex gap-2 align-items-center">
+                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-calendar-range"></i> Jan 1 - Jan 31, 2026</button>
+                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-download"></i></button>
+                    <button class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i> Aduan Baru</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Small Metric Widgets (sparklines) -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card p-2 card-light">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Aduan Hari Ini</small>
+                            <div class="stat-number">12</div>
+                        </div>
+                        <div style="width:80px"><canvas id="spark1" class="sparkline"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card p-2 card-light">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Baru</small>
+                            <div class="stat-number">12</div>
+                        </div>
+                        <div style="width:80px"><canvas id="spark2" class="sparkline"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card p-2 card-light">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Dalam Proses</small>
+                            <div class="stat-number">64</div>
+                        </div>
+                        <div style="width:80px"><canvas id="spark3" class="sparkline"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card p-2 card-light">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Selesai</small>
+                            <div class="stat-number">172</div>
+                        </div>
+                        <div style="width:80px"><canvas id="spark4" class="sparkline"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-primary border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Jumlah Aduan</h6>
+                                <div class="stat-number text-primary">248</div>
+                            </div>
+                            <div>
+                                <i class="bi bi-inbox-fill fs-1 text-primary opacity-25"></i>
+                            </div>
+                        </div>
+                        <small class="text-success">
+                            <i class="bi bi-arrow-up"></i> 12% dari bulan lalu
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-warning border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Dalam Proses</h6>
+                                <div class="stat-number text-warning">64</div>
+                            </div>
+                            <div>
+                                <i class="bi bi-hourglass-split fs-1 text-warning opacity-25"></i>
+                            </div>
+                        </div>
+                        <small class="text-info">
+                            <i class="bi bi-clock"></i> 24 memerlukan tindakan
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-success border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Selesai</h6>
+                                <div class="stat-number text-success">172</div>
+                            </div>
+                            <div>
+                                <i class="bi bi-check-circle-fill fs-1 text-success opacity-25"></i>
+                            </div>
+                        </div>
+                        <small class="text-success">
+                            69.4% kadar penyelesaian
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-danger border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Masa Purata</h6>
+                                <div class="stat-number text-danger">3.2</div>
+                            </div>
+                            <div>
+                                <i class="bi bi-clock-history fs-1 text-danger opacity-25"></i>
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            hari untuk penyelesaian
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Row (blended) -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="chart-container mb-3">
+                    <h5 class="mb-3">Trend Aduan (7 Hari Terakhir)</h5>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="card chart-container">
+                    <h5 class="mb-3">Status Aduan</h5>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card chart-container mb-3">
+                    <h6 class="mb-3">Aktiviti Terkini</h6>
+                    <ul class="list-group activity-feed">
+                        <li class="list-group-item">Siti menghantar maklum balas — <small class="text-muted">10 min</small></li>
+                        <li class="list-group-item">Aduan <strong>#ADU-001</strong> ditutup — <small class="text-muted">1 jam</small></li>
+                        <li class="list-group-item">Ahmad menetapkan status ke Dalam Proses — <small class="text-muted">2 jam</small></li>
+                    </ul>
+                </div>
+                <div class="card chart-container map-card">
+                    <h6 class="mb-3">Pengedaran Aduan</h6>
+                    <div id="map" aria-label="Peta pengedaran aduan" style="height:220px; background:#eef2f5; border-radius:8px; display:flex;align-items:center;justify-content:center;color:#6c757d;">Peta placeholder</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Complaints Table -->
+        <div class="table-responsive">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Aduan Terkini</h5>
+                <div class="d-flex gap-2">
+                    <label for="searchAduan" class="visually-hidden-focusable">Cari aduan</label>
+                    <input type="text" class="form-control search-box" id="searchAduan" aria-label="Cari aduan" placeholder="Cari aduan..." style="width: 300px;">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary filter-btn active" aria-pressed="true">Semua</button>
+                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Baru</button>
+                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Proses</button>
+                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Selesai</button>
+                    </div>
+                </div>
+            </div>
+            
+            <table class="table table-hover table-striped" aria-describedby="table-caption" tabindex="0">
+                <caption id="table-caption" class="visually-hidden-focusable">Senarai Aduan</caption>
+                <thead>
+                    <tr>
+                        <th>ID Aduan</th>
+                        <th>Tajuk</th>
+                        <th>Kategori</th>
+                        <th>Pengadu</th>
+                        <th>Tarikh</th>
+                        <th>Keutamaan</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>#ADU-001</strong></td>
+                        <td>Masalah sistem pembayaran tidak berfungsi</td>
+                        <td><span class="badge bg-info">Teknikal</span></td>
+                        <td>Ahmad Ali</td>
+                        <td>31 Dis 2025</td>
+                        <td><span class="badge bg-danger">Tinggi</span></td>
+                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-warning" style="width: 60%"></div>
+                            </div>
+                            <small class="text-muted">60%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#ADU-002</strong></td>
+                        <td>Perkhidmatan pelanggan lambat bertindak</td>
+                        <td><span class="badge bg-warning">Perkhidmatan</span></td>
+                        <td>Siti Nurhaliza</td>
+                        <td>31 Dis 2025</td>
+                        <td><span class="badge bg-warning">Sederhana</span></td>
+                        <td><span class="badge badge-status bg-primary">Baru</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-primary" style="width: 10%"></div>
+                            </div>
+                            <small class="text-muted">10%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#ADU-003</strong></td>
+                        <td>Kualiti produk tidak memuaskan</td>
+                        <td><span class="badge bg-danger">Produk</span></td>
+                        <td>Mohd Razak</td>
+                        <td>30 Dis 2025</td>
+                        <td><span class="badge bg-danger">Tinggi</span></td>
+                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-warning" style="width: 75%"></div>
+                            </div>
+                            <small class="text-muted">75%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#ADU-004</strong></td>
+                        <td>Permintaan maklumat tambahan</td>
+                        <td><span class="badge bg-secondary">Pertanyaan</span></td>
+                        <td>Fatimah Zahra</td>
+                        <td>30 Dis 2025</td>
+                        <td><span class="badge bg-success">Rendah</span></td>
+                        <td><span class="badge badge-status bg-success">Selesai</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                            </div>
+                            <small class="text-muted">100%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#ADU-005</strong></td>
+                        <td>Aplikasi mobile sering crash</td>
+                        <td><span class="badge bg-info">Teknikal</span></td>
+                        <td>Lim Wei Jian</td>
+                        <td>29 Dis 2025</td>
+                        <td><span class="badge bg-danger">Tinggi</span></td>
+                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-warning" style="width: 45%"></div>
+                            </div>
+                            <small class="text-muted">45%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#ADU-006</strong></td>
+                        <td>Penghantaran barang lewat</td>
+                        <td><span class="badge bg-primary">Logistik</span></td>
+                        <td>Kumar Selvam</td>
+                        <td>29 Dis 2025</td>
+                        <td><span class="badge bg-warning">Sederhana</span></td>
+                        <td><span class="badge badge-status bg-success">Selesai</span></td>
+                        <td>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                            </div>
+                            <small class="text-muted">100%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Sebelum</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Seterusnya</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <!-- Chart.js Initialization -->
+    <script>
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['25 Dis', '26 Dis', '27 Dis', '28 Dis', '29 Dis', '30 Dis', '31 Dis'],
+                datasets: [{
+                    label: 'Aduan Baru',
+                    data: [12, 19, 15, 17, 14, 18, 16],
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Selesai',
+                    data: [8, 15, 12, 14, 11, 15, 13],
+                    borderColor: 'rgb(40, 167, 69)',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Status Pie Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Baru', 'Dalam Proses', 'Selesai', 'Ditolak'],
+                datasets: [{
+                    data: [12, 64, 172, 0],
+                    backgroundColor: [
+                        'rgb(13, 110, 253)',
+                        'rgb(255, 193, 7)',
+                        'rgb(25, 135, 84)',
+                        'rgb(220, 53, 69)'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+        
+        // Small sparklines for metric cards
+        function createSpark(id, data, color, bg) {
+            const ctx = document.getElementById(id).getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: { labels: data.map((_,i)=>i), datasets:[{ data, borderColor: color, backgroundColor: bg, tension:0.4, fill:true, pointRadius:0 }] },
+                options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{enabled:false}}, scales:{x:{display:false}, y:{display:false}} }
+            });
+        }
+        createSpark('spark1',[3,5,2,8,6,9,7],'rgb(13,110,253)','rgba(13,110,253,0.12)');
+        createSpark('spark2',[2,6,4,5,3,6,4],'rgb(255,193,7)','rgba(255,193,7,0.12)');
+        createSpark('spark3',[1,3,2,4,6,5,7],'rgb(25,135,84)','rgba(25,135,84,0.12)');
+        createSpark('spark4',[5,4,6,3,2,5,6],'rgb(102,126,234)','rgba(102,126,234,0.12)');
+        
+        // Simple activity click handler (mark read)
+        document.querySelectorAll('.activity-feed .list-group-item').forEach(li => {
+            li.addEventListener('click', () => li.classList.toggle('active'));
+        });
+
+        // Initialize Leaflet map
+        if (typeof L !== 'undefined') {
+            try {
+                const map = L.map('map', { tap: false }).setView([3.1390, 101.6869], 11);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Sample markers (cluster areas)
+                const markers = [
+                    {lat:3.1390, lng:101.6869, text:'#ADU-001: City Centre'},
+                    {lat:3.0738, lng:101.5183, text:'#ADU-003: Suburb'},
+                    {lat:3.2000, lng:101.6330, text:'#ADU-005: Northeast'}
+                ];
+                markers.forEach(m => L.marker([m.lat, m.lng]).addTo(map).bindPopup(`<strong>${m.text}</strong>`));
+            } catch(e) {
+                console.warn('Leaflet map failed to initialize', e);
+            }
+        }
+
+        // Sidebar toggle for small screens
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.toggle('show');
+                sidebarToggle.setAttribute('aria-expanded', document.querySelector('.sidebar').classList.contains('show'));
+            });
+        }
+
+        // Filter buttons functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-pressed', 'true');
+            });
+        });
+
+        // Improve search accessibility: focus the table when Enter is pressed
+        const searchBoxEl = document.getElementById('searchAduan');
+        if (searchBoxEl) {
+            searchBoxEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    document.querySelector('table').focus();
+                }
+            });
+        }
+        
+        // Search functionality
+        const searchBox = document.querySelector('.search-box');
+        searchBox.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
