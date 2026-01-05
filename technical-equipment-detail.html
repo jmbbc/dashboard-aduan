@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butiran Peralatan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <style>
+        :root { --sidebar-width: 240px; }
+        body { background-color: #f5f7fb; }
+        .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: var(--sidebar-width); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding-top: 20px; z-index: 1000; }
+        .sidebar .nav-link { color: rgba(255, 255, 255, 0.88); padding: 12px 20px; transition: all 0.3s; border-left: 4px solid transparent; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-left-color: white; }
+        .main-content { margin-left: var(--sidebar-width); padding: 24px; min-height: 100vh; }
+        .card-light { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
+        .search-box { border-radius: 24px; padding: 10px 16px; }
+        .filter-btn { border-radius: 20px; padding: 8px 16px; }
+        .gallery-img { max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; }
+        @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
+        <div class="text-center mb-4">
+            <i class="bi bi-cpu fs-1"></i>
+            <h4 class="mt-2">Technical</h4>
+        </div>
+        <nav class="nav flex-column">
+            <div class="nav-item mb-1">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="false" aria-controls="aduanMenu">
+                    Aduan
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse" id="aduanMenu">
+                    <a class="nav-link ps-4" href="index.html">Dashboard Aduan</a>
+                    <a class="nav-link ps-4" href="sub-aduan.html">Sub Aduan</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="true" aria-controls="techMenu">
+                    Technical
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse show" id="techMenu">
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
+                    <a class="nav-link active ps-4" href="#">Butiran Peralatan</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content" id="main-content" role="main">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <div>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="technical-equipment.html">Status Peralatan</a></li><li class="breadcrumb-item active" id="breadcrumbName">Butiran</li></ol></nav>
+                <h2 class="mb-0" id="pageTitle">Butiran Peralatan</h2>
+                <p class="text-muted small mb-0" id="pageSubtitle">Isi butiran peralatan, simpan rujukan, dan jejak isu.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary" id="badgeStatus">Status</span>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-3 col-sm-6">
+                <div class="card card-light p-3">
+                    <small class="text-muted">Status</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-5 fw-bold" id="statStatus">-</div>
+                        <i class="bi bi-activity fs-3 text-primary opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card card-light p-3">
+                    <small class="text-muted">Kuantiti</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-5 fw-bold" id="statQuantity">-</div>
+                        <i class="bi bi-collection fs-3 text-success opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card card-light p-3">
+                    <small class="text-muted">Isu Aktif</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-5 fw-bold" id="statIssues">0</div>
+                        <i class="bi bi-exclamation-triangle fs-3 text-warning opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card card-light p-3">
+                    <small class="text-muted">PIC</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-5 fw-bold" id="statOwner">-</div>
+                        <i class="bi bi-person-badge fs-3 text-info opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card card-light mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Maklumat Peralatan</h5>
+                                <small class="text-muted">Edit butiran, lokasi dan simpan imej rujukan</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" id="btnSaveDetail">Simpan</button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label" for="equipName">Nama Peralatan</label>
+                                <input type="text" class="form-control" id="equipName" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="equipStatus">Status</label>
+                                <select class="form-select" id="equipStatus">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Memerlukan Tindakan">Memerlukan Tindakan</option>
+                                    <option value="Kritikal">Kritikal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="equipQuantity">Kuantiti</label>
+                                <input type="number" min="0" class="form-control" id="equipQuantity">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="equipOwner">PIC / Penyelenggara</label>
+                                <input type="text" class="form-control" id="equipOwner" placeholder="Nama PIC">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="equipDetails">Butiran / Catatan</label>
+                                <textarea class="form-control" id="equipDetails" rows="3" placeholder="Contoh: lokasi panel, tarikh servis, vendor"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="equipLocations">Lokasi (satu per baris)</label>
+                                <textarea class="form-control" id="equipLocations" rows="3" placeholder="Contoh: Pejabat pengurusan\nPondok pengawal"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-light mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Isu / Tindakan</h5>
+                                <small class="text-muted">Cipta isu dan pantau status</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" id="btnClearIssues">Kosongkan Isu</button>
+                        </div>
+                        <form class="row g-3" id="issueForm" novalidate>
+                            <div class="col-md-6">
+                                <label class="form-label" for="issueTitle">Tajuk Isu</label>
+                                <input type="text" class="form-control" id="issueTitle" required>
+                                <div class="invalid-feedback">Isi tajuk isu.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="issueSeverity">Severity</label>
+                                <select class="form-select" id="issueSeverity" required>
+                                    <option value="Tinggi">Tinggi</option>
+                                    <option value="Sederhana">Sederhana</option>
+                                    <option value="Rendah">Rendah</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih severity.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="issueStatus">Status</label>
+                                <select class="form-select" id="issueStatus" required>
+                                    <option value="Terbuka">Terbuka</option>
+                                    <option value="Dalam Proses">Dalam Proses</option>
+                                    <option value="Selesai">Selesai</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih status.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="issueOwner">PIC / Vendor</label>
+                                <input type="text" class="form-control" id="issueOwner" placeholder="Nama PIC" required>
+                                <div class="invalid-feedback">Isi PIC.</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="issueNotes">Butiran</label>
+                                <textarea class="form-control" id="issueNotes" rows="2" placeholder="Terangkan isu / tindakan" required></textarea>
+                                <div class="invalid-feedback">Isi butiran.</div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-success" type="submit">Tambah Isu</button>
+                            </div>
+                        </form>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Tajuk</th>
+                                        <th>Severity</th>
+                                        <th>Status</th>
+                                        <th>PIC</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="issueBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card card-light mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Galeri / Rujukan</h5>
+                                <small class="text-muted">Tambah URL imej atau catatan ringkas</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" id="btnAddImage">Tambah</button>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="url" class="form-control" id="imageUrl" placeholder="https://..." aria-label="URL imej">
+                            <button class="btn btn-outline-secondary" type="button" id="btnAddUrl">Simpan URL</button>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="noteText" placeholder="Nota ringkas">
+                            <button class="btn btn-outline-secondary" type="button" id="btnAddNote">Simpan Nota</button>
+                        </div>
+                        <div id="galleryList" class="row g-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultEquipment = [
+                { slug: 'panel-kebakaran', name: 'Panel kebakaran', quantity: 4, status: 'Kritikal', issues: 'Panel 2 tidak reset selepas ujian', owner: 'Faris', details: 'Perlu pemeriksaan vendor minggu ini.', locations: ['Pejabat pengurusan', 'Pondok pengawal'], media: [] },
+                { slug: 'tangki-air-kebakaran', name: 'Tangki air (kebakaran)', quantity: 2, status: 'Memerlukan Tindakan', issues: 'Float valve bocor', owner: 'Hafiz', details: 'Pesan alat ganti, jadualkan shutdown 1 jam.', locations: [], media: [] },
+                { slug: 'bilik-riser-kebakaran', name: 'Bilik riser (kebakaran)', quantity: 6, status: 'Normal', issues: '-', owner: 'Azlan', details: 'Pemeriksaan mingguan selesai.', locations: [], media: [] },
+                { slug: 'pam-utama', name: 'Pam utama', quantity: 3, status: 'Memerlukan Tindakan', issues: 'Getaran tinggi pam #2', owner: 'Ravi', details: 'Suspek alignment coupler; vendor dipanggil.', locations: [], media: [] },
+                { slug: 'pam-tekanan-tinggi', name: 'Pam tekanan tinggi', quantity: 2, status: 'Normal', issues: '-', owner: 'Ravi', details: 'Tiada isu aktif.', locations: [], media: [] },
+                { slug: 'pam-kolam-renang', name: 'Pam kolam renang', quantity: 2, status: 'Normal', issues: '-', owner: 'Shima', details: 'Backwash terakhir 3 hari lepas.', locations: [], media: [] },
+                { slug: 'genset', name: 'Genset', quantity: 1, status: 'Normal', issues: '-', owner: 'Hafiz', details: 'Ujian beban mingguan lulus.', locations: [], media: [] },
+                { slug: 'bilik-msb', name: 'Bilik MSB', quantity: 1, status: 'Kritikal', issues: 'Suhu tinggi (32°C)', owner: 'Nadia', details: 'AC split out; sementara guna kipas industri.', locations: [], media: [] },
+                { slug: 'kapasitor-bank', name: 'Kapasitor bank', quantity: 1, status: 'Normal', issues: '-', owner: 'Nadia', details: 'Harmonik dalam had.', locations: [], media: [] },
+                { slug: 'cctv', name: 'Kamera litar tertutup (CCTV)', quantity: 48, status: 'Memerlukan Tindakan', issues: '3 kamera offline (Lobi, Parkir B2, Lif 3)', owner: 'Amin', details: 'Switch POE perlu disemak; fiber patch panel longgar.', locations: [], media: [] },
+                { slug: 'lif', name: 'Lif', quantity: 6, status: 'Normal', issues: '-', owner: 'Vendor KONE', details: 'Penyelenggaraan bulanan terjadual.', locations: [], media: [] },
+                { slug: 'padang-permainan', name: 'Padang permainan', quantity: 1, status: 'Normal', issues: '-', owner: 'Ops', details: 'Pemeriksaan fizikal normal.', locations: [], media: [] },
+                { slug: 'padang-badminton', name: 'Padang Badminton', quantity: 2, status: 'Normal', issues: '-', owner: 'Ops', details: 'Lampu LED baru dipasang.', locations: [], media: [] },
+                { slug: 'tangki-air-domestik', name: 'Tangki air domestik', quantity: 2, status: 'Memerlukan Tindakan', issues: 'Sedikit sedimen', owner: 'Hafiz', details: 'Jadual cuci tank minggu depan.', locations: [], media: [] }
+            ];
+
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('key');
+            let record = getInitialRecord(slug);
+            let issues = loadIssues(record.slug);
+            let media = loadMedia(record.slug, record.media || []);
+
+            const refs = {
+                sidebarToggle: document.getElementById('sidebarToggle'),
+                sidebar: document.querySelector('.sidebar'),
+                pageTitle: document.getElementById('pageTitle'),
+                pageSubtitle: document.getElementById('pageSubtitle'),
+                breadcrumbName: document.getElementById('breadcrumbName'),
+                badgeStatus: document.getElementById('badgeStatus'),
+                statStatus: document.getElementById('statStatus'),
+                statQuantity: document.getElementById('statQuantity'),
+                statIssues: document.getElementById('statIssues'),
+                statOwner: document.getElementById('statOwner'),
+                equipName: document.getElementById('equipName'),
+                equipStatus: document.getElementById('equipStatus'),
+                equipQuantity: document.getElementById('equipQuantity'),
+                equipOwner: document.getElementById('equipOwner'),
+                equipDetails: document.getElementById('equipDetails'),
+                equipLocations: document.getElementById('equipLocations'),
+                btnSaveDetail: document.getElementById('btnSaveDetail'),
+                issueForm: document.getElementById('issueForm'),
+                issueBody: document.getElementById('issueBody'),
+                issueTitle: document.getElementById('issueTitle'),
+                issueSeverity: document.getElementById('issueSeverity'),
+                issueStatus: document.getElementById('issueStatus'),
+                issueOwner: document.getElementById('issueOwner'),
+                issueNotes: document.getElementById('issueNotes'),
+                btnClearIssues: document.getElementById('btnClearIssues'),
+                galleryList: document.getElementById('galleryList'),
+                imageUrl: document.getElementById('imageUrl'),
+                noteText: document.getElementById('noteText'),
+                btnAddUrl: document.getElementById('btnAddUrl'),
+                btnAddNote: document.getElementById('btnAddNote')
+            };
+
+            init();
+
+            function init() {
+                if (refs.sidebarToggle) {
+                    refs.sidebarToggle.addEventListener('click', () => {
+                        refs.sidebar.classList.toggle('show');
+                        refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
+                    });
+                }
+
+                bindDetail();
+                bindIssues();
+                bindMedia();
+                renderAll();
+            }
+
+            function getInitialRecord(key) {
+                const found = defaultEquipment.find(e => e.slug === key) || defaultEquipment[0];
+                const stored = loadRecord(found.slug);
+                return stored || found;
+            }
+
+            function loadRecord(key) {
+                try {
+                    const raw = localStorage.getItem(`equip-detail-${key}`);
+                    if (raw) return JSON.parse(raw);
+                } catch (e) { console.warn(e); }
+                return null;
+            }
+
+            function saveRecord(data) {
+                localStorage.setItem(`equip-detail-${data.slug}`, JSON.stringify(data));
+            }
+
+            function loadIssues(key) {
+                try {
+                    const raw = localStorage.getItem(`equip-issues-${key}`);
+                    if (raw) return JSON.parse(raw);
+                } catch (e) { console.warn(e); }
+                return [];
+            }
+
+            function saveIssues(list) {
+                localStorage.setItem(`equip-issues-${record.slug}`, JSON.stringify(list));
+            }
+
+            function loadMedia(key, fallback) {
+                try {
+                    const raw = localStorage.getItem(`equip-media-${key}`);
+                    if (raw) return JSON.parse(raw);
+                } catch (e) { console.warn(e); }
+                return fallback || [];
+            }
+
+            function saveMedia(list) {
+                localStorage.setItem(`equip-media-${record.slug}`, JSON.stringify(list));
+            }
+
+            function bindDetail() {
+                refs.btnSaveDetail.addEventListener('click', () => {
+                    record.status = refs.equipStatus.value;
+                    record.quantity = Number(refs.equipQuantity.value) || 0;
+                    record.owner = refs.equipOwner.value.trim();
+                    record.details = refs.equipDetails.value.trim();
+                    record.locations = refs.equipLocations.value.split('\n').map(l => l.trim()).filter(Boolean);
+                    saveRecord(record);
+                    renderSummary();
+                });
+            }
+
+            function bindIssues() {
+                refs.issueForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!refs.issueForm.checkValidity()) {
+                        refs.issueForm.classList.add('was-validated');
+                        return;
+                    }
+                    issues.unshift({
+                        title: refs.issueTitle.value.trim(),
+                        severity: refs.issueSeverity.value,
+                        status: refs.issueStatus.value,
+                        owner: refs.issueOwner.value.trim(),
+                        notes: refs.issueNotes.value.trim(),
+                        createdAt: new Date().toISOString()
+                    });
+                    saveIssues(issues);
+                    renderIssues();
+                    refs.issueForm.reset();
+                    refs.issueForm.classList.remove('was-validated');
+                    renderSummary();
+                });
+
+                refs.btnClearIssues.addEventListener('click', () => {
+                    if (!confirm('Kosongkan semua isu untuk peralatan ini?')) return;
+                    issues = [];
+                    saveIssues(issues);
+                    renderIssues();
+                    renderSummary();
+                });
+            }
+
+            function bindMedia() {
+                refs.btnAddUrl.addEventListener('click', () => {
+                    const url = refs.imageUrl.value.trim();
+                    if (!url) return;
+                    media.unshift({ type: 'image', value: url, createdAt: new Date().toISOString() });
+                    saveMedia(media);
+                    renderMedia();
+                    refs.imageUrl.value = '';
+                });
+
+                refs.btnAddNote.addEventListener('click', () => {
+                    const note = refs.noteText.value.trim();
+                    if (!note) return;
+                    media.unshift({ type: 'note', value: note, createdAt: new Date().toISOString() });
+                    saveMedia(media);
+                    renderMedia();
+                    refs.noteText.value = '';
+                });
+
+                document.getElementById('btnAddImage').addEventListener('click', () => refs.imageUrl.focus());
+            }
+
+            function renderAll() {
+                renderDetail();
+                renderIssues();
+                renderMedia();
+                renderSummary();
+            }
+
+            function renderDetail() {
+                refs.pageTitle.textContent = record.name;
+                refs.pageSubtitle.textContent = record.details || 'Isi butiran peralatan, simpan rujukan, dan jejak isu.';
+                refs.breadcrumbName.textContent = record.name;
+                refs.equipName.value = record.name;
+                refs.equipStatus.value = record.status;
+                refs.equipQuantity.value = record.quantity;
+                refs.equipOwner.value = record.owner || '';
+                refs.equipDetails.value = record.details || '';
+                refs.equipLocations.value = (record.locations || []).join('\n');
+            }
+
+            function renderIssues() {
+                if (!refs.issueBody) return;
+                if (!issues.length) {
+                    refs.issueBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Tiada isu direkodkan.</td></tr>';
+                    return;
+                }
+                refs.issueBody.innerHTML = issues.map(item => `
+                    <tr>
+                        <td>${item.title}</td>
+                        <td>${badgeSeverity(item.severity)}</td>
+                        <td>${badgeStatus(item.status)}</td>
+                        <td>${item.owner || '-'}</td>
+                    </tr>
+                `).join('');
+            }
+
+            function renderMedia() {
+                if (!refs.galleryList) return;
+                if (!media.length) {
+                    refs.galleryList.innerHTML = '<div class="col-12 text-muted">Tiada media atau nota.</div>';
+                    return;
+                }
+                refs.galleryList.innerHTML = media.map(item => {
+                    if (item.type === 'image') {
+                        return `<div class="col-12"><img src="${item.value}" alt="Rujukan" class="gallery-img w-100"><small class="text-muted">${formatDate(item.createdAt)}</small></div>`;
+                    }
+                    return `<div class="col-12"><div class="p-2 border rounded bg-light">${item.value}</div><small class="text-muted">${formatDate(item.createdAt)}</small></div>`;
+                }).join('');
+            }
+
+            function renderSummary() {
+                refs.badgeStatus.innerHTML = getStatusBadge(record.status);
+                refs.statStatus.textContent = record.status;
+                refs.statQuantity.textContent = record.quantity;
+                refs.statOwner.textContent = record.owner || '-';
+                const activeIssues = issues.filter(i => i.status !== 'Selesai').length;
+                refs.statIssues.textContent = activeIssues;
+                saveRecord(record);
+            }
+
+            function getStatusBadge(status) {
+                const map = { Normal: 'bg-success', 'Memerlukan Tindakan': 'bg-warning text-dark', Kritikal: 'bg-danger' };
+                return `<span class="badge badge-status ${map[status] || 'bg-secondary'}">${status}</span>`;
+            }
+
+            function badgeStatus(status) {
+                const map = { Terbuka: 'bg-primary', 'Dalam Proses': 'bg-warning text-dark', Selesai: 'bg-success' };
+                return `<span class="badge ${map[status] || 'bg-secondary'}">${status}</span>`;
+            }
+
+            function badgeSeverity(sev) {
+                const map = { Tinggi: 'bg-danger', Sederhana: 'bg-warning text-dark', Rendah: 'bg-success' };
+                return `<span class="badge ${map[sev] || 'bg-secondary'}">${sev}</span>`;
+            }
+
+            function formatDate(str) {
+                const d = new Date(str);
+                if (Number.isNaN(d.getTime())) return str || '';
+                return d.toLocaleString('ms-MY');
+            }
+        });
+    </script>
+</body>
+</html>

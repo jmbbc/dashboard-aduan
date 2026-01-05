@@ -4,25 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Aduan</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    
+
     <style>
-        :root {
-            --sidebar-width: 250px;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-        }
-        
+        :root { --sidebar-width: 240px; }
+
+        body { background-color: #f5f7fb; }
+
         .sidebar {
             position: fixed;
             top: 0;
@@ -34,119 +28,113 @@
             padding-top: 20px;
             z-index: 1000;
         }
-        
+
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.88);
             padding: 12px 20px;
             transition: all 0.3s;
+            border-left: 4px solid transparent;
         }
-        
+
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid white;
+            border-left-color: white;
         }
-        
+
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 20px;
+            padding: 24px;
+            min-height: 100vh;
         }
-        
-        .stat-card {
-            border: none;
+
+        .stat-card,
+        .card-light {
+            background: transparent;
+            border: 1px solid #e5e7eb;
             border-radius: 12px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.2s;
         }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
+
         .stat-card .card-body {
-            padding: 25px;
+            min-height: 170px;
         }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
+
+        /* Colorful accents for the top metric widgets; mimic border-start thickness */
+        .spark-card {
+            --spark-accent: #4f46e5;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 8px solid var(--spark-accent);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
         }
-        
-        .badge-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+
+        .spark-card.accent-indigo { --spark-accent: #4f46e5; background: #eef2ff; border-color: #cdd7ff; }
+        .spark-card.accent-teal { --spark-accent: #0f766e; background: #e6fffb; border-color: #b2f5ea; }
+        .spark-card.accent-amber { --spark-accent: #d97706; background: #fff7e6; border-color: #ffe0b2; }
+        .spark-card.accent-emerald { --spark-accent: #047857; background: #ecfdf3; border-color: #bbf7d0; }
+
+        .spark-card .stat-number { color: #1f2937; }
+
+        .stat-card:hover,
+        .card-light:hover {
+            transform: translateY(-2px);
         }
-        
-        .table-responsive {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .progress-custom {
-            height: 8px;
-            border-radius: 10px;
-        }
-        
-        .search-box {
-            border-radius: 25px;
-            padding: 10px 20px;
-        }
-        
-        .filter-btn {
-            border-radius: 20px;
-            padding: 8px 20px;
-        }
-        
+
         .chart-container {
-            background: white;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
-        /* Skip link for accessibility */
-        .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-        .skip-link:focus { left: 10px; top: 10px; width: auto; height: auto; background: #fff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 2000; }
-        .visually-hidden-focusable { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-        .visually-hidden-focusable:focus { left: 10px; top: 10px; width: auto; height: auto; }
-        *:focus-visible { outline: 2px solid #667eea; outline-offset: 3px; }
-
-        /* Top toolbar */
-        .top-toolbar { flex-wrap: wrap; }
-        .top-toolbar .btn { height: 36px; }
-        @media (max-width: 576px) {
-            .top-toolbar .btn { width: 100%; justify-content: center; }
+        .chart-container.chart-sm canvas {
+            max-width: 320px;
+            max-height: 320px;
+            margin: 0 auto;
+            display: block;
         }
 
-        /* Small stat cards (sparklines) */
-        .card-light { background: linear-gradient(180deg,#ffffff,#fbfdff); border-radius:12px; box-shadow:0 6px 18px rgba(34,41,47,0.06); }
-        .card-light .stat-number { font-size: 1.8rem; margin-top:4px; }
-        canvas.sparkline { width: 100% !important; height: 48px !important; }
+        .search-box { border-radius: 24px; padding: 10px 16px; }
+        .filter-btn { border-radius: 20px; padding: 8px 16px; }
 
-        /* Activity feed */
-        .activity-feed .list-group-item { cursor: pointer; border:0; border-radius:8px; margin-bottom:8px; }
-        .activity-feed .list-group-item.active { background: linear-gradient(90deg, rgba(102,126,234,0.12), rgba(102,126,234,0.06)); }
+        .table-responsive {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
 
-        /* Map card */
-        .map-card #map { border-radius:8px; overflow:hidden; }
+        .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        .skip-link:focus {
+            left: 10px;
+            top: 10px;
+            width: auto;
+            height: auto;
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            z-index: 2000;
+        }
 
         @media (max-width: 768px) {
-            .sidebar {
-                width: 0;
-                overflow: hidden;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .sidebar.show {
-                width: var(--sidebar-width);
-            }
+            .sidebar { width: 0; overflow: hidden; }
+            .sidebar.show { width: var(--sidebar-width); }
+            .main-content { margin-left: 0; padding: 16px; }
         }
     </style>
 </head>
@@ -159,23 +147,29 @@
             <h4 class="mt-2">Sistem Aduan</h4>
         </div>
         <nav class="nav flex-column">
-            <a class="nav-link active" href="#dashboard">
-                <i class="bi bi-speedometer2 me-2"></i> Dashboard
-            </a>
-            <a class="nav-link" href="#aduan">
-                <i class="bi bi-inbox me-2"></i> Senarai Aduan
-            </a>
-            <a class="nav-link" href="#baru">
-                <i class="bi bi-plus-circle me-2"></i> Aduan Baru
-            </a>
-            <a class="nav-link" href="#laporan">
-                <i class="bi bi-graph-up me-2"></i> Laporan
-            </a>
-            <a class="nav-link" href="#tetapan">
-                <i class="bi bi-gear me-2"></i> Tetapan
-            </a>
+            <div class="nav-item mb-1">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="true" aria-controls="aduanMenu">
+                    Aduan
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse show" id="aduanMenu">
+                    <a class="nav-link active ps-4" href="#main-content">Dashboard Aduan</a>
+                    <a class="nav-link ps-4" href="sub-aduan.html">Sub Aduan</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="false" aria-controls="techMenu">
+                    Technical
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse" id="techMenu">
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
+                </div>
+            </div>
         </nav>
-        
+
         <div class="position-absolute bottom-0 w-100 p-3">
             <div class="d-flex align-items-center">
                 <div class="bg-white rounded-circle p-2 me-2">
@@ -189,6 +183,99 @@
             </div>
         </div>
     </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <form class="modal-content needs-validation" id="complaintForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="complaintModalLabel">Aduan Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputTitle">Tajuk Aduan</label>
+                            <input type="text" class="form-control" id="inputTitle" placeholder="Contoh: Sistem pembayaran gagal" required>
+                            <div class="invalid-feedback">Sila masukkan tajuk.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputCategory">Kategori</label>
+                            <select class="form-select" id="inputCategory" required>
+                                <option value="" disabled selected>Pilih kategori</option>
+                                <option value="Teknikal">Teknikal</option>
+                                <option value="Perkhidmatan">Perkhidmatan</option>
+                                <option value="Produk">Produk</option>
+                                <option value="Logistik">Logistik</option>
+                                <option value="Pertanyaan">Pertanyaan</option>
+                            </select>
+                            <div class="invalid-feedback">Pilih kategori.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputReporter">Nama Pengadu</label>
+                            <input type="text" class="form-control" id="inputReporter" placeholder="Nama pengadu" required>
+                            <div class="invalid-feedback">Masukkan nama pengadu.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputPhone">No. Telefon Pengadu</label>
+                            <input type="tel" class="form-control" id="inputPhone" placeholder="Contoh: 012-3456789" required>
+                            <div class="invalid-feedback">Masukkan nombor telefon.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputUnit">Unit Rumah Pengadu</label>
+                            <input type="text" class="form-control" id="inputUnit" placeholder="Contoh: B-12-3" required>
+                            <div class="invalid-feedback">Isi unit rumah.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputStatus">Status</label>
+                            <select class="form-select" id="inputStatus" required>
+                                <option value="" disabled selected>Pilih status</option>
+                                <option value="Baru">Baru</option>
+                                <option value="Dalam Proses">Dalam Proses</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Ditolak">Ditolak</option>
+                            </select>
+                            <div class="invalid-feedback">Pilih status.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="inputDate">Tarikh Terima</label>
+                            <input type="date" class="form-control" id="inputDate" required>
+                            <div class="form-text">Pilih tarikh terima (lalai hari ini).</div>
+                            <div class="invalid-feedback">Pilih tarikh terima.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="inputDetails">Butiran Aduan</label>
+                            <textarea class="form-control" id="inputDetails" rows="3" placeholder="Nyatakan butiran aduan" required></textarea>
+                            <div class="invalid-feedback">Isi butiran aduan.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="submitComplaintBtn">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">Maklumat Aduan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3" id="viewDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-success" id="viewEditBtn">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <!-- Main Content -->
     <div class="main-content" id="main-content" role="main" aria-label="Dashboard utama">
@@ -202,56 +289,64 @@
             </div>
             <div class="d-flex align-items-center gap-2">
                 <div class="top-toolbar d-flex gap-2 align-items-center">
-                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-calendar-range"></i> Jan 1 - Jan 31, 2026</button>
-                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-download"></i></button>
-                    <button class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i> Aduan Baru</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="dateRangeBtn"><i class="bi bi-calendar-range"></i> Jan 1 - Jan 31, 2026</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="reportBtn" title="Jana laporan CSV"><i class="bi bi-download"></i></button>
+                    <button class="btn btn-primary btn-new-complaint" id="newComplaintBtn"><i class="bi bi-plus-circle me-1"></i> Aduan Baru</button>
                 </div>
             </div>
         </div>
 
         <!-- Small Metric Widgets (sparklines) -->
-        <div class="row g-3 mb-4">
+        <div class="row g-4 mb-4 align-items-stretch">
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card p-2 card-light">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1">
-                            <small class="text-muted">Aduan Hari Ini</small>
-                            <div class="stat-number">12</div>
+                <div class="card stat-card card-light spark-card accent-indigo h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <small class="text-muted">Aduan Hari Ini</small>
+                                <div class="stat-number" id="statToday">0</div>
+                            </div>
+                            <div style="width:80px"><canvas id="spark1" class="sparkline"></canvas></div>
                         </div>
-                        <div style="width:80px"><canvas id="spark1" class="sparkline"></canvas></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card p-2 card-light">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1">
-                            <small class="text-muted">Baru</small>
-                            <div class="stat-number">12</div>
+                <div class="card stat-card card-light spark-card accent-teal h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <small class="text-muted">Baru</small>
+                                <div class="stat-number" id="statNew">0</div>
+                            </div>
+                            <div style="width:80px"><canvas id="spark2" class="sparkline"></canvas></div>
                         </div>
-                        <div style="width:80px"><canvas id="spark2" class="sparkline"></canvas></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card p-2 card-light">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1">
-                            <small class="text-muted">Dalam Proses</small>
-                            <div class="stat-number">64</div>
+                <div class="card stat-card card-light spark-card accent-amber h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <small class="text-muted">Dalam Proses</small>
+                                <div class="stat-number" id="statProcess">0</div>
+                            </div>
+                            <div style="width:80px"><canvas id="spark3" class="sparkline"></canvas></div>
                         </div>
-                        <div style="width:80px"><canvas id="spark3" class="sparkline"></canvas></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card p-2 card-light">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1">
-                            <small class="text-muted">Selesai</small>
-                            <div class="stat-number">172</div>
+                <div class="card stat-card card-light spark-card accent-emerald h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <small class="text-muted">Selesai</small>
+                                <div class="stat-number" id="statDone">0</div>
+                            </div>
+                            <div style="width:80px"><canvas id="spark4" class="sparkline"></canvas></div>
                         </div>
-                        <div style="width:80px"><canvas id="spark4" class="sparkline"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -265,7 +360,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">Jumlah Aduan</h6>
-                                <div class="stat-number text-primary">248</div>
+                                <div class="stat-number text-primary" id="statTotal">0</div>
                             </div>
                             <div>
                                 <i class="bi bi-inbox-fill fs-1 text-primary opacity-25"></i>
@@ -284,7 +379,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">Dalam Proses</h6>
-                                <div class="stat-number text-warning">64</div>
+                                <div class="stat-number text-warning" id="statInProgressLarge">0</div>
                             </div>
                             <div>
                                 <i class="bi bi-hourglass-split fs-1 text-warning opacity-25"></i>
@@ -303,7 +398,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">Selesai</h6>
-                                <div class="stat-number text-success">172</div>
+                                <div class="stat-number text-success" id="statDoneLarge">0</div>
                             </div>
                             <div>
                                 <i class="bi bi-check-circle-fill fs-1 text-success opacity-25"></i>
@@ -322,7 +417,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">Masa Purata</h6>
-                                <div class="stat-number text-danger">3.2</div>
+                                <div class="stat-number text-danger" id="statAvgTime">0</div>
                             </div>
                             <div>
                                 <i class="bi bi-clock-history fs-1 text-danger opacity-25"></i>
@@ -343,7 +438,7 @@
                     <h5 class="mb-3">Trend Aduan (7 Hari Terakhir)</h5>
                     <canvas id="trendChart"></canvas>
                 </div>
-                <div class="card chart-container">
+                <div class="card chart-container chart-sm text-center">
                     <h5 class="mb-3">Status Aduan</h5>
                     <canvas id="statusChart"></canvas>
                 </div>
@@ -351,15 +446,7 @@
             <div class="col-lg-4">
                 <div class="card chart-container mb-3">
                     <h6 class="mb-3">Aktiviti Terkini</h6>
-                    <ul class="list-group activity-feed">
-                        <li class="list-group-item">Siti menghantar maklum balas — <small class="text-muted">10 min</small></li>
-                        <li class="list-group-item">Aduan <strong>#ADU-001</strong> ditutup — <small class="text-muted">1 jam</small></li>
-                        <li class="list-group-item">Ahmad menetapkan status ke Dalam Proses — <small class="text-muted">2 jam</small></li>
-                    </ul>
-                </div>
-                <div class="card chart-container map-card">
-                    <h6 class="mb-3">Pengedaran Aduan</h6>
-                    <div id="map" aria-label="Peta pengedaran aduan" style="height:220px; background:#eef2f5; border-radius:8px; display:flex;align-items:center;justify-content:center;color:#6c757d;">Peta placeholder</div>
+                    <ul class="list-group activity-feed" id="activityList"></ul>
                 </div>
             </div>
         </div>
@@ -372,10 +459,10 @@
                     <label for="searchAduan" class="visually-hidden-focusable">Cari aduan</label>
                     <input type="text" class="form-control search-box" id="searchAduan" aria-label="Cari aduan" placeholder="Cari aduan..." style="width: 300px;">
                     <div class="btn-group">
-                        <button class="btn btn-outline-primary filter-btn active" aria-pressed="true">Semua</button>
-                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Baru</button>
-                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Proses</button>
-                        <button class="btn btn-outline-primary filter-btn" aria-pressed="false">Selesai</button>
+                        <button class="btn btn-outline-primary filter-btn active" data-status="Semua" aria-pressed="true">Semua</button>
+                        <button class="btn btn-outline-primary filter-btn" data-status="Baru" aria-pressed="false">Baru</button>
+                        <button class="btn btn-outline-primary filter-btn" data-status="Dalam Proses" aria-pressed="false">Proses</button>
+                        <button class="btn btn-outline-primary filter-btn" data-status="Selesai" aria-pressed="false">Selesai</button>
                     </div>
                 </div>
             </div>
@@ -388,144 +475,18 @@
                         <th>Tajuk</th>
                         <th>Kategori</th>
                         <th>Pengadu</th>
+                        <th>Telefon</th>
+                        <th>Unit</th>
                         <th>Tarikh</th>
-                        <th>Keutamaan</th>
                         <th>Status</th>
-                        <th>Progress</th>
-                        <th>Tindakan</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>#ADU-001</strong></td>
-                        <td>Masalah sistem pembayaran tidak berfungsi</td>
-                        <td><span class="badge bg-info">Teknikal</span></td>
-                        <td>Ahmad Ali</td>
-                        <td>31 Dis 2025</td>
-                        <td><span class="badge bg-danger">Tinggi</span></td>
-                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-warning" style="width: 60%"></div>
-                            </div>
-                            <small class="text-muted">60%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>#ADU-002</strong></td>
-                        <td>Perkhidmatan pelanggan lambat bertindak</td>
-                        <td><span class="badge bg-warning">Perkhidmatan</span></td>
-                        <td>Siti Nurhaliza</td>
-                        <td>31 Dis 2025</td>
-                        <td><span class="badge bg-warning">Sederhana</span></td>
-                        <td><span class="badge badge-status bg-primary">Baru</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-primary" style="width: 10%"></div>
-                            </div>
-                            <small class="text-muted">10%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>#ADU-003</strong></td>
-                        <td>Kualiti produk tidak memuaskan</td>
-                        <td><span class="badge bg-danger">Produk</span></td>
-                        <td>Mohd Razak</td>
-                        <td>30 Dis 2025</td>
-                        <td><span class="badge bg-danger">Tinggi</span></td>
-                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-warning" style="width: 75%"></div>
-                            </div>
-                            <small class="text-muted">75%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>#ADU-004</strong></td>
-                        <td>Permintaan maklumat tambahan</td>
-                        <td><span class="badge bg-secondary">Pertanyaan</span></td>
-                        <td>Fatimah Zahra</td>
-                        <td>30 Dis 2025</td>
-                        <td><span class="badge bg-success">Rendah</span></td>
-                        <td><span class="badge badge-status bg-success">Selesai</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-success" style="width: 100%"></div>
-                            </div>
-                            <small class="text-muted">100%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>#ADU-005</strong></td>
-                        <td>Aplikasi mobile sering crash</td>
-                        <td><span class="badge bg-info">Teknikal</span></td>
-                        <td>Lim Wei Jian</td>
-                        <td>29 Dis 2025</td>
-                        <td><span class="badge bg-danger">Tinggi</span></td>
-                        <td><span class="badge badge-status bg-warning text-dark">Dalam Proses</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-warning" style="width: 45%"></div>
-                            </div>
-                            <small class="text-muted">45%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>#ADU-006</strong></td>
-                        <td>Penghantaran barang lewat</td>
-                        <td><span class="badge bg-primary">Logistik</span></td>
-                        <td>Kumar Selvam</td>
-                        <td>29 Dis 2025</td>
-                        <td><span class="badge bg-warning">Sederhana</span></td>
-                        <td><span class="badge badge-status bg-success">Selesai</span></td>
-                        <td>
-                            <div class="progress progress-custom">
-                                <div class="progress-bar bg-success" style="width: 100%"></div>
-                            </div>
-                            <small class="text-muted">100%</small>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" title="Edit"><i class="bi bi-pencil"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="complaintsBody"></tbody>
             </table>
             
             <!-- Pagination -->
             <nav>
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Sebelum</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Seterusnya</a>
-                    </li>
-                </ul>
+                <ul class="pagination justify-content-end" id="pagination"></ul>
             </nav>
         </div>
     </div>
@@ -535,156 +496,636 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     
-    <!-- Chart.js Initialization -->
+    <!-- Chart.js & App Logic -->
     <script>
-        // Trend Chart
-        const trendCtx = document.getElementById('trendChart').getContext('2d');
-        const trendChart = new Chart(trendCtx, {
-            type: 'line',
-            data: {
-                labels: ['25 Dis', '26 Dis', '27 Dis', '28 Dis', '29 Dis', '30 Dis', '31 Dis'],
-                datasets: [{
-                    label: 'Aduan Baru',
-                    data: [12, 19, 15, 17, 14, 18, 16],
-                    borderColor: 'rgb(102, 126, 234)',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Selesai',
-                    data: [8, 15, 12, 14, 11, 15, 13],
-                    borderColor: 'rgb(40, 167, 69)',
-                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
+        document.addEventListener('DOMContentLoaded', () => {
+            const STORAGE_KEY = 'aduanDashboardData';
+            const ACTIVITY_KEY = 'aduanDashboardActivity';
+
+            const defaultComplaints = [
+                {
+                    id: 'ADU-001',
+                    title: 'Masalah sistem pembayaran tidak berfungsi',
+                    category: 'Teknikal',
+                    reporter: 'Ahmad Ali',
+                    phone: '012-3456789',
+                    unit: 'B-12-3',
+                    date: '2025-12-31',
+                    status: 'Dalam Proses',
+                    details: 'Transaksi gagal diproses selepas kemas kini aplikasi.'
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                {
+                    id: 'ADU-002',
+                    title: 'Perkhidmatan pelanggan lambat bertindak',
+                    category: 'Perkhidmatan',
+                    reporter: 'Siti Nurhaliza',
+                    phone: '013-1112233',
+                    unit: 'A-03-8',
+                    date: '2025-12-31',
+                    status: 'Baru',
+                    details: 'Pertanyaan tidak dijawab selama lebih 48 jam.'
+                },
+                {
+                    id: 'ADU-003',
+                    title: 'Kualiti produk tidak memuaskan',
+                    category: 'Produk',
+                    reporter: 'Mohd Razak',
+                    phone: '017-2233445',
+                    unit: 'D-07-15',
+                    date: '2025-12-30',
+                    status: 'Dalam Proses',
+                    details: 'Produk diterima rosak dengan kemasan tidak lengkap.'
+                },
+                {
+                    id: 'ADU-004',
+                    title: 'Permintaan maklumat tambahan',
+                    category: 'Pertanyaan',
+                    reporter: 'Fatimah Zahra',
+                    phone: '016-9090909',
+                    unit: 'C-05-2',
+                    date: '2025-12-30',
+                    status: 'Selesai',
+                    resolvedAt: '2025-12-31',
+                    details: 'Memerlukan spesifikasi lanjut berkenaan produk terbaru.'
+                },
+                {
+                    id: 'ADU-005',
+                    title: 'Aplikasi mudah alih sering tergendala',
+                    category: 'Teknikal',
+                    reporter: 'Lim Wei Jian',
+                    phone: '012-8882233',
+                    unit: 'E-10-1',
+                    date: '2025-12-29',
+                    status: 'Dalam Proses',
+                    details: 'Aplikasi crash ketika membuka halaman pembayaran.'
+                },
+                {
+                    id: 'ADU-006',
+                    title: 'Penghantaran barang lewat',
+                    category: 'Logistik',
+                    reporter: 'Kumar Selvam',
+                    phone: '019-5556789',
+                    unit: 'F-02-6',
+                    date: '2025-12-29',
+                    status: 'Selesai',
+                    resolvedAt: '2025-12-30',
+                    details: 'Parcel sampai 3 hari lewat daripada tarikh dijanjikan.'
                 }
-            }
-        });
-        
-        // Status Pie Chart
-        const statusCtx = document.getElementById('statusChart').getContext('2d');
-        const statusChart = new Chart(statusCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Baru', 'Dalam Proses', 'Selesai', 'Ditolak'],
-                datasets: [{
-                    data: [12, 64, 172, 0],
-                    backgroundColor: [
-                        'rgb(13, 110, 253)',
-                        'rgb(255, 193, 7)',
-                        'rgb(25, 135, 84)',
-                        'rgb(220, 53, 69)'
-                    ],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+            ];
+
+            const defaultActivity = [
+                { message: 'Siti menghantar maklum balas', time: '2025-12-31T09:10:00Z' },
+                { message: 'Aduan ADU-001 ditutup', time: '2025-12-31T08:00:00Z' },
+                { message: 'Ahmad menetapkan status ke Dalam Proses', time: '2025-12-31T06:00:00Z' }
+            ];
+
+            const refs = {
+                tableBody: document.getElementById('complaintsBody'),
+                searchBox: document.getElementById('searchAduan'),
+                filterButtons: document.querySelectorAll('.filter-btn'),
+                statToday: document.getElementById('statToday'),
+                statNew: document.getElementById('statNew'),
+                statProcess: document.getElementById('statProcess'),
+                statDone: document.getElementById('statDone'),
+                statTotal: document.getElementById('statTotal'),
+                statInProgressLarge: document.getElementById('statInProgressLarge'),
+                statDoneLarge: document.getElementById('statDoneLarge'),
+                statAvgTime: document.getElementById('statAvgTime'),
+                activityList: document.getElementById('activityList'),
+                reportBtn: document.getElementById('reportBtn'),
+                dateRangeBtn: document.getElementById('dateRangeBtn'),
+                pagination: document.getElementById('pagination'),
+                newButtons: document.querySelectorAll('.btn-new-complaint'),
+                complaintForm: document.getElementById('complaintForm'),
+                complaintModalEl: document.getElementById('complaintModal'),
+                viewModalEl: document.getElementById('viewModal'),
+                viewDetails: document.getElementById('viewDetails'),
+                viewEditBtn: document.getElementById('viewEditBtn'),
+                sidebarToggle: document.getElementById('sidebarToggle'),
+                sidebar: document.querySelector('.sidebar')
+            };
+
+            const formFields = {
+                title: document.getElementById('inputTitle'),
+                category: document.getElementById('inputCategory'),
+                reporter: document.getElementById('inputReporter'),
+                phone: document.getElementById('inputPhone'),
+                unit: document.getElementById('inputUnit'),
+                status: document.getElementById('inputStatus'),
+                date: document.getElementById('inputDate'),
+                details: document.getElementById('inputDetails')
+            };
+
+            let complaints = loadFromStorage(STORAGE_KEY, defaultComplaints);
+            let activityLog = loadFromStorage(ACTIVITY_KEY, defaultActivity);
+            let currentStatus = 'Semua';
+            let currentSearch = '';
+            let editingId = null;
+            let viewingId = null;
+            const pageSize = 5;
+            let currentPage = 1;
+
+            const complaintModal = new bootstrap.Modal(refs.complaintModalEl);
+            const viewModal = new bootstrap.Modal(refs.viewModalEl);
+
+            let trendChart;
+            let statusChart;
+            const sparkCharts = {};
+
+            initCharts();
+            renderAll();
+            bindEvents();
+
+            function loadFromStorage(key, fallback) {
+                try {
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (Array.isArray(parsed) && parsed.length) {
+                            return parsed;
+                        }
                     }
+                } catch (e) {
+                    console.warn('Gagal memuat data tersimpan', e);
                 }
+                return JSON.parse(JSON.stringify(fallback));
             }
-        });
-        
-        // Small sparklines for metric cards
-        function createSpark(id, data, color, bg) {
-            const ctx = document.getElementById(id).getContext('2d');
-            return new Chart(ctx, {
-                type: 'line',
-                data: { labels: data.map((_,i)=>i), datasets:[{ data, borderColor: color, backgroundColor: bg, tension:0.4, fill:true, pointRadius:0 }] },
-                options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{enabled:false}}, scales:{x:{display:false}, y:{display:false}} }
-            });
-        }
-        createSpark('spark1',[3,5,2,8,6,9,7],'rgb(13,110,253)','rgba(13,110,253,0.12)');
-        createSpark('spark2',[2,6,4,5,3,6,4],'rgb(255,193,7)','rgba(255,193,7,0.12)');
-        createSpark('spark3',[1,3,2,4,6,5,7],'rgb(25,135,84)','rgba(25,135,84,0.12)');
-        createSpark('spark4',[5,4,6,3,2,5,6],'rgb(102,126,234)','rgba(102,126,234,0.12)');
-        
-        // Simple activity click handler (mark read)
-        document.querySelectorAll('.activity-feed .list-group-item').forEach(li => {
-            li.addEventListener('click', () => li.classList.toggle('active'));
-        });
 
-        // Initialize Leaflet map
-        if (typeof L !== 'undefined') {
-            try {
-                const map = L.map('map', { tap: false }).setView([3.1390, 101.6869], 11);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
-
-                // Sample markers (cluster areas)
-                const markers = [
-                    {lat:3.1390, lng:101.6869, text:'#ADU-001: City Centre'},
-                    {lat:3.0738, lng:101.5183, text:'#ADU-003: Suburb'},
-                    {lat:3.2000, lng:101.6330, text:'#ADU-005: Northeast'}
-                ];
-                markers.forEach(m => L.marker([m.lat, m.lng]).addTo(map).bindPopup(`<strong>${m.text}</strong>`));
-            } catch(e) {
-                console.warn('Leaflet map failed to initialize', e);
+            function saveComplaints() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
             }
-        }
 
-        // Sidebar toggle for small screens
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', () => {
-                document.querySelector('.sidebar').classList.toggle('show');
-                sidebarToggle.setAttribute('aria-expanded', document.querySelector('.sidebar').classList.contains('show'));
-            });
-        }
+            function saveActivity() {
+                localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activityLog));
+            }
 
-        // Filter buttons functionality
-        document.querySelectorAll('.filter-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-pressed', 'false');
+            function bindEvents() {
+                refs.filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        refs.filterButtons.forEach(b => {
+                            b.classList.remove('active');
+                            b.setAttribute('aria-pressed', 'false');
+                        });
+                        btn.classList.add('active');
+                        btn.setAttribute('aria-pressed', 'true');
+                        currentStatus = btn.dataset.status;
+                        currentPage = 1;
+                        renderTable();
+                        updateStatusChart();
+                    });
                 });
-                this.classList.add('active');
-                this.setAttribute('aria-pressed', 'true');
-            });
-        });
 
-        // Improve search accessibility: focus the table when Enter is pressed
-        const searchBoxEl = document.getElementById('searchAduan');
-        if (searchBoxEl) {
-            searchBoxEl.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    document.querySelector('table').focus();
+                refs.searchBox.addEventListener('input', (e) => {
+                    currentSearch = e.target.value.toLowerCase();
+                    currentPage = 1;
+                    renderTable();
+                });
+
+
+                refs.searchBox.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        document.querySelector('table')?.focus();
+                    }
+                });
+
+                refs.newButtons.forEach(btn => btn.addEventListener('click', () => openFormModal('new')));
+
+                refs.reportBtn.addEventListener('click', () => {
+                    const rows = getFilteredComplaints();
+                    downloadReport(rows);
+                });
+
+                if (refs.dateRangeBtn) {
+                    refs.dateRangeBtn.addEventListener('click', () => {
+                        alert('Penapisan tarikh demo: gunakan carian atau status untuk menapis buat sementara.');
+                    });
                 }
-            });
-        }
-        
-        // Search functionality
-        const searchBox = document.querySelector('.search-box');
-        searchBox.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
+
+                refs.tableBody.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button[data-action]');
+                    if (!btn) return;
+                    const id = btn.dataset.id;
+                    if (btn.dataset.action === 'view') {
+                        openViewModal(id);
+                    } else if (btn.dataset.action === 'edit') {
+                        openFormModal('edit', id);
+                    } else if (btn.dataset.action === 'delete') {
+                        handleDelete(id);
+                    }
+                });
+
+                refs.complaintForm.addEventListener('submit', handleSubmitForm);
+
+                refs.viewEditBtn.addEventListener('click', () => {
+                    if (viewingId) {
+                        viewModal.hide();
+                        openFormModal('edit', viewingId);
+                    }
+                });
+
+
+                if (refs.sidebarToggle) {
+                    refs.sidebarToggle.addEventListener('click', () => {
+                        refs.sidebar.classList.toggle('show');
+                        refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
+                    });
+                }
+            }
+
+            function renderAll() {
+                currentPage = 1;
+                renderTable();
+                renderStats();
+                updateCharts();
+                renderActivity();
+            }
+
+            function getFilteredComplaints() {
+                return complaints.filter(c => {
+                    const statusMatch = currentStatus === 'Semua' ? true : c.status === currentStatus;
+                    const searchMatch = currentSearch
+                        ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details}`.toLowerCase().includes(currentSearch)
+                        : true;
+                    return statusMatch && searchMatch;
+                });
+            }
+
+            function renderTable() {
+                const rows = getFilteredComplaints();
+                const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+                if (currentPage > totalPages) currentPage = totalPages;
+                const start = (currentPage - 1) * pageSize;
+                const pageRows = rows.slice(start, start + pageSize);
+
+                if (!pageRows.length) {
+                    refs.tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
+                    renderPagination(1);
+                    return;
+                }
+
+                refs.tableBody.innerHTML = pageRows.map(c => {
+                    const statusBadge = getStatusBadge(c.status);
+                    const formattedDate = formatDisplayDate(c.date);
+                    return `
+                        <tr>
+                            <td><strong>#${c.id}</strong></td>
+                            <td>${c.title}</td>
+                            <td><span class="badge bg-light text-dark border">${c.category}</span></td>
+                            <td>${c.reporter}</td>
+                            <td>${c.phone || '-'}</td>
+                            <td>${c.unit || '-'}</td>
+                            <td>${formattedDate}</td>
+                            <td>${statusBadge}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                renderPagination(totalPages);
+            }
+
+            function renderPagination(totalPages) {
+                if (!refs.pagination) return;
+                const createItem = (label, page, disabled, active) => `
+                    <li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${page}" aria-label="Halaman ${label}">${label}</a>
+                    </li>`;
+
+                const items = [];
+                items.push(createItem('Sebelum', Math.max(1, currentPage - 1), currentPage === 1, false));
+                for (let i = 1; i <= totalPages; i++) {
+                    items.push(createItem(i, i, false, currentPage === i));
+                }
+                items.push(createItem('Seterusnya', Math.min(totalPages, currentPage + 1), currentPage === totalPages, false));
+
+                refs.pagination.innerHTML = items.join('');
+
+                refs.pagination.querySelectorAll('a[data-page]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetPage = Number(link.dataset.page);
+                        if (Number.isNaN(targetPage)) return;
+                        if (targetPage < 1 || targetPage > totalPages) return;
+                        currentPage = targetPage;
+                        renderTable();
+                    });
+                });
+            }
+
+            function renderStats() {
+                const todayStr = new Date().toISOString().slice(0, 10);
+                const todayCount = complaints.filter(c => c.date === todayStr).length;
+                const newCount = complaints.filter(c => c.status === 'Baru').length;
+                const processCount = complaints.filter(c => c.status === 'Dalam Proses').length;
+                const doneCount = complaints.filter(c => c.status === 'Selesai').length;
+                const avgResolution = calculateAverageResolutionDays();
+
+                refs.statToday.textContent = todayCount;
+                refs.statNew.textContent = newCount;
+                refs.statProcess.textContent = processCount;
+                refs.statDone.textContent = doneCount;
+
+                refs.statTotal.textContent = complaints.length;
+                refs.statInProgressLarge.textContent = processCount;
+                refs.statDoneLarge.textContent = doneCount;
+                refs.statAvgTime.textContent = avgResolution;
+            }
+
+            function calculateAverageResolutionDays() {
+                const resolved = complaints.filter(c => c.status === 'Selesai' && c.resolvedAt);
+                if (!resolved.length) return '-';
+                const totalDays = resolved.reduce((sum, c) => sum + daysBetween(c.date, c.resolvedAt), 0);
+                return (totalDays / resolved.length).toFixed(1);
+            }
+
+            function daysBetween(start, end) {
+                const a = new Date(start);
+                const b = new Date(end || Date.now());
+                return Math.max(0, (b - a) / (1000 * 60 * 60 * 24));
+            }
+
+            function renderActivity() {
+                const sorted = [...activityLog].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5);
+                if (!sorted.length) {
+                    refs.activityList.innerHTML = '<li class="list-group-item text-muted">Tiada aktiviti direkodkan.</li>';
+                    return;
+                }
+                refs.activityList.innerHTML = sorted.map(item => `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>${item.message}</span>
+                        <small class="text-muted">${timeAgo(item.time)}</small>
+                    </li>
+                `).join('');
+            }
+
+            function addActivity(message) {
+                activityLog.push({ message, time: new Date().toISOString() });
+                saveActivity();
+                renderActivity();
+            }
+
+            function openFormModal(mode, id) {
+                editingId = mode === 'edit' ? id : null;
+                refs.complaintForm.classList.remove('was-validated');
+                document.getElementById('complaintModalLabel').textContent = mode === 'edit' ? 'Edit Aduan' : 'Aduan Baru';
+                document.getElementById('submitComplaintBtn').textContent = mode === 'edit' ? 'Kemaskini' : 'Simpan';
+
+                if (mode === 'edit' && id) {
+                    const data = complaints.find(c => c.id === id);
+                    if (data) {
+                        formFields.title.value = data.title;
+                        formFields.category.value = data.category;
+                        formFields.reporter.value = data.reporter;
+                        formFields.status.value = data.status;
+                        formFields.phone.value = data.phone || '';
+                        formFields.unit.value = data.unit || '';
+                        formFields.date.value = data.date;
+                        formFields.details.value = data.details || '';
+                    }
+                } else {
+                    refs.complaintForm.reset();
+                    const today = new Date().toISOString().slice(0, 10);
+                    formFields.date.value = today;
+                    formFields.status.value = 'Baru';
+                }
+
+                complaintModal.show();
+            }
+
+            function handleSubmitForm(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const form = refs.complaintForm;
+
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+
+                const payload = collectFormData();
+
+                if (editingId) {
+                    const idx = complaints.findIndex(c => c.id === editingId);
+                    if (idx !== -1) {
+                        const prevStatus = complaints[idx].status;
+                        complaints[idx] = { ...complaints[idx], ...payload };
+                        if (payload.status === 'Selesai' && !complaints[idx].resolvedAt) {
+                            complaints[idx].resolvedAt = new Date().toISOString().slice(0, 10);
+                        }
+                        if (prevStatus !== payload.status) {
+                            addActivity(`Status ${payload.id} ditukar kepada ${payload.status}`);
+                        }
+                    }
+                    addActivity(`Aduan ${payload.id} dikemaskini`);
+                } else {
+                    complaints.unshift(payload);
+                    if (payload.status === 'Selesai') {
+                        payload.resolvedAt = new Date().toISOString().slice(0, 10);
+                    }
+                    addActivity(`Aduan ${payload.id} ditambah oleh ${payload.reporter}`);
+                }
+
+                saveComplaints();
+                renderAll();
+                complaintModal.hide();
+                editingId = null;
+            }
+
+            function collectFormData() {
+                const id = editingId || generateId();
+                const status = formFields.status.value;
+                const dateValue = formFields.date.value || new Date().toISOString().slice(0, 10);
+                return {
+                    id,
+                    title: formFields.title.value.trim(),
+                    category: formFields.category.value,
+                    reporter: formFields.reporter.value.trim(),
+                    phone: formFields.phone.value.trim(),
+                    unit: formFields.unit.value.trim(),
+                    date: dateValue,
+                    status,
+                    details: formFields.details.value.trim()
+                };
+            }
+
+            function openViewModal(id) {
+                const data = complaints.find(c => c.id === id);
+                viewingId = id;
+                if (!data) return;
+
+                refs.viewDetails.innerHTML = `
+                    <div class="col-md-4"><small class="text-muted">ID Aduan</small><div class="fw-bold">${data.id}</div></div>
+                    <div class="col-md-4"><small class="text-muted">Tarikh</small><div class="fw-bold">${formatDisplayDate(data.date)}</div></div>
+                    <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${data.status}</div></div>
+                    <div class="col-md-6"><small class="text-muted">Tajuk</small><div class="fw-bold">${data.title}</div></div>
+                    <div class="col-md-6"><small class="text-muted">Kategori</small><div class="fw-bold">${data.category}</div></div>
+                    <div class="col-md-6"><small class="text-muted">Pengadu</small><div class="fw-bold">${data.reporter}</div></div>
+                    <div class="col-md-6"><small class="text-muted">No. Telefon</small><div class="fw-bold">${data.phone || '-'}</div></div>
+                    <div class="col-md-6"><small class="text-muted">Unit Rumah</small><div class="fw-bold">${data.unit || '-'}</div></div>
+                    <div class="col-12"><small class="text-muted">Butiran</small><div class="border rounded p-3 bg-light">${data.details || '-'}</div></div>
+                `;
+
+                viewModal.show();
+            }
+
+            function handleDelete(id) {
+                const confirmDelete = window.confirm('Padam aduan ini? Tindakan tidak boleh diundur.');
+                if (!confirmDelete) return;
+                complaints = complaints.filter(c => c.id !== id);
+                saveComplaints();
+                addActivity(`Aduan ${id} dipadam`);
+                renderAll();
+            }
+
+            function downloadReport(rows) {
+                if (!rows.length) {
+                    alert('Tiada data untuk dijana.');
+                    return;
+                }
+                const header = ['ID', 'Tajuk', 'Kategori', 'Pengadu', 'Telefon', 'Unit', 'Tarikh', 'Status'];
+                const csvRows = [header.join(',')];
+                rows.forEach(r => {
+                    const line = [r.id, r.title, r.category, r.reporter, r.phone || '-', r.unit || '-', r.date, r.status]
+                        .map(value => `"${String(value || '').replace(/"/g, '""')}"`)
+                        .join(',');
+                    csvRows.push(line);
+                });
+                const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `laporan-aduan-${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                addActivity('Laporan CSV dijana');
+            }
+
+            function initCharts() {
+                const trendCtx = document.getElementById('trendChart').getContext('2d');
+                const statusCtx = document.getElementById('statusChart').getContext('2d');
+
+                trendChart = new Chart(trendCtx, {
+                    type: 'line',
+                    data: { labels: [], datasets: [
+                        { label: 'Aduan Baru', data: [], borderColor: 'rgb(102, 126, 234)', backgroundColor: 'rgba(102, 126, 234, 0.12)', tension: 0.4, fill: true },
+                        { label: 'Selesai', data: [], borderColor: 'rgb(25, 135, 84)', backgroundColor: 'rgba(25, 135, 84, 0.12)', tension: 0.4, fill: true }
+                    ]},
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+                });
+
+                statusChart = new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: { labels: ['Baru', 'Dalam Proses', 'Selesai', 'Ditolak'], datasets: [{ data: [0,0,0,0], backgroundColor: [
+                        'rgb(13, 110, 253)','rgb(255, 193, 7)','rgb(25, 135, 84)','rgb(220, 53, 69)'], borderWidth: 2, borderColor: '#fff' }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                sparkCharts.spark1 = createSpark('spark1', [0], 'rgb(13,110,253)', 'rgba(13,110,253,0.12)');
+                sparkCharts.spark2 = createSpark('spark2', [0], 'rgb(255,193,7)', 'rgba(255,193,7,0.12)');
+                sparkCharts.spark3 = createSpark('spark3', [0], 'rgb(25,135,84)', 'rgba(25,135,84,0.12)');
+                sparkCharts.spark4 = createSpark('spark4', [0], 'rgb(102,126,234)', 'rgba(102,126,234,0.12)');
+            }
+
+            function updateCharts() {
+                const trendSeries = buildTrendSeries();
+                trendChart.data.labels = trendSeries.labels;
+                trendChart.data.datasets[0].data = trendSeries.newCounts;
+                trendChart.data.datasets[1].data = trendSeries.doneCounts;
+                trendChart.update();
+
+                updateStatusChart();
+                updateSparklines(trendSeries);
+            }
+
+            function updateStatusChart() {
+                const counts = {
+                    Baru: 0,
+                    'Dalam Proses': 0,
+                    Selesai: 0,
+                    Ditolak: 0
+                };
+                getFilteredComplaints().forEach(c => counts[c.status] = (counts[c.status] || 0) + 1);
+                statusChart.data.datasets[0].data = [counts.Baru, counts['Dalam Proses'], counts.Selesai, counts.Ditolak];
+                statusChart.update();
+            }
+
+            function buildTrendSeries() {
+                const labels = [];
+                const newCounts = [];
+                const doneCounts = [];
+                const processCounts = [];
+                const totalCounts = [];
+                const today = new Date();
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    const iso = d.toISOString().slice(0, 10);
+                    labels.push(formatShortDate(d));
+                    const dayComplaints = complaints.filter(c => c.date === iso);
+                    newCounts.push(dayComplaints.length);
+                    doneCounts.push(complaints.filter(c => c.resolvedAt === iso).length);
+                    processCounts.push(dayComplaints.filter(c => c.status === 'Dalam Proses').length);
+                    totalCounts.push(dayComplaints.length);
+                }
+                return { labels, newCounts, doneCounts, processCounts, totalCounts };
+            }
+
+            function updateSparklines(trendSeries) {
+                sparkCharts.spark1.data.datasets[0].data = trendSeries.newCounts;
+                sparkCharts.spark1.update();
+                sparkCharts.spark2.data.datasets[0].data = trendSeries.doneCounts;
+                sparkCharts.spark2.update();
+                sparkCharts.spark3.data.datasets[0].data = trendSeries.processCounts;
+                sparkCharts.spark3.update();
+                sparkCharts.spark4.data.datasets[0].data = trendSeries.totalCounts;
+                sparkCharts.spark4.update();
+            }
+
+            function createSpark(id, data, color, bg) {
+                const ctx = document.getElementById(id).getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: data.map((_, i) => i), datasets: [{ data, borderColor: color, backgroundColor: bg, tension: 0.4, fill: true, pointRadius: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+                });
+            }
+
+            function formatDisplayDate(dateStr) {
+                const d = new Date(dateStr);
+                if (Number.isNaN(d.getTime())) return dateStr;
+                return d.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            function formatShortDate(dateObj) {
+                return dateObj.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' });
+            }
+
+            function getStatusBadge(status) {
+                const map = {
+                    Baru: 'bg-primary',
+                    'Dalam Proses': 'bg-warning text-dark',
+                    Selesai: 'bg-success',
+                    Ditolak: 'bg-danger'
+                };
+                return `<span class="badge badge-status ${map[status] || 'bg-secondary'}">${status}</span>`;
+            }
+
+            function timeAgo(dateStr) {
+                const diffMs = Date.now() - new Date(dateStr).getTime();
+                const minutes = Math.floor(diffMs / (1000 * 60));
+                if (minutes < 1) return 'baru';
+                if (minutes < 60) return `${minutes} min lepas`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours} jam lepas`;
+                const days = Math.floor(hours / 24);
+                return `${days} hari lepas`;
+            }
+
+            function generateId() {
+                const now = new Date();
+                const parts = [now.getFullYear().toString().slice(-2), (now.getMonth() + 1).toString().padStart(2, '0'), now.getDate().toString().padStart(2, '0'), now.getHours().toString().padStart(2, '0'), now.getMinutes().toString().padStart(2, '0')];
+                return `ADU-${parts.join('')}`;
+            }
+
         });
     </script>
 </body>
