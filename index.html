@@ -61,6 +61,12 @@
             min-height: 170px;
         }
 
+        .stat-number {
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
         /* Colorful accents for the top metric widgets; mimic border-start thickness */
         .spark-card {
             --spark-accent: #4f46e5;
@@ -97,8 +103,60 @@
             display: block;
         }
 
+        .combined-charts-section .status-col {
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .combined-charts-section .status-chart-wrap {
+            max-width: 260px;
+            margin: 0 auto;
+        }
+
+        .analytics-panels-row > [class*="col-"] {
+            display: flex;
+        }
+
+        .analytics-panels-row .panel-card {
+            width: 100%;
+            height: 100%;
+        }
+
+        .analytics-panels-row .activity-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analytics-panels-row .activity-panel .activity-feed {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            margin-bottom: 0;
+        }
+
         .search-box { border-radius: 24px; padding: 10px 16px; }
+        .category-select { border-radius: 20px; min-width: 180px; }
         .filter-btn { border-radius: 20px; padding: 8px 16px; }
+
+        .aduan-toolbar-controls {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .aduan-toolbar-controls .search-box {
+            width: 250px;
+            min-width: 250px;
+        }
+
+        .aduan-toolbar-controls .category-select {
+            width: 180px;
+            min-width: 180px;
+        }
+
+        .aduan-toolbar-controls .btn-group {
+            flex: 0 0 auto;
+        }
 
         .table-responsive {
             background: #ffffff;
@@ -109,6 +167,155 @@
         }
 
         .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+        /* Compact mode for Dashboard Aduan */
+        .compact-dashboard {
+            padding: 14px;
+        }
+
+        .compact-dashboard .card,
+        .compact-dashboard .chart-container,
+        .compact-dashboard .table-responsive {
+            border-radius: 10px;
+        }
+
+        .compact-dashboard .stat-card .card-body {
+            min-height: 124px;
+            padding: 0.75rem 0.85rem;
+        }
+
+        .compact-dashboard .spark-card {
+            border-left-width: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .compact-dashboard .spark-card .card-body {
+            min-height: 0;
+            padding: 0.42rem 0.58rem;
+        }
+
+        .compact-dashboard .spark-card .stat-number {
+            font-size: 1.28rem;
+        }
+
+        .compact-dashboard .sparkline-wrap {
+            width: 48px;
+            height: 24px;
+            flex: 0 0 48px;
+        }
+
+        .compact-dashboard .sparkline {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .compact-dashboard .chart-container {
+            padding: 12px;
+        }
+
+        .compact-dashboard h2 {
+            font-size: 1.35rem;
+        }
+
+        .compact-dashboard h5 {
+            font-size: 1rem;
+        }
+
+        .compact-dashboard h6 {
+            font-size: 0.85rem;
+        }
+
+        .compact-dashboard .top-toolbar .btn {
+            padding: 0.25rem 0.55rem;
+            font-size: 0.82rem;
+        }
+
+        .compact-dashboard .search-box {
+            padding: 7px 12px;
+            border-radius: 18px;
+        }
+
+        .compact-dashboard .category-select {
+            min-width: 165px;
+            padding: 6px 10px;
+            font-size: 0.84rem;
+            border-radius: 18px;
+        }
+
+        .compact-dashboard .aduan-toolbar-controls {
+            gap: 0.4rem;
+        }
+
+        .compact-dashboard .aduan-toolbar-controls .search-box {
+            width: 220px;
+            min-width: 220px;
+        }
+
+        .compact-dashboard .aduan-toolbar-controls .category-select {
+            width: 165px;
+            min-width: 165px;
+        }
+
+        .compact-dashboard .filter-btn {
+            padding: 6px 12px;
+            font-size: 0.84rem;
+        }
+
+        .compact-dashboard .table-responsive {
+            padding: 10px;
+        }
+
+        .compact-dashboard .table > :not(caption) > * > * {
+            padding: 0.45rem 0.5rem;
+            font-size: 0.86rem;
+        }
+
+        .compact-dashboard .badge-status {
+            padding: 4px 9px;
+            font-size: 0.76rem;
+        }
+
+        .compact-dashboard .activity-feed .list-group-item {
+            padding: 0.45rem 0.6rem;
+            font-size: 0.86rem;
+        }
+
+        .compact-dashboard .pagination {
+            margin-bottom: 0;
+        }
+
+        .compact-dashboard #trendChart {
+            height: 190px !important;
+        }
+
+        .compact-dashboard #statusChart {
+            max-height: 220px !important;
+        }
+
+        .compact-dashboard .chart-container.chart-sm canvas {
+            max-width: 240px;
+            max-height: 240px;
+        }
+
+        .compact-dashboard .combined-charts-section .status-chart-wrap {
+            max-width: 210px;
+        }
+
+        .compact-dashboard .row.g-4 {
+            --bs-gutter-x: 0.85rem;
+            --bs-gutter-y: 0.85rem;
+        }
+
+        .compact-dashboard .row.g-3 {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+
+        .compact-dashboard .mb-4 {
+            margin-bottom: 0.95rem !important;
+        }
 
         .skip-link {
             position: absolute;
@@ -131,11 +338,135 @@
             z-index: 2000;
         }
 
+        .complaint-modal-compact .modal-content {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .complaint-modal-compact .modal-header {
+            padding: 0.62rem 0.8rem;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .complaint-modal-compact .modal-title {
+            font-size: 0.98rem;
+            font-weight: 600;
+        }
+
+        .complaint-modal-compact .modal-body {
+            padding: 0.72rem 0.8rem;
+        }
+
+        .complaint-modal-compact .modal-footer {
+            padding: 0.62rem 0.8rem;
+            border-top: 1px solid #edf0f5;
+            gap: 0.4rem;
+        }
+
+        .complaint-modal-compact .row {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+        .complaint-modal-compact .form-label {
+            margin-bottom: 0.22rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .complaint-modal-compact .form-control,
+        .complaint-modal-compact .form-select {
+            padding: 0.38rem 0.55rem;
+            font-size: 0.84rem;
+            min-height: calc(1.5em + 0.72rem + 2px);
+        }
+
+        .complaint-modal-compact textarea.form-control {
+            min-height: 78px;
+            resize: vertical;
+        }
+
+        .complaint-modal-compact .form-text,
+        .complaint-modal-compact .invalid-feedback {
+            margin-top: 0.2rem;
+            font-size: 0.72rem;
+        }
+
+        .complaint-modal-compact .btn {
+            padding: 0.34rem 0.68rem;
+            font-size: 0.82rem;
+        }
+
+        .unit-summary-trigger {
+            font-size: 0.83rem;
+            font-weight: 600;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .unit-summary-trigger:hover,
+        .unit-summary-trigger:focus-visible {
+            text-decoration: underline;
+        }
+
+        .unit-summary-modal .summary-tile {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.5rem 0.58rem;
+            height: 100%;
+        }
+
+        .unit-summary-modal .summary-label {
+            display: block;
+            margin-bottom: 0.12rem;
+            font-size: 0.72rem;
+            color: #6b7280;
+        }
+
+        .unit-summary-modal .summary-value {
+            font-size: 1.04rem;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        .unit-summary-modal .table > :not(caption) > * > * {
+            padding: 0.42rem 0.45rem;
+            font-size: 0.83rem;
+        }
+
+        @media (max-width: 768px) {
+            .complaint-modal-compact .modal-body,
+            .complaint-modal-compact .modal-header,
+            .complaint-modal-compact .modal-footer {
+                padding-left: 0.68rem;
+                padding-right: 0.68rem;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .combined-charts-section .status-col {
+                border-left: 0;
+                border-top: 1px solid #e5e7eb;
+                margin-top: 0.25rem;
+                padding-top: 0.75rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar { width: 0; overflow: hidden; }
             .sidebar.show { width: var(--sidebar-width); }
             .main-content { margin-left: 0; padding: 16px; }
+            .compact-dashboard { padding: 10px; }
+            .compact-dashboard .table-responsive { padding: 8px; }
+            .compact-dashboard .table > :not(caption) > * > * { font-size: 0.8rem; }
         }
+
     </style>
 </head>
 <body>
@@ -154,7 +485,7 @@
                 </button>
                 <div class="collapse show" id="aduanMenu">
                     <a class="nav-link active ps-4" href="#main-content">Dashboard Aduan</a>
-                    <a class="nav-link ps-4" href="sub-aduan.html">Sub Aduan</a>
+                    <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
             <div class="nav-item">
@@ -186,20 +517,20 @@
 
     <!-- Modals -->
     <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered complaint-modal-compact">
             <form class="modal-content needs-validation" id="complaintForm" novalidate>
                 <div class="modal-header">
                     <h5 class="modal-title" id="complaintModalLabel">Aduan Baru</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
+                    <div class="row g-2">
+                        <div class="col-md-8">
                             <label class="form-label" for="inputTitle">Tajuk Aduan</label>
                             <input type="text" class="form-control" id="inputTitle" placeholder="Contoh: Sistem pembayaran gagal" required>
                             <div class="invalid-feedback">Sila masukkan tajuk.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputCategory">Kategori</label>
                             <select class="form-select" id="inputCategory" required>
                                 <option value="" disabled selected>Pilih kategori</option>
@@ -211,22 +542,22 @@
                             </select>
                             <div class="invalid-feedback">Pilih kategori.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputReporter">Nama Pengadu</label>
                             <input type="text" class="form-control" id="inputReporter" placeholder="Nama pengadu" required>
                             <div class="invalid-feedback">Masukkan nama pengadu.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputPhone">No. Telefon Pengadu</label>
                             <input type="tel" class="form-control" id="inputPhone" placeholder="Contoh: 012-3456789" required>
                             <div class="invalid-feedback">Masukkan nombor telefon.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputUnit">Unit Rumah Pengadu</label>
                             <input type="text" class="form-control" id="inputUnit" placeholder="Contoh: B-12-3" required>
                             <div class="invalid-feedback">Isi unit rumah.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputStatus">Status</label>
                             <select class="form-select" id="inputStatus" required>
                                 <option value="" disabled selected>Pilih status</option>
@@ -237,7 +568,7 @@
                             </select>
                             <div class="invalid-feedback">Pilih status.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="inputDate">Tarikh Terima</label>
                             <input type="date" class="form-control" id="inputDate" required>
                             <div class="form-text">Pilih tarikh terima (lalai hari ini).</div>
@@ -245,7 +576,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label" for="inputDetails">Butiran Aduan</label>
-                            <textarea class="form-control" id="inputDetails" rows="3" placeholder="Nyatakan butiran aduan" required></textarea>
+                            <textarea class="form-control" id="inputDetails" rows="2" placeholder="Nyatakan butiran aduan" required></textarea>
                             <div class="invalid-feedback">Isi butiran aduan.</div>
                         </div>
                     </div>
@@ -276,9 +607,40 @@
         </div>
     </div>
 
+    <div class="modal fade" id="unitSummaryModal" tabindex="-1" aria-labelledby="unitSummaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content unit-summary-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unitSummaryModalLabel">Ringkasan Unit: <span id="unitSummaryName">-</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2 mb-2" id="unitSummaryStats"></div>
+                    <div class="table-responsive border rounded-3 p-2">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID Aduan</th>
+                                    <th>Tajuk</th>
+                                    <th>Tarikh</th>
+                                    <th>Status</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unitSummaryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <!-- Main Content -->
-    <div class="main-content" id="main-content" role="main" aria-label="Dashboard utama">
+    <div class="main-content compact-dashboard" id="main-content" role="main" aria-label="Dashboard utama">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
@@ -297,7 +659,7 @@
         </div>
 
         <!-- Small Metric Widgets (sparklines) -->
-        <div class="row g-4 mb-4 align-items-stretch">
+        <div class="row g-3 mb-3 align-items-stretch">
             <div class="col-md-3 col-sm-6">
                 <div class="card stat-card card-light spark-card accent-indigo h-100">
                     <div class="card-body">
@@ -306,7 +668,7 @@
                                 <small class="text-muted">Aduan Hari Ini</small>
                                 <div class="stat-number" id="statToday">0</div>
                             </div>
-                            <div style="width:80px"><canvas id="spark1" class="sparkline"></canvas></div>
+                            <div class="sparkline-wrap"><canvas id="spark1" class="sparkline"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -319,7 +681,7 @@
                                 <small class="text-muted">Baru</small>
                                 <div class="stat-number" id="statNew">0</div>
                             </div>
-                            <div style="width:80px"><canvas id="spark2" class="sparkline"></canvas></div>
+                            <div class="sparkline-wrap"><canvas id="spark2" class="sparkline"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -332,7 +694,7 @@
                                 <small class="text-muted">Dalam Proses</small>
                                 <div class="stat-number" id="statProcess">0</div>
                             </div>
-                            <div style="width:80px"><canvas id="spark3" class="sparkline"></canvas></div>
+                            <div class="sparkline-wrap"><canvas id="spark3" class="sparkline"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -345,7 +707,7 @@
                                 <small class="text-muted">Selesai</small>
                                 <div class="stat-number" id="statDone">0</div>
                             </div>
-                            <div style="width:80px"><canvas id="spark4" class="sparkline"></canvas></div>
+                            <div class="sparkline-wrap"><canvas id="spark4" class="sparkline"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -353,7 +715,7 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="row g-4 mb-4">
+        <div class="row g-3 mb-3">
             <div class="col-md-3 col-sm-6">
                 <div class="card stat-card border-start border-primary border-4">
                     <div class="card-body">
@@ -432,19 +794,25 @@
         </div>
         
         <!-- Charts Row (blended) -->
-        <div class="row g-4 mb-4">
+        <div class="row g-3 mb-3 analytics-panels-row align-items-stretch">
             <div class="col-lg-8">
-                <div class="chart-container mb-3">
-                    <h5 class="mb-3">Trend Aduan (7 Hari Terakhir)</h5>
-                    <canvas id="trendChart"></canvas>
-                </div>
-                <div class="card chart-container chart-sm text-center">
-                    <h5 class="mb-3">Status Aduan</h5>
-                    <canvas id="statusChart"></canvas>
+                <div class="chart-container combined-charts-section panel-card">
+                    <div class="row g-3 align-items-stretch">
+                        <div class="col-lg-8">
+                            <h5 class="mb-3">Trend Aduan (7 Hari Terakhir)</h5>
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                        <div class="col-lg-4 text-center status-col">
+                            <h5 class="mb-3">Status Aduan</h5>
+                            <div class="status-chart-wrap">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card chart-container mb-3">
+                <div class="card chart-container activity-panel panel-card">
                     <h6 class="mb-3">Aktiviti Terkini</h6>
                     <ul class="list-group activity-feed" id="activityList"></ul>
                 </div>
@@ -453,11 +821,15 @@
         
         <!-- Complaints Table -->
         <div class="table-responsive">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <h5>Aduan Terkini</h5>
-                <div class="d-flex gap-2">
+                <div class="aduan-toolbar-controls">
                     <label for="searchAduan" class="visually-hidden-focusable">Cari aduan</label>
-                    <input type="text" class="form-control search-box" id="searchAduan" aria-label="Cari aduan" placeholder="Cari aduan..." style="width: 300px;">
+                    <input type="text" class="form-control search-box" id="searchAduan" aria-label="Cari aduan" placeholder="Cari aduan...">
+                    <label for="categoryFilter" class="visually-hidden-focusable">Tapis kategori</label>
+                    <select class="form-select category-select" id="categoryFilter" aria-label="Tapis kategori">
+                        <option value="Semua">Kategori: Semua</option>
+                    </select>
                     <div class="btn-group">
                         <button class="btn btn-outline-primary filter-btn active" data-status="Semua" aria-pressed="true">Semua</button>
                         <button class="btn btn-outline-primary filter-btn" data-status="Baru" aria-pressed="false">Baru</button>
@@ -479,6 +851,7 @@
                         <th>Unit</th>
                         <th>Tarikh</th>
                         <th>Status</th>
+                        <th>Tindakan</th>
                     </tr>
                 </thead>
                 <tbody id="complaintsBody"></tbody>
@@ -493,85 +866,21 @@
     
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard-store.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     
     <!-- Chart.js & App Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const STORAGE_KEY = 'aduanDashboardData';
-            const ACTIVITY_KEY = 'aduanDashboardActivity';
+            const store = window.DashboardStore;
 
-            const defaultComplaints = [
-                {
-                    id: 'ADU-001',
-                    title: 'Masalah sistem pembayaran tidak berfungsi',
-                    category: 'Teknikal',
-                    reporter: 'Ahmad Ali',
-                    phone: '012-3456789',
-                    unit: 'B-12-3',
-                    date: '2025-12-31',
-                    status: 'Dalam Proses',
-                    details: 'Transaksi gagal diproses selepas kemas kini aplikasi.'
-                },
-                {
-                    id: 'ADU-002',
-                    title: 'Perkhidmatan pelanggan lambat bertindak',
-                    category: 'Perkhidmatan',
-                    reporter: 'Siti Nurhaliza',
-                    phone: '013-1112233',
-                    unit: 'A-03-8',
-                    date: '2025-12-31',
-                    status: 'Baru',
-                    details: 'Pertanyaan tidak dijawab selama lebih 48 jam.'
-                },
-                {
-                    id: 'ADU-003',
-                    title: 'Kualiti produk tidak memuaskan',
-                    category: 'Produk',
-                    reporter: 'Mohd Razak',
-                    phone: '017-2233445',
-                    unit: 'D-07-15',
-                    date: '2025-12-30',
-                    status: 'Dalam Proses',
-                    details: 'Produk diterima rosak dengan kemasan tidak lengkap.'
-                },
-                {
-                    id: 'ADU-004',
-                    title: 'Permintaan maklumat tambahan',
-                    category: 'Pertanyaan',
-                    reporter: 'Fatimah Zahra',
-                    phone: '016-9090909',
-                    unit: 'C-05-2',
-                    date: '2025-12-30',
-                    status: 'Selesai',
-                    resolvedAt: '2025-12-31',
-                    details: 'Memerlukan spesifikasi lanjut berkenaan produk terbaru.'
-                },
-                {
-                    id: 'ADU-005',
-                    title: 'Aplikasi mudah alih sering tergendala',
-                    category: 'Teknikal',
-                    reporter: 'Lim Wei Jian',
-                    phone: '012-8882233',
-                    unit: 'E-10-1',
-                    date: '2025-12-29',
-                    status: 'Dalam Proses',
-                    details: 'Aplikasi crash ketika membuka halaman pembayaran.'
-                },
-                {
-                    id: 'ADU-006',
-                    title: 'Penghantaran barang lewat',
-                    category: 'Logistik',
-                    reporter: 'Kumar Selvam',
-                    phone: '019-5556789',
-                    unit: 'F-02-6',
-                    date: '2025-12-29',
-                    status: 'Selesai',
-                    resolvedAt: '2025-12-30',
-                    details: 'Parcel sampai 3 hari lewat daripada tarikh dijanjikan.'
-                }
-            ];
+            if (!store) {
+                console.error('DashboardStore tidak ditemui. Pastikan dashboard-store.js dimuatkan.');
+                return;
+            }
+
+            const ACTIVITY_KEY = store.STORAGE_KEYS.activity;
 
             const defaultActivity = [
                 { message: 'Siti menghantar maklum balas', time: '2025-12-31T09:10:00Z' },
@@ -582,6 +891,7 @@
             const refs = {
                 tableBody: document.getElementById('complaintsBody'),
                 searchBox: document.getElementById('searchAduan'),
+                categoryFilter: document.getElementById('categoryFilter'),
                 filterButtons: document.querySelectorAll('.filter-btn'),
                 statToday: document.getElementById('statToday'),
                 statNew: document.getElementById('statNew'),
@@ -601,6 +911,10 @@
                 viewModalEl: document.getElementById('viewModal'),
                 viewDetails: document.getElementById('viewDetails'),
                 viewEditBtn: document.getElementById('viewEditBtn'),
+                unitSummaryModalEl: document.getElementById('unitSummaryModal'),
+                unitSummaryName: document.getElementById('unitSummaryName'),
+                unitSummaryStats: document.getElementById('unitSummaryStats'),
+                unitSummaryBody: document.getElementById('unitSummaryBody'),
                 sidebarToggle: document.getElementById('sidebarToggle'),
                 sidebar: document.querySelector('.sidebar')
             };
@@ -616,9 +930,10 @@
                 details: document.getElementById('inputDetails')
             };
 
-            let complaints = loadFromStorage(STORAGE_KEY, defaultComplaints);
+            let complaints = store.loadComplaints();
             let activityLog = loadFromStorage(ACTIVITY_KEY, defaultActivity);
             let currentStatus = 'Semua';
+            let currentCategory = 'Semua';
             let currentSearch = '';
             let editingId = null;
             let viewingId = null;
@@ -627,6 +942,7 @@
 
             const complaintModal = new bootstrap.Modal(refs.complaintModalEl);
             const viewModal = new bootstrap.Modal(refs.viewModalEl);
+            const unitSummaryModal = refs.unitSummaryModalEl ? new bootstrap.Modal(refs.unitSummaryModalEl) : null;
 
             let trendChart;
             let statusChart;
@@ -652,7 +968,7 @@
             }
 
             function saveComplaints() {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
+                complaints = store.saveComplaints(complaints);
             }
 
             function saveActivity() {
@@ -681,6 +997,13 @@
                     renderTable();
                 });
 
+                refs.categoryFilter?.addEventListener('change', (e) => {
+                    currentCategory = e.target.value || 'Semua';
+                    currentPage = 1;
+                    renderTable();
+                    updateStatusChart();
+                });
+
 
                 refs.searchBox.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
@@ -703,15 +1026,34 @@
 
                 refs.tableBody.addEventListener('click', (e) => {
                     const btn = e.target.closest('button[data-action]');
-                    if (!btn) return;
-                    const id = btn.dataset.id;
-                    if (btn.dataset.action === 'view') {
-                        openViewModal(id);
-                    } else if (btn.dataset.action === 'edit') {
-                        openFormModal('edit', id);
-                    } else if (btn.dataset.action === 'delete') {
-                        handleDelete(id);
+                    if (btn) {
+                        const id = btn.dataset.id;
+                        if (btn.dataset.action === 'view') {
+                            openViewModal(id);
+                        } else if (btn.dataset.action === 'edit') {
+                            openFormModal('edit', id);
+                        } else if (btn.dataset.action === 'delete') {
+                            handleDelete(id);
+                        }
+                        return;
                     }
+
+                    const unitBtn = e.target.closest('button[data-unit-action="summary"]');
+                    if (!unitBtn) return;
+                    openUnitSummaryModal(safeDecodeURIComponent(unitBtn.dataset.unit || ''));
+                });
+
+                refs.unitSummaryBody?.addEventListener('click', (e) => {
+                    const viewBtn = e.target.closest('button[data-unit-view-id]');
+                    if (!viewBtn) return;
+                    unitSummaryModal?.hide();
+                    openViewModal(viewBtn.dataset.unitViewId);
+                });
+
+                refs.unitSummaryModalEl?.addEventListener('hidden.bs.modal', () => {
+                    refs.unitSummaryBody.innerHTML = '';
+                    refs.unitSummaryStats.innerHTML = '';
+                    refs.unitSummaryName.textContent = '-';
                 });
 
                 refs.complaintForm.addEventListener('submit', handleSubmitForm);
@@ -730,23 +1072,64 @@
                         refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
                     });
                 }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) refreshComplaints();
+                });
+
+                window.addEventListener('storage', (event) => {
+                    if (event.key === store.STORAGE_KEYS.complaints) {
+                        refreshComplaints();
+                    }
+                });
+            }
+
+            function refreshComplaints() {
+                complaints = store.loadComplaints();
+                renderAll();
             }
 
             function renderAll() {
                 currentPage = 1;
+                renderCategoryOptions();
                 renderTable();
                 renderStats();
                 updateCharts();
                 renderActivity();
             }
 
+            function renderCategoryOptions() {
+                if (!refs.categoryFilter) return;
+
+                const categories = Array.from(new Set(
+                    complaints
+                        .map(c => (c.category || '').trim())
+                        .filter(Boolean)
+                )).sort((a, b) => a.localeCompare(b, 'ms'));
+
+                if (currentCategory !== 'Semua' && !categories.includes(currentCategory)) {
+                    currentCategory = 'Semua';
+                }
+
+                const options = ['Semua', ...categories]
+                    .map(cat => {
+                        const label = cat === 'Semua' ? 'Kategori: Semua' : `Kategori: ${cat}`;
+                        return `<option value="${escapeHtml(cat)}">${escapeHtml(label)}</option>`;
+                    })
+                    .join('');
+
+                refs.categoryFilter.innerHTML = options;
+                refs.categoryFilter.value = currentCategory;
+            }
+
             function getFilteredComplaints() {
                 return complaints.filter(c => {
                     const statusMatch = currentStatus === 'Semua' ? true : c.status === currentStatus;
+                    const categoryMatch = currentCategory === 'Semua' ? true : c.category === currentCategory;
                     const searchMatch = currentSearch
                         ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details}`.toLowerCase().includes(currentSearch)
                         : true;
-                    return statusMatch && searchMatch;
+                    return statusMatch && categoryMatch && searchMatch;
                 });
             }
 
@@ -758,7 +1141,7 @@
                 const pageRows = rows.slice(start, start + pageSize);
 
                 if (!pageRows.length) {
-                    refs.tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
+                    refs.tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
                     renderPagination(1);
                     return;
                 }
@@ -766,6 +1149,10 @@
                 refs.tableBody.innerHTML = pageRows.map(c => {
                     const statusBadge = getStatusBadge(c.status);
                     const formattedDate = formatDisplayDate(c.date);
+                    const unitText = (c.unit || '').trim();
+                    const unitCell = unitText
+                        ? `<button type="button" class="unit-summary-trigger" data-unit-action="summary" data-unit="${encodeURIComponent(unitText)}">${escapeHtml(unitText)}</button>`
+                        : '-';
                     return `
                         <tr>
                             <td><strong>#${c.id}</strong></td>
@@ -773,14 +1160,74 @@
                             <td><span class="badge bg-light text-dark border">${c.category}</span></td>
                             <td>${c.reporter}</td>
                             <td>${c.phone || '-'}</td>
-                            <td>${c.unit || '-'}</td>
+                            <td>${unitCell}</td>
                             <td>${formattedDate}</td>
                             <td>${statusBadge}</td>
+                            <td class="text-nowrap">
+                                <button class="btn btn-sm btn-primary" data-action="view" data-id="${c.id}" title="Lihat"><i class="bi bi-eye"></i></button>
+                                <button class="btn btn-sm btn-success" data-action="edit" data-id="${c.id}" title="Edit"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${c.id}" title="Padam"><i class="bi bi-trash"></i></button>
+                            </td>
                         </tr>
                     `;
                 }).join('');
 
                 renderPagination(totalPages);
+            }
+
+            function openUnitSummaryModal(unitName) {
+                const cleanUnit = (unitName || '').trim();
+                if (!cleanUnit || !unitSummaryModal) return;
+
+                const unitKey = cleanUnit.toLowerCase();
+                const related = complaints
+                    .filter(c => (c.unit || '').trim().toLowerCase() === unitKey)
+                    .sort((a, b) => {
+                        const aTime = new Date(a.updatedAt || a.date || 0).getTime();
+                        const bTime = new Date(b.updatedAt || b.date || 0).getTime();
+                        return bTime - aTime;
+                    });
+
+                const statusCounts = related.reduce((acc, c) => {
+                    acc[c.status] = (acc[c.status] || 0) + 1;
+                    return acc;
+                }, {});
+
+                refs.unitSummaryName.textContent = cleanUnit;
+                refs.unitSummaryStats.innerHTML = [
+                    { label: 'Jumlah Aduan', value: related.length, tone: 'text-primary' },
+                    { label: 'Baru', value: statusCounts.Baru || 0, tone: 'text-primary' },
+                    { label: 'Dalam Proses', value: statusCounts['Dalam Proses'] || 0, tone: 'text-warning' },
+                    { label: 'Selesai', value: statusCounts.Selesai || 0, tone: 'text-success' },
+                    { label: 'Purata Hari Selesai', value: calculateAverageResolutionDaysForRows(related), tone: 'text-danger' }
+                ].map(item => `
+                    <div class="col-6 col-md">
+                        <div class="summary-tile">
+                            <small class="summary-label">${item.label}</small>
+                            <div class="summary-value ${item.tone}">${item.value}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (!related.length) {
+                    refs.unitSummaryBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Tiada aduan untuk unit ini.</td></tr>';
+                    unitSummaryModal.show();
+                    return;
+                }
+
+                refs.unitSummaryBody.innerHTML = related.map(c => `
+                    <tr>
+                        <td><strong>#${c.id}</strong></td>
+                        <td>${escapeHtml(c.title || '-')}</td>
+                        <td>${formatDisplayDate(c.date)}</td>
+                        <td>${getStatusBadge(c.status)}</td>
+                        <td class="text-nowrap">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-unit-view-id="${c.id}">Lihat</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                unitSummaryModal.show();
             }
 
             function renderPagination(totalPages) {
@@ -832,6 +1279,13 @@
 
             function calculateAverageResolutionDays() {
                 const resolved = complaints.filter(c => c.status === 'Selesai' && c.resolvedAt);
+                if (!resolved.length) return '-';
+                const totalDays = resolved.reduce((sum, c) => sum + daysBetween(c.date, c.resolvedAt), 0);
+                return (totalDays / resolved.length).toFixed(1);
+            }
+
+            function calculateAverageResolutionDaysForRows(rows) {
+                const resolved = rows.filter(c => c.status === 'Selesai' && c.resolvedAt);
                 if (!resolved.length) return '-';
                 const totalDays = resolved.reduce((sum, c) => sum + daysBetween(c.date, c.resolvedAt), 0);
                 return (totalDays / resolved.length).toFixed(1);
@@ -907,7 +1361,7 @@
                     const idx = complaints.findIndex(c => c.id === editingId);
                     if (idx !== -1) {
                         const prevStatus = complaints[idx].status;
-                        complaints[idx] = { ...complaints[idx], ...payload };
+                        complaints[idx] = { ...complaints[idx], ...payload, updatedAt: new Date().toISOString() };
                         if (payload.status === 'Selesai' && !complaints[idx].resolvedAt) {
                             complaints[idx].resolvedAt = new Date().toISOString().slice(0, 10);
                         }
@@ -917,7 +1371,7 @@
                     }
                     addActivity(`Aduan ${payload.id} dikemaskini`);
                 } else {
-                    complaints.unshift(payload);
+                    complaints.unshift({ ...payload, updatedAt: new Date().toISOString() });
                     if (payload.status === 'Selesai') {
                         payload.resolvedAt = new Date().toISOString().slice(0, 10);
                     }
@@ -943,7 +1397,8 @@
                     unit: formFields.unit.value.trim(),
                     date: dateValue,
                     status,
-                    details: formFields.details.value.trim()
+                    details: formFields.details.value.trim(),
+                    updatedAt: new Date().toISOString()
                 };
             }
 
@@ -970,8 +1425,7 @@
             function handleDelete(id) {
                 const confirmDelete = window.confirm('Padam aduan ini? Tindakan tidak boleh diundur.');
                 if (!confirmDelete) return;
-                complaints = complaints.filter(c => c.id !== id);
-                saveComplaints();
+                complaints = store.removeComplaint(id);
                 addActivity(`Aduan ${id} dipadam`);
                 renderAll();
             }
@@ -1107,6 +1561,24 @@
                     Ditolak: 'bg-danger'
                 };
                 return `<span class="badge badge-status ${map[status] || 'bg-secondary'}">${status}</span>`;
+            }
+
+            function escapeHtml(value) {
+                const text = String(value ?? '');
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function safeDecodeURIComponent(value) {
+                try {
+                    return decodeURIComponent(value);
+                } catch {
+                    return value;
+                }
             }
 
             function timeAgo(dateStr) {

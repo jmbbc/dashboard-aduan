@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Rumah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root { --sidebar-width: 240px; }
+
+        body { background-color: #f5f7fb; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.88);
+            padding: 12px 20px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .card-light {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .search-box {
+            border-radius: 24px;
+            padding: 10px 16px;
+            min-width: 220px;
+        }
+
+        .sort-select {
+            border-radius: 20px;
+            min-width: 220px;
+        }
+
+        .filter-btn {
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
+
+        .sync-meta {
+            color: #6b7280;
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+        }
+
+        .stat-card .card-body {
+            padding: 0.75rem 0.85rem;
+            min-height: 112px;
+        }
+
+        .stat-title {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.2rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.45rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .stat-note {
+            margin-top: 0.22rem;
+            font-size: 0.76rem;
+            color: #6b7280;
+        }
+
+        .unit-top-controls .card-body {
+            padding: 0.5rem 0.62rem;
+        }
+
+        .unit-top-controls .search-box {
+            padding: 0.38rem 0.62rem;
+            min-width: 165px;
+        }
+
+        .unit-top-controls .sort-select {
+            min-width: 176px;
+        }
+
+        .unit-top-controls .filter-btn {
+            padding: 0.3rem 0.54rem;
+            font-size: 0.81rem;
+        }
+
+        .unit-top-controls .sync-meta {
+            font-size: 0.77rem;
+        }
+
+        .unit-top-controls .controls-scroll {
+            overflow-x: auto;
+        }
+
+        .unit-top-controls .controls-row {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 0.42rem;
+            min-width: max-content;
+        }
+
+        .unit-top-controls .controls-row .search-box {
+            width: 228px;
+            min-width: 228px;
+        }
+
+        .unit-top-controls .controls-row .sort-select {
+            width: 176px;
+            min-width: 176px;
+        }
+
+        .unit-top-controls .controls-row .filter-btn {
+            white-space: nowrap;
+        }
+
+        .unit-kpi-row {
+            --bs-gutter-x: 0.44rem;
+            --bs-gutter-y: 0.44rem;
+        }
+
+        .unit-kpi-row .stat-card {
+            border-radius: 10px;
+        }
+
+        .unit-kpi-row .stat-card .card-body {
+            padding: 0.44rem 0.56rem;
+            min-height: 80px;
+        }
+
+        .unit-kpi-row .stat-title {
+            font-size: 0.72rem;
+            margin-bottom: 0.08rem;
+        }
+
+        .unit-kpi-row .stat-value {
+            font-size: 1.12rem;
+            line-height: 1.05;
+        }
+
+        .unit-kpi-row .stat-note {
+            margin-top: 0.08rem;
+            font-size: 0.65rem;
+        }
+
+        .unit-chart-row {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+        .unit-chart-row .card-body {
+            padding: 0.58rem 0.68rem;
+        }
+
+        .unit-chart-row h6 {
+            margin-bottom: 0.45rem !important;
+            font-size: 0.86rem;
+        }
+
+        .unit-chart-row .chart-wrap {
+            height: 220px;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 280px;
+        }
+
+        .table-responsive td,
+        .table-responsive th {
+            vertical-align: middle;
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+        }
+
+        .unit-link {
+            border: 0;
+            background: none;
+            color: #0d6efd;
+            font-weight: 600;
+            padding: 0;
+        }
+
+        .unit-link:hover,
+        .unit-link:focus-visible {
+            text-decoration: underline;
+        }
+
+        .unit-modal .summary-chip {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.5rem 0.58rem;
+            height: 100%;
+        }
+
+        .unit-modal .modal-header {
+            padding: 0.52rem 0.72rem;
+        }
+
+        .unit-modal .modal-body {
+            padding: 0.62rem 0.72rem;
+        }
+
+        .unit-modal .modal-footer {
+            padding: 0.48rem 0.72rem;
+        }
+
+        .unit-modal #unitDetailStats {
+            --bs-gutter-x: 0.35rem;
+            --bs-gutter-y: 0.35rem;
+        }
+
+        .unit-modal .summary-chip {
+            border-radius: 8px;
+            padding: 0.34rem 0.4rem;
+        }
+
+        .unit-modal .summary-chip .label {
+            display: block;
+            font-size: 0.66rem;
+            color: #6b7280;
+            margin-bottom: 0.06rem;
+        }
+
+        .unit-modal .summary-chip .value {
+            font-size: 0.92rem;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        .unit-modal .table > :not(caption) > * > * {
+            padding: 0.34rem 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .sidebar.show { width: var(--sidebar-width); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .chart-wrap { height: 240px; }
+            .unit-chart-row .chart-wrap { height: 190px; }
+            .unit-top-controls .controls-row {
+                gap: 0.32rem;
+            }
+            .unit-top-controls .controls-row .search-box {
+                width: 190px;
+                min-width: 190px;
+            }
+            .unit-top-controls .controls-row .sort-select {
+                width: 150px;
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
+        <div class="text-center mb-4">
+            <i class="bi bi-file-earmark-text fs-1"></i>
+            <h4 class="mt-2">Sistem Aduan</h4>
+        </div>
+        <nav class="nav flex-column">
+            <div class="nav-item mb-1">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="true" aria-controls="aduanMenu">
+                    Aduan
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse show" id="aduanMenu">
+                    <a class="nav-link ps-4" href="index.html">Dashboard Aduan</a>
+                    <a class="nav-link active ps-4" href="unit-rumah.html">Unit Rumah</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="false" aria-controls="techMenu">
+                    Technical
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse" id="techMenu">
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
+                </div>
+            </div>
+        </nav>
+        <div class="position-absolute bottom-0 w-100 p-3">
+            <div class="d-flex align-items-center">
+                <div class="bg-white rounded-circle p-2 me-2"><i class="bi bi-person-fill text-primary"></i></div>
+                <div><small>Admin</small><br><small class="text-white-50">admin@sistem.my</small></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content" id="main-content" role="main">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <div>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="index.html">Dashboard</a></li><li class="breadcrumb-item active">Unit Rumah</li></ol></nav>
+                <h2 class="mb-0">Ringkasan Unit Rumah</h2>
+                <p class="text-muted small mb-0">Kumpulkan aduan mengikut unit dan semak ringkasan setiap unit dengan cepat.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary" id="countBadge">0 unit</span>
+            </div>
+        </div>
+
+        <div class="card card-light mb-1 unit-top-controls">
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
+                    <div class="controls-scroll">
+                        <div class="controls-row">
+                        <label class="visually-hidden" for="unitSearch">Cari unit</label>
+                        <input type="text" id="unitSearch" class="form-control search-box" placeholder="Cari unit rumah..." aria-label="Cari unit rumah">
+                        <label class="visually-hidden" for="unitSort">Susun unit</label>
+                        <select class="form-select sort-select" id="unitSort" aria-label="Susun ringkasan unit">
+                            <option value="total">Susun: Jumlah Aduan</option>
+                            <option value="open">Susun: Aduan Terbuka</option>
+                            <option value="latest">Susun: Kemas Kini Terkini</option>
+                            <option value="unit">Susun: Nama Unit</option>
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary filter-btn" id="unitReset">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small sync-meta">
+                    <span id="unitResultInfo">Memaparkan 0 unit</span>
+                    <span id="unitLastSync">Data terakhir: -</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-1 unit-kpi-row">
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-primary border-4 h-100">
+                    <div class="card-body">
+                        <span class="stat-title">Jumlah Unit</span>
+                        <div class="stat-value text-primary" id="statUnits">0</div>
+                        <div class="stat-note" id="statTopUnit">Unit tertinggi: -</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-info border-4 h-100">
+                    <div class="card-body">
+                        <span class="stat-title">Jumlah Aduan</span>
+                        <div class="stat-value text-info" id="statComplaints">0</div>
+                        <div class="stat-note">Semua aduan berdaftar</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-warning border-4 h-100">
+                    <div class="card-body">
+                        <span class="stat-title">Aduan Terbuka</span>
+                        <div class="stat-value text-warning" id="statOpen">0</div>
+                        <div class="stat-note">Baru + Dalam Proses</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stat-card border-start border-success border-4 h-100">
+                    <div class="card-body">
+                        <span class="stat-title">Kadar Selesai</span>
+                        <div class="stat-value text-success" id="statCompletion">0%</div>
+                        <div class="stat-note">Berdasarkan paparan semasa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-2 unit-chart-row">
+            <div class="col-lg-8">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <h6 class="mb-3">Top 10 Unit Mengikut Jumlah Aduan</h6>
+                        <div class="chart-wrap">
+                            <canvas id="unitChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <h6 class="mb-3">Agihan Status Aduan</h6>
+                        <div class="chart-wrap">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Unit Rumah</th>
+                                <th>Jumlah Aduan</th>
+                                <th>Baru</th>
+                                <th>Dalam Proses</th>
+                                <th>Selesai</th>
+                                <th>Ditolak</th>
+                                <th>Kadar Selesai</th>
+                                <th>Kemas Kini</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unitBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="unitDetailModal" tabindex="-1" aria-labelledby="unitDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content unit-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unitDetailModalLabel">Aduan Unit: <span id="unitDetailName">-</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2 mb-2" id="unitDetailStats"></div>
+                    <div class="table-responsive border rounded-3 p-1">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tajuk</th>
+                                    <th>Kategori</th>
+                                    <th>Tarikh</th>
+                                    <th>Status</th>
+                                    <th>Pengadu</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unitDetailBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="complaintDetailModal" tabindex="-1" aria-labelledby="complaintDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="complaintDetailModalLabel">Butiran Aduan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body" id="complaintDetailBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard-store.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const store = window.DashboardStore;
+
+            if (!store) {
+                console.error('DashboardStore tidak ditemui. Pastikan dashboard-store.js dimuatkan.');
+                return;
+            }
+
+            const refs = {
+                sidebarToggle: document.getElementById('sidebarToggle'),
+                sidebar: document.getElementById('sidebarNav'),
+                searchInput: document.getElementById('unitSearch'),
+                sortInput: document.getElementById('unitSort'),
+                resetBtn: document.getElementById('unitReset'),
+                resultInfo: document.getElementById('unitResultInfo'),
+                lastSync: document.getElementById('unitLastSync'),
+                countBadge: document.getElementById('countBadge'),
+                statUnits: document.getElementById('statUnits'),
+                statComplaints: document.getElementById('statComplaints'),
+                statOpen: document.getElementById('statOpen'),
+                statCompletion: document.getElementById('statCompletion'),
+                statTopUnit: document.getElementById('statTopUnit'),
+                tableBody: document.getElementById('unitBody'),
+                unitDetailModalEl: document.getElementById('unitDetailModal'),
+                unitDetailName: document.getElementById('unitDetailName'),
+                unitDetailStats: document.getElementById('unitDetailStats'),
+                unitDetailBody: document.getElementById('unitDetailBody'),
+                complaintDetailModalEl: document.getElementById('complaintDetailModal'),
+                complaintDetailBody: document.getElementById('complaintDetailBody')
+            };
+
+            let complaints = [];
+            let unitRows = [];
+            let unitLookup = new Map();
+            let searchTerm = '';
+            let sortMode = 'total';
+            let unitChart;
+            let statusChart;
+
+            const unitDetailModal = refs.unitDetailModalEl
+                ? new bootstrap.Modal(refs.unitDetailModalEl)
+                : null;
+
+            const complaintDetailModal = refs.complaintDetailModalEl
+                ? new bootstrap.Modal(refs.complaintDetailModalEl)
+                : null;
+
+            init();
+
+            function init() {
+                initCharts();
+                bindEvents();
+                refreshData();
+            }
+
+            function bindEvents() {
+                refs.searchInput?.addEventListener('input', (event) => {
+                    searchTerm = event.target.value.toLowerCase();
+                    renderAll();
+                });
+
+                refs.sortInput?.addEventListener('change', (event) => {
+                    sortMode = event.target.value;
+                    renderAll();
+                });
+
+                refs.resetBtn?.addEventListener('click', () => {
+                    searchTerm = '';
+                    sortMode = 'total';
+                    refs.searchInput.value = '';
+                    refs.sortInput.value = 'total';
+                    renderAll();
+                });
+
+                refs.tableBody?.addEventListener('click', (event) => {
+                    const target = event.target.closest('button[data-unit-key]');
+                    if (!target) return;
+                    openUnitDetail(safeDecodeURIComponent(target.dataset.unitKey || ''));
+                });
+
+                refs.unitDetailBody?.addEventListener('click', (event) => {
+                    const target = event.target.closest('button[data-complaint-id]');
+                    if (!target) return;
+                    openComplaintDetail(safeDecodeURIComponent(target.dataset.complaintId || ''));
+                });
+
+                refs.unitDetailModalEl?.addEventListener('hidden.bs.modal', () => {
+                    refs.unitDetailName.textContent = '-';
+                    refs.unitDetailStats.innerHTML = '';
+                    refs.unitDetailBody.innerHTML = '';
+                });
+
+                refs.complaintDetailModalEl?.addEventListener('hidden.bs.modal', () => {
+                    refs.complaintDetailBody.innerHTML = '';
+                });
+
+                if (refs.sidebarToggle) {
+                    refs.sidebarToggle.addEventListener('click', () => {
+                        refs.sidebar.classList.toggle('show');
+                        refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
+                    });
+                }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) refreshData();
+                });
+
+                window.addEventListener('storage', (event) => {
+                    if (event.key === store.STORAGE_KEYS.complaints) {
+                        refreshData();
+                    }
+                });
+            }
+
+            function refreshData() {
+                complaints = store.loadComplaints();
+                renderAll();
+            }
+
+            function renderAll() {
+                unitRows = buildUnitRows(complaints);
+                unitLookup = new Map(unitRows.map((row) => [row.key, row]));
+
+                const filteredRows = getFilteredRows(unitRows);
+
+                refs.countBadge.textContent = `${filteredRows.length} unit`;
+                refs.resultInfo.textContent = `Memaparkan ${filteredRows.length} daripada ${unitRows.length} unit`;
+
+                const latest = store.getLatestUpdatedAt(complaints);
+                refs.lastSync.textContent = latest
+                    ? `Data terakhir: ${latest.toLocaleString('ms-MY')}`
+                    : 'Data terakhir: -';
+
+                renderStats(filteredRows);
+                renderCharts(filteredRows);
+                renderTable(filteredRows);
+            }
+
+            function buildUnitRows(rows) {
+                const map = new Map();
+
+                rows.forEach((complaint) => {
+                    const unitName = normalizeUnitName(complaint.unit);
+                    const key = unitName.toUpperCase();
+                    const status = complaint.status || 'Baru';
+
+                    if (!map.has(key)) {
+                        map.set(key, {
+                            key,
+                            unit: unitName,
+                            total: 0,
+                            newCount: 0,
+                            processCount: 0,
+                            doneCount: 0,
+                            rejectCount: 0,
+                            openCount: 0,
+                            completionRate: 0,
+                            lastUpdatedRaw: 0,
+                            lastUpdatedText: '-',
+                            complaints: []
+                        });
+                    }
+
+                    const current = map.get(key);
+                    current.total += 1;
+                    current.complaints.push(complaint);
+
+                    if (status === 'Baru') current.newCount += 1;
+                    else if (status === 'Dalam Proses') current.processCount += 1;
+                    else if (status === 'Selesai') current.doneCount += 1;
+                    else if (status === 'Ditolak') current.rejectCount += 1;
+
+                    const updatedRaw = getComparableTime(complaint.updatedAt || complaint.date);
+                    if (updatedRaw >= current.lastUpdatedRaw) {
+                        current.lastUpdatedRaw = updatedRaw;
+                        current.lastUpdatedText = formatDateTime(complaint.updatedAt || complaint.date);
+                    }
+                });
+
+                return Array.from(map.values()).map((row) => {
+                    const sortedComplaints = [...row.complaints].sort((a, b) =>
+                        getComparableTime(b.updatedAt || b.date) - getComparableTime(a.updatedAt || a.date)
+                    );
+
+                    return {
+                        ...row,
+                        openCount: row.newCount + row.processCount,
+                        completionRate: row.total ? Math.round((row.doneCount / row.total) * 100) : 0,
+                        complaints: sortedComplaints
+                    };
+                });
+            }
+
+            function getFilteredRows(rows) {
+                const filtered = rows.filter((row) => {
+                    if (!searchTerm) return true;
+                    return `${row.unit} ${row.total} ${row.newCount} ${row.processCount} ${row.doneCount}`
+                        .toLowerCase()
+                        .includes(searchTerm);
+                });
+
+                return sortRows(filtered);
+            }
+
+            function sortRows(rows) {
+                const next = [...rows];
+
+                if (sortMode === 'open') {
+                    return next.sort((a, b) => b.openCount - a.openCount || b.total - a.total);
+                }
+
+                if (sortMode === 'latest') {
+                    return next.sort((a, b) => b.lastUpdatedRaw - a.lastUpdatedRaw);
+                }
+
+                if (sortMode === 'unit') {
+                    return next.sort((a, b) => a.unit.localeCompare(b.unit, 'ms'));
+                }
+
+                return next.sort((a, b) => b.total - a.total || b.openCount - a.openCount);
+            }
+
+            function renderStats(rows) {
+                const totalUnits = rows.length;
+                const totalComplaints = rows.reduce((sum, row) => sum + row.total, 0);
+                const openComplaints = rows.reduce((sum, row) => sum + row.openCount, 0);
+                const doneComplaints = rows.reduce((sum, row) => sum + row.doneCount, 0);
+                const topUnit = [...rows].sort((a, b) => b.total - a.total)[0];
+                const completionRate = totalComplaints ? Math.round((doneComplaints / totalComplaints) * 100) : 0;
+
+                refs.statUnits.textContent = totalUnits;
+                refs.statComplaints.textContent = totalComplaints;
+                refs.statOpen.textContent = openComplaints;
+                refs.statCompletion.textContent = `${completionRate}%`;
+                refs.statTopUnit.textContent = topUnit
+                    ? `Unit tertinggi: ${topUnit.unit} (${topUnit.total})`
+                    : 'Unit tertinggi: -';
+            }
+
+            function initCharts() {
+                const unitCtx = document.getElementById('unitChart').getContext('2d');
+                const statusCtx = document.getElementById('statusChart').getContext('2d');
+
+                unitChart = new Chart(unitCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Jumlah Aduan',
+                            data: [],
+                            backgroundColor: 'rgba(13,110,253,0.55)',
+                            borderColor: 'rgba(13,110,253,1)',
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            maxBarThickness: 34
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0 } },
+                            x: { ticks: { maxRotation: 40, minRotation: 0 } }
+                        }
+                    }
+                });
+
+                statusChart = new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Baru', 'Dalam Proses', 'Selesai', 'Ditolak'],
+                        datasets: [{
+                            data: [0, 0, 0, 0],
+                            backgroundColor: [
+                                'rgb(13, 110, 253)',
+                                'rgb(255, 193, 7)',
+                                'rgb(25, 135, 84)',
+                                'rgb(220, 53, 69)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+
+            function renderCharts(rows) {
+                const topUnits = [...rows].sort((a, b) => b.total - a.total).slice(0, 10);
+                unitChart.data.labels = topUnits.map((row) => row.unit);
+                unitChart.data.datasets[0].data = topUnits.map((row) => row.total);
+                unitChart.update();
+
+                const status = rows.reduce((acc, row) => {
+                    acc.Baru += row.newCount;
+                    acc['Dalam Proses'] += row.processCount;
+                    acc.Selesai += row.doneCount;
+                    acc.Ditolak += row.rejectCount;
+                    return acc;
+                }, { Baru: 0, 'Dalam Proses': 0, Selesai: 0, Ditolak: 0 });
+
+                statusChart.data.datasets[0].data = [status.Baru, status['Dalam Proses'], status.Selesai, status.Ditolak];
+                statusChart.update();
+            }
+
+            function renderTable(rows) {
+                if (!rows.length) {
+                    refs.tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Tiada unit ditemui.</td></tr>';
+                    return;
+                }
+
+                refs.tableBody.innerHTML = rows.map((row) => `
+                    <tr>
+                        <td>
+                            <button type="button" class="unit-link" data-unit-key="${encodeURIComponent(row.key)}">${escapeHtml(row.unit)}</button>
+                        </td>
+                        <td><strong>${row.total}</strong></td>
+                        <td>${row.newCount}</td>
+                        <td>${row.processCount}</td>
+                        <td>${row.doneCount}</td>
+                        <td>${row.rejectCount}</td>
+                        <td>${row.completionRate}%</td>
+                        <td>${row.lastUpdatedText}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-unit-key="${encodeURIComponent(row.key)}">Lihat Aduan</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function openUnitDetail(unitKey) {
+                const lookupKey = String(unitKey || '').trim().toUpperCase();
+                const row = unitLookup.get(lookupKey);
+                if (!row || !unitDetailModal) return;
+
+                refs.unitDetailName.textContent = row.unit;
+                refs.unitDetailStats.innerHTML = [
+                    { label: 'Jumlah Aduan', value: row.total, tone: 'text-primary' },
+                    { label: 'Baru', value: row.newCount, tone: 'text-primary' },
+                    { label: 'Dalam Proses', value: row.processCount, tone: 'text-warning' },
+                    { label: 'Selesai', value: row.doneCount, tone: 'text-success' },
+                    { label: 'Ditolak', value: row.rejectCount, tone: 'text-danger' },
+                    { label: 'Kadar Selesai', value: `${row.completionRate}%`, tone: 'text-success' }
+                ].map((item) => `
+                    <div class="col-6 col-md-2">
+                        <div class="summary-chip">
+                            <small class="label">${item.label}</small>
+                            <div class="value ${item.tone}">${item.value}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (!row.complaints.length) {
+                    refs.unitDetailBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Tiada aduan untuk unit ini.</td></tr>';
+                } else {
+                    refs.unitDetailBody.innerHTML = row.complaints.map((complaint) => `
+                        <tr>
+                            <td><strong>#${escapeHtml(complaint.id)}</strong></td>
+                            <td>${escapeHtml(complaint.title || '-')}</td>
+                            <td>${escapeHtml(complaint.category || '-')}</td>
+                            <td>${formatDisplayDate(complaint.date)}</td>
+                            <td>${getStatusBadge(complaint.status)}</td>
+                            <td>${escapeHtml(complaint.reporter || '-')}</td>
+                            <td class="text-nowrap">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-complaint-id="${encodeURIComponent(complaint.id)}">Lihat</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                unitDetailModal.show();
+            }
+
+            function openComplaintDetail(complaintId) {
+                const id = String(complaintId || '').trim();
+                const complaint = complaints.find((item) => String(item.id) === id);
+                if (!complaint || !complaintDetailModal) return;
+
+                refs.complaintDetailBody.innerHTML = `
+                    <div class="row g-3">
+                        <div class="col-md-4"><small class="text-muted">ID Aduan</small><div class="fw-bold">${escapeHtml(complaint.id)}</div></div>
+                        <div class="col-md-4"><small class="text-muted">Tarikh</small><div class="fw-bold">${formatDisplayDate(complaint.date)}</div></div>
+                        <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${getStatusBadge(complaint.status)}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Tajuk</small><div class="fw-bold">${escapeHtml(complaint.title || '-')}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Kategori</small><div class="fw-bold">${escapeHtml(complaint.category || '-')}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Pengadu</small><div class="fw-bold">${escapeHtml(complaint.reporter || '-')}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Telefon</small><div class="fw-bold">${escapeHtml(complaint.phone || '-')}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Unit Rumah</small><div class="fw-bold">${escapeHtml(normalizeUnitName(complaint.unit))}</div></div>
+                        <div class="col-12"><small class="text-muted">Butiran</small><div class="border rounded p-2 bg-light">${escapeHtml(complaint.details || '-')}</div></div>
+                    </div>
+                `;
+
+                complaintDetailModal.show();
+            }
+
+            function normalizeUnitName(unit) {
+                const text = String(unit || '').trim();
+                return text || 'Tanpa Unit';
+            }
+
+            function getComparableTime(value) {
+                const time = new Date(value || 0).getTime();
+                return Number.isNaN(time) ? 0 : time;
+            }
+
+            function formatDisplayDate(value) {
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return '-';
+                return date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            function formatDateTime(value) {
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return '-';
+                return date.toLocaleString('ms-MY');
+            }
+
+            function getStatusBadge(status) {
+                const map = {
+                    Baru: 'bg-primary',
+                    'Dalam Proses': 'bg-warning text-dark',
+                    Selesai: 'bg-success',
+                    Ditolak: 'bg-danger'
+                };
+                return `<span class="badge badge-status ${map[status] || 'bg-secondary'}">${escapeHtml(status || '-')}</span>`;
+            }
+
+            function escapeHtml(value) {
+                const text = String(value ?? '');
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function safeDecodeURIComponent(value) {
+                try {
+                    return decodeURIComponent(value);
+                } catch {
+                    return value;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

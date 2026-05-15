@@ -14,8 +14,11 @@
         .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-left-color: white; }
         .main-content { margin-left: var(--sidebar-width); padding: 24px; min-height: 100vh; }
         .card-light { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .search-box { border-radius: 24px; padding: 10px 16px; }
+        .search-box { border-radius: 24px; padding: 10px 16px; min-width: 220px; }
         .filter-btn { border-radius: 20px; padding: 8px 16px; }
+        .sort-select { border-radius: 20px; min-width: 220px; }
+        .sync-meta { color: #6b7280; }
+        .table-responsive td, .table-responsive th { vertical-align: middle; }
         .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
     </style>
@@ -34,7 +37,7 @@
                 </button>
                 <div class="collapse" id="aduanMenu">
                     <a class="nav-link ps-4" href="index.html">Dashboard Aduan</a>
-                    <a class="nav-link ps-4" href="sub-aduan.html">Sub Aduan</a>
+                    <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
             <div class="nav-item">
@@ -68,10 +71,21 @@
             <div class="card-body">
                 <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-3">
                     <div class="d-flex flex-wrap gap-2 align-items-center" id="typeFilters" aria-label="Penapis kategori teknikal"></div>
-                    <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <label for="subTechSort" class="visually-hidden">Susun rekod teknikal</label>
+                        <select class="form-select sort-select" id="subTechSort" aria-label="Susun rekod teknikal">
+                            <option value="updated">Susun: Kemas Kini Terkini</option>
+                            <option value="due">Susun: Tarikh Due Terdekat</option>
+                            <option value="priority">Susun: Prioriti Tertinggi</option>
+                        </select>
+                        <button class="btn btn-outline-secondary filter-btn" type="button" id="subTechReset">Reset</button>
                         <label for="searchTech" class="visually-hidden">Cari technical</label>
                         <input type="text" class="form-control search-box" id="searchTech" placeholder="Cari technical..." aria-label="Cari technical" style="width:280px;">
                     </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3 small sync-meta">
+                    <span id="subTechResultInfo">Memaparkan 0 rekod</span>
+                    <span id="subTechLastSync">Data terakhir: -</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped mb-0">
@@ -85,6 +99,7 @@
                                 <th>Tarikh Due</th>
                                 <th>Prioriti</th>
                                 <th>Status</th>
+                                <th>Kemas Kini</th>
                                 <th>Tindakan</th>
                             </tr>
                         </thead>
@@ -96,40 +111,59 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard-store.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const TECH_KEY = 'aduanDashboardTechnical';
-            const defaultTechnical = [
-                { id: 'TECH-001', title: 'Lesen AV Endpoint (Corp-AV) tamat 20 Jan', type: 'Lesen', asset: 'Endpoint Suite', owner: 'Hafiz', due: '2026-01-20', priority: 'Tinggi', status: 'Terbuka', notes: 'Perlu perbaharui 250 seat, semak bajet dengan kewangan.' },
-                { id: 'TECH-002', title: 'Pembaikan kipas PSU Server RDS-01', type: 'Pembaikan', asset: 'Server RDS-01', owner: 'Amin', due: '2026-01-08', priority: 'Tinggi', status: 'Dalam Proses', notes: 'PSU gantian telah ditempah, ETA vendor 3 hari.' },
-                { id: 'TECH-003', title: 'Penyelenggaraan AC bilik server', type: 'Penyelenggaraan', asset: 'CRAC-02', owner: 'Ravi', due: '2026-01-15', priority: 'Sederhana', status: 'Terbuka', notes: 'Jadualkan downtime 1 jam, maklumkan pasukan operasi.' },
-                { id: 'TECH-004', title: 'Audit patuh ISO27001 Q1', type: 'Audit/Compliance', asset: 'Keseluruhan', owner: 'Nadia', due: '2026-02-05', priority: 'Sederhana', status: 'Selesai', notes: 'Pra-audit selesai, laporan dihantar auditor.' }
-            ];
+            const store = window.DashboardStore;
+
+            if (!store) {
+                console.error('DashboardStore tidak ditemui. Pastikan dashboard-store.js dimuatkan.');
+                return;
+            }
 
             const refs = {
                 sidebarToggle: document.getElementById('sidebarToggle'),
                 sidebar: document.querySelector('.sidebar'),
                 filterWrap: document.getElementById('typeFilters'),
                 searchInput: document.getElementById('searchTech'),
+                sortInput: document.getElementById('subTechSort'),
+                resetBtn: document.getElementById('subTechReset'),
+                resultInfo: document.getElementById('subTechResultInfo'),
+                lastSync: document.getElementById('subTechLastSync'),
                 tableBody: document.getElementById('subTechBody'),
                 countBadge: document.getElementById('countBadge')
             };
 
-            let techItems = loadFromStorage(TECH_KEY, defaultTechnical);
+            let techItems = store.loadTechnical();
             let currentType = 'Semua';
             let searchTerm = '';
+            let sortMode = 'updated';
 
             init();
 
             function init() {
-                renderTypeFilters();
-                renderTable();
                 bindEvents();
+                refreshData();
             }
 
             function bindEvents() {
                 refs.searchInput?.addEventListener('input', (e) => {
                     searchTerm = e.target.value.toLowerCase();
+                    renderTable();
+                });
+
+                refs.sortInput?.addEventListener('change', (e) => {
+                    sortMode = e.target.value;
+                    renderTable();
+                });
+
+                refs.resetBtn?.addEventListener('click', () => {
+                    currentType = 'Semua';
+                    searchTerm = '';
+                    sortMode = 'updated';
+                    refs.searchInput.value = '';
+                    refs.sortInput.value = 'updated';
+                    renderTypeFilters();
                     renderTable();
                 });
 
@@ -139,19 +173,22 @@
                         refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
                     });
                 }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) refreshData();
+                });
+
+                window.addEventListener('storage', (event) => {
+                    if (event.key === store.STORAGE_KEYS.technical) {
+                        refreshData();
+                    }
+                });
             }
 
-            function loadFromStorage(key, fallback) {
-                try {
-                    const stored = localStorage.getItem(key);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        if (Array.isArray(parsed) && parsed.length) return parsed;
-                    }
-                } catch (e) {
-                    console.warn('Gagal memuat data tersimpan', e);
-                }
-                return JSON.parse(JSON.stringify(fallback));
+            function refreshData() {
+                techItems = store.loadTechnical();
+                renderTypeFilters();
+                renderTable();
             }
 
             function renderTypeFilters() {
@@ -178,22 +215,39 @@
             }
 
             function getFilteredTech() {
-                return techItems.filter(t => {
+                const filtered = techItems.filter(t => {
                     const typeMatch = currentType === 'Semua' ? true : t.type === currentType;
                     const searchMatch = searchTerm
                         ? `${t.id} ${t.title} ${t.type} ${t.asset} ${t.owner} ${t.notes || ''}`.toLowerCase().includes(searchTerm)
                         : true;
                     return typeMatch && searchMatch;
                 });
+
+                if (sortMode === 'due') {
+                    return filtered.sort((a, b) => new Date(a.due) - new Date(b.due));
+                }
+
+                if (sortMode === 'priority') {
+                    const rank = { Tinggi: 0, Sederhana: 1, Rendah: 2 };
+                    return filtered.sort((a, b) => (rank[a.priority] ?? 99) - (rank[b.priority] ?? 99));
+                }
+
+                return filtered.sort((a, b) => new Date(b.updatedAt || b.due || 0) - new Date(a.updatedAt || a.due || 0));
             }
 
             function renderTable() {
                 if (!refs.tableBody) return;
                 const rows = getFilteredTech();
                 refs.countBadge.textContent = `${rows.length} rekod`;
+                refs.resultInfo.textContent = `Memaparkan ${rows.length} daripada ${techItems.length} rekod`;
+
+                const latest = store.getLatestUpdatedAt(techItems);
+                refs.lastSync.textContent = latest
+                    ? `Data terakhir: ${latest.toLocaleString('ms-MY')}`
+                    : 'Data terakhir: -';
 
                 if (!rows.length) {
-                    refs.tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Tiada rekod teknikal ditemui.</td></tr>';
+                    refs.tableBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Tiada rekod teknikal ditemui.</td></tr>';
                     return;
                 }
 
@@ -207,6 +261,7 @@
                         <td>${formatDisplayDate(t.due)}</td>
                         <td>${getPriorityBadge(t.priority)}</td>
                         <td>${getStatusBadge(t.status)}</td>
+                        <td>${formatDateTime(t.updatedAt)}</td>
                         <td class="text-nowrap">
                             <button class="btn btn-sm btn-primary" data-action="view" data-id="${t.id}" title="Lihat"><i class="bi bi-eye"></i></button>
                             <button class="btn btn-sm btn-success" data-action="edit" data-id="${t.id}" title="Edit"><i class="bi bi-pencil"></i></button>
@@ -233,6 +288,12 @@
                 const d = new Date(dateStr);
                 if (Number.isNaN(d.getTime())) return dateStr || '-';
                 return d.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            function formatDateTime(dateStr) {
+                const d = new Date(dateStr);
+                if (Number.isNaN(d.getTime())) return '-';
+                return d.toLocaleString('ms-MY');
             }
 
             function getStatusBadge(status) {
@@ -281,9 +342,10 @@
                         due: document.getElementById('editTechDue').value,
                         priority: document.getElementById('editTechPriority').value,
                         status: document.getElementById('editTechStatus').value,
-                        notes: document.getElementById('editTechNotes').value.trim()
+                        notes: document.getElementById('editTechNotes').value.trim(),
+                        updatedAt: new Date().toISOString()
                     };
-                    localStorage.setItem(TECH_KEY, JSON.stringify(techItems));
+                    store.saveTechnical(techItems);
                     renderTable();
                     renderTypeFilters();
                 }
@@ -312,8 +374,7 @@
 
             function handleDelete(id) {
                 if (!confirm('Padam rekod teknikal ini?')) return;
-                techItems = techItems.filter(t => t.id !== id);
-                localStorage.setItem(TECH_KEY, JSON.stringify(techItems));
+                techItems = store.removeTechnical(id);
                 renderTable();
                 renderTypeFilters();
             }

@@ -14,8 +14,11 @@
         .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-left-color: white; }
         .main-content { margin-left: var(--sidebar-width); padding: 24px; min-height: 100vh; }
         .card-light { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .search-box { border-radius: 24px; padding: 10px 16px; }
+        .search-box { border-radius: 24px; padding: 10px 16px; min-width: 220px; }
         .filter-btn { border-radius: 20px; padding: 8px 16px; }
+        .sort-select { border-radius: 20px; min-width: 220px; }
+        .sync-meta { color: #6b7280; }
+        .table-responsive td, .table-responsive th { vertical-align: middle; }
         .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
     </style>
@@ -34,7 +37,7 @@
                 </button>
                 <div class="collapse show" id="aduanMenu">
                     <a class="nav-link ps-4" href="index.html">Dashboard Aduan</a>
-                    <a class="nav-link active ps-4" href="sub-aduan.html">Sub Aduan</a>
+                    <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
             <div class="nav-item">
@@ -68,10 +71,21 @@
             <div class="card-body">
                 <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-3">
                     <div class="d-flex flex-wrap gap-2 align-items-center" id="categoryFilters" aria-label="Penapis kategori"></div>
-                    <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <label for="subAduanSort" class="visually-hidden">Susun rekod aduan</label>
+                        <select class="form-select sort-select" id="subAduanSort" aria-label="Susun rekod aduan">
+                            <option value="updated">Susun: Kemas Kini Terkini</option>
+                            <option value="date">Susun: Tarikh Terima Terkini</option>
+                            <option value="status">Susun: Status</option>
+                        </select>
+                        <button class="btn btn-outline-secondary filter-btn" type="button" id="subAduanReset">Reset</button>
                         <label for="searchAduan" class="visually-hidden">Cari aduan</label>
                         <input type="text" class="form-control search-box" id="searchAduan" placeholder="Cari aduan..." aria-label="Cari aduan" style="width:280px;">
                     </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3 small sync-meta">
+                    <span id="subAduanResultInfo">Memaparkan 0 rekod</span>
+                    <span id="subAduanLastSync">Data terakhir: -</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped mb-0">
@@ -85,6 +99,7 @@
                                 <th>Unit</th>
                                 <th>Tarikh Terima</th>
                                 <th>Status</th>
+                                <th>Kemas Kini</th>
                                 <th>Tindakan</th>
                             </tr>
                         </thead>
@@ -96,42 +111,59 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard-store.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const STORAGE_KEY = 'aduanDashboardData';
-            const defaultComplaints = [
-                { id: 'ADU-001', title: 'Masalah sistem pembayaran tidak berfungsi', category: 'Teknikal', reporter: 'Ahmad Ali', phone: '012-3456789', unit: 'B-12-3', date: '2025-12-31', status: 'Dalam Proses', details: 'Transaksi gagal diproses selepas kemas kini aplikasi.' },
-                { id: 'ADU-002', title: 'Perkhidmatan pelanggan lambat bertindak', category: 'Perkhidmatan', reporter: 'Siti Nurhaliza', phone: '013-1112233', unit: 'A-03-8', date: '2025-12-31', status: 'Baru', details: 'Pertanyaan tidak dijawab selama lebih 48 jam.' },
-                { id: 'ADU-003', title: 'Kualiti produk tidak memuaskan', category: 'Produk', reporter: 'Mohd Razak', phone: '017-2233445', unit: 'D-07-15', date: '2025-12-30', status: 'Dalam Proses', details: 'Produk rosak selepas penggunaan pertama.' },
-                { id: 'ADU-004', title: 'Permintaan maklumat tambahan', category: 'Pertanyaan', reporter: 'Fatimah Zahra', phone: '016-9090909', unit: 'C-05-2', date: '2025-12-30', status: 'Selesai', resolvedAt: '2025-12-31', details: 'Memerlukan spesifikasi lanjut berkenaan produk terbaru.' },
-                { id: 'ADU-005', title: 'Aplikasi mudah alih sering tergendala', category: 'Teknikal', reporter: 'Lim Wei Jian', phone: '012-8882233', unit: 'E-10-1', date: '2025-12-29', status: 'Dalam Proses', details: 'Aplikasi crash ketika membuka halaman pembayaran.' },
-                { id: 'ADU-006', title: 'Penghantaran barang lewat', category: 'Logistik', reporter: 'Kumar Selvam', phone: '019-5556789', unit: 'F-02-6', date: '2025-12-29', status: 'Selesai', resolvedAt: '2025-12-30', details: 'Parcel sampai 3 hari lewat daripada tarikh dijanjikan.' }
-            ];
+            const store = window.DashboardStore;
+
+            if (!store) {
+                console.error('DashboardStore tidak ditemui. Pastikan dashboard-store.js dimuatkan.');
+                return;
+            }
 
             const refs = {
                 sidebarToggle: document.getElementById('sidebarToggle'),
                 sidebar: document.querySelector('.sidebar'),
                 filterWrap: document.getElementById('categoryFilters'),
                 searchInput: document.getElementById('searchAduan'),
+                sortInput: document.getElementById('subAduanSort'),
+                resetBtn: document.getElementById('subAduanReset'),
+                resultInfo: document.getElementById('subAduanResultInfo'),
+                lastSync: document.getElementById('subAduanLastSync'),
                 tableBody: document.getElementById('subAduanBody'),
                 countBadge: document.getElementById('countBadge')
             };
 
-            let complaints = loadFromStorage(STORAGE_KEY, defaultComplaints);
+            let complaints = store.loadComplaints();
             let currentCategory = 'Semua';
             let searchTerm = '';
+            let sortMode = 'updated';
 
             init();
 
             function init() {
-                renderCategoryFilters();
-                renderTable();
                 bindEvents();
+                refreshData();
             }
 
             function bindEvents() {
                 refs.searchInput?.addEventListener('input', (e) => {
                     searchTerm = e.target.value.toLowerCase();
+                    renderTable();
+                });
+
+                refs.sortInput?.addEventListener('change', (e) => {
+                    sortMode = e.target.value;
+                    renderTable();
+                });
+
+                refs.resetBtn?.addEventListener('click', () => {
+                    currentCategory = 'Semua';
+                    searchTerm = '';
+                    sortMode = 'updated';
+                    refs.searchInput.value = '';
+                    refs.sortInput.value = 'updated';
+                    renderCategoryFilters();
                     renderTable();
                 });
 
@@ -141,19 +173,22 @@
                         refs.sidebarToggle.setAttribute('aria-expanded', refs.sidebar.classList.contains('show'));
                     });
                 }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) refreshData();
+                });
+
+                window.addEventListener('storage', (event) => {
+                    if (event.key === store.STORAGE_KEYS.complaints) {
+                        refreshData();
+                    }
+                });
             }
 
-            function loadFromStorage(key, fallback) {
-                try {
-                    const stored = localStorage.getItem(key);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        if (Array.isArray(parsed) && parsed.length) return parsed;
-                    }
-                } catch (e) {
-                    console.warn('Gagal memuat data tersimpan', e);
-                }
-                return JSON.parse(JSON.stringify(fallback));
+            function refreshData() {
+                complaints = store.loadComplaints();
+                renderCategoryFilters();
+                renderTable();
             }
 
             function renderCategoryFilters() {
@@ -180,22 +215,39 @@
             }
 
             function getFilteredComplaints() {
-                return complaints.filter(c => {
+                const rows = complaints.filter(c => {
                     const catMatch = currentCategory === 'Semua' ? true : c.category === currentCategory;
                     const searchMatch = searchTerm
                         ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details || ''}`.toLowerCase().includes(searchTerm)
                         : true;
                     return catMatch && searchMatch;
                 });
+
+                if (sortMode === 'date') {
+                    return rows.sort((a, b) => new Date(b.date) - new Date(a.date));
+                }
+
+                if (sortMode === 'status') {
+                    const rank = { Baru: 0, 'Dalam Proses': 1, Selesai: 2, Ditolak: 3 };
+                    return rows.sort((a, b) => (rank[a.status] ?? 99) - (rank[b.status] ?? 99));
+                }
+
+                return rows.sort((a, b) => new Date(b.updatedAt || b.date || 0) - new Date(a.updatedAt || a.date || 0));
             }
 
             function renderTable() {
                 if (!refs.tableBody) return;
                 const rows = getFilteredComplaints();
                 refs.countBadge.textContent = `${rows.length} rekod`;
+                refs.resultInfo.textContent = `Memaparkan ${rows.length} daripada ${complaints.length} rekod`;
+
+                const latest = store.getLatestUpdatedAt(complaints);
+                refs.lastSync.textContent = latest
+                    ? `Data terakhir: ${latest.toLocaleString('ms-MY')}`
+                    : 'Data terakhir: -';
 
                 if (!rows.length) {
-                    refs.tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
+                    refs.tableBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
                     return;
                 }
 
@@ -209,6 +261,7 @@
                         <td>${c.unit || '-'}</td>
                         <td>${formatDisplayDate(c.date)}</td>
                         <td>${getStatusBadge(c.status)}</td>
+                        <td>${formatDateTime(c.updatedAt)}</td>
                         <td class="text-nowrap">
                             <button class="btn btn-sm btn-primary" data-action="view" data-id="${c.id}" title="Lihat"><i class="bi bi-eye"></i></button>
                             <button class="btn btn-sm btn-success" data-action="edit" data-id="${c.id}" title="Edit"><i class="bi bi-pencil"></i></button>
@@ -235,6 +288,12 @@
                 const d = new Date(dateStr);
                 if (Number.isNaN(d.getTime())) return dateStr || '-';
                 return d.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            function formatDateTime(dateStr) {
+                const d = new Date(dateStr);
+                if (Number.isNaN(d.getTime())) return '-';
+                return d.toLocaleString('ms-MY');
             }
 
             function getStatusBadge(status) {
@@ -296,9 +355,10 @@
                         unit: document.getElementById('editUnit').value.trim(),
                         date: document.getElementById('editDate').value,
                         status: document.getElementById('editStatus').value,
-                        details: document.getElementById('editDetails').value.trim()
+                        details: document.getElementById('editDetails').value.trim(),
+                        updatedAt: new Date().toISOString()
                     };
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
+                    store.saveComplaints(complaints);
                     renderTable();
                     renderCategoryFilters();
                 }
@@ -309,8 +369,7 @@
 
             function handleDelete(id) {
                 if (!confirm('Padam aduan ini?')) return;
-                complaints = complaints.filter(c => c.id !== id);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
+                complaints = store.removeComplaint(id);
                 renderTable();
                 renderCategoryFilters();
             }
