@@ -1,0 +1,54 @@
+﻿Sheet: FF - FIRE CONTROL ROOM
+UsedRows: 50
+UsedCols: 10
+
+ROW_1:  |  | FIRE CONTROL ROOM |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Category |  | Fire Fighting |  | Reference No. |  | BC/MAINT/FCR/1 | 
+ROW_4: Month |  | Year |  | Status | Monthly | Location |  |  | 
+ROW_5:  |  |  |  |  |  |  |  |  | 
+ROW_6:  |  |  |  |  |  |  |  |  | 
+ROW_7: No | Description |  |  |  | Status |  | Remarks |  | 
+ROW_8:  |  |  |  |  | Comply | Not Comply |  |  | 
+ROW_9: A | FIRE ALARM PANEL |  |  |  |  |  |  |  | 
+ROW_10: 1 | Floor plan |  |  |  |  |  |  |  | 
+ROW_11: 2 | Indicator light (testing) |  |  |  |  |  |  |  | 
+ROW_12: 3 | Volt meter |  |  |  |  |  |  |  | 
+ROW_13: 4 | Amp meter |  |  |  |  |  |  |  | 
+ROW_14: 5 | CMS |  |  |  |  |  |  |  | 
+ROW_15: 6 | Cable connection |  |  |  |  |  |  |  | 
+ROW_16: 7 | Battery cell / charger (service) |  |  |  |  |  |  |  | 
+ROW_17: 8 | Zone switch (ISO/N/TA/TF test) |  |  |  |  |  |  |  | 
+ROW_18: 9 | Buzzer |  |  |  |  |  |  |  | 
+ROW_19: 10 | Master reset |  |  |  |  |  |  |  | 
+ROW_20: 11 | Bell (testing) |  |  |  |  |  |  |  | 
+ROW_21: 12 | Brake glass (testing) |  |  |  |  |  |  |  | 
+ROW_22: 13 | Smoke detector (testing) |  |  |  |  |  |  |  | 
+ROW_23: 14 | Heat detector (testing) |  |  |  |  |  |  |  | 
+ROW_24: 15 | Flow switch (testing) |  |  |  |  |  |  |  | 
+ROW_25:  |  |  |  |  |  |  |  |  | 
+ROW_26: B | INTERCOM PANEL |  |  |  |  |  |  |  | 
+ROW_27: 1 | Voltage |  |  |  | 26 |  |  |  | 
+ROW_28: 2 | Ampere |  |  |  | 0.5 |  |  |  | 
+ROW_29: 3 | Battery cell |  |  |  |  |  |  |  | 
+ROW_30: 4 | Battery charger |  |  |  |  |  |  |  | 
+ROW_31: 5 | Indicator light (testing) |  |  |  |  |  |  |  | 
+ROW_32: 6 | Call button |  |  |  |  |  |  |  | 
+ROW_33: 7 | Phone (testing) |  |  |  |  |  |  |  | 
+ROW_34:  |  |  |  |  |  |  |  |  | 
+ROW_35: NOTES |  |  |  |  |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  |  | 
+ROW_37:  |  |  |  |  |  |  |  |  | 
+ROW_38:  |  |  |  |  |  |  |  |  | 
+ROW_39: Carried out by :- |  |  |  |  | Verified by :- |  |  |  | 
+ROW_40: Signature |  | : |  |  | Signature |  | : |  | 
+ROW_41:  |  |  |  |  |  |  |  |  | 
+ROW_42: Name |  | : |  |  | Name |  | : |  | 
+ROW_43: Date |  | : |  |  | Date |  | : |  | 
+ROW_44:  |  |  |  |  |  |  |  |  | 
+ROW_45:  |  |  |  |  |  |  |  |  | 
+ROW_46:  |  |  |  |  |  |  |  |  | 
+ROW_47:  |  |  |  |  |  |  |  |  | 
+ROW_48:  |  |  |  |  |  |  |  |  | 
+ROW_49:  |  |  |  |  |  |  |  |  | 
+ROW_50:  |  |  |  |  |  |  |  |  | 

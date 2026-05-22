@@ -1,0 +1,42 @@
+﻿Sheet: FF - WATER TANK
+UsedRows: 38
+UsedCols: 15
+
+ROW_1:  |  | WATER TANK |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Month |  | Year |  | Status | Monthly | Category | Fire Fighting |  | Reference No. |  | BC/MAINT/WT/1 | 
+ROW_4:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_5: No | Location |  | Suction Tank (JBA) |  | Fire Tank (PG) |  | Domestic Tank Rooftop Blok A |  | Domestic Tank Rooftop Blok B1 |  | Domestic Tank Rooftop Blok B2 |  | Domestic Tank Rooftop Blok B3 | 
+ROW_6:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_7:  | Status |  | GOOD | BAD | GOOD | BAD | GOOD | BAD | GOOD | BAD | GOOD | BAD | GOOD | BAD
+ROW_8: 1 | Piping |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_9: 2 | Valve |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_10: 3 | Water level indicator |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_11: 4 | Tank condition |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_12: 5 | Painting |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_13: 6 | Ball valve |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_14: 7 | Sensor rod |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_15: 8 | Float switch |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_16: 9 | Check valve |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_17: 10 | Ladder |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_18:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_19: NOTES |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_20:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_21:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_22: Carried out by :- |  |  |  |  |  |  |  | Verified by :- |  |  |  |  |  | 
+ROW_23: Signature |  | : |  |  |  |  |  | Signature |  | : |  |  |  | 
+ROW_24:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_25: Name |  | : |  |  |  |  |  | Name |  | : |  |  |  | 
+ROW_26: Date |  | : |  |  |  |  |  | Date |  | : |  |  |  | 
+ROW_27:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_28:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_29:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_30:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_31:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_32:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_33:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_34:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_35:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_37:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_38:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 

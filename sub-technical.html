@@ -20,6 +20,85 @@
         .sync-meta { color: #6b7280; }
         .table-responsive td, .table-responsive th { vertical-align: middle; }
         .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+        .compact-sub-technical {
+            padding: 14px;
+        }
+
+        .compact-sub-technical .row.g-3 {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+        .compact-sub-technical .card-light,
+        .compact-sub-technical .table-responsive {
+            border-radius: 10px;
+        }
+
+        .compact-sub-technical h2 {
+            font-size: 1.35rem;
+        }
+
+        .compact-sub-technical .breadcrumb,
+        .compact-sub-technical .text-muted.small {
+            font-size: 0.8rem;
+        }
+
+        .compact-sub-technical #countBadge {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.55rem;
+        }
+
+        .compact-sub-technical .search-box {
+            padding: 7px 12px;
+            border-radius: 18px;
+            min-width: 190px;
+            font-size: 0.84rem;
+        }
+
+        .compact-sub-technical .sort-select {
+            border-radius: 18px;
+            min-width: 190px;
+            padding: 6px 10px;
+            font-size: 0.84rem;
+        }
+
+        .compact-sub-technical .filter-btn {
+            padding: 6px 12px;
+            font-size: 0.82rem;
+        }
+
+        .compact-sub-technical .sync-meta {
+            font-size: 0.78rem;
+        }
+
+        .compact-sub-technical .table > :not(caption) > * > * {
+            padding: 0.45rem 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .compact-sub-technical .badge-status {
+            padding: 4px 9px;
+            font-size: 0.76rem;
+        }
+
+        #techViewModalInline .modal-body,
+        #techEditModal .modal-body {
+            font-size: 0.86rem;
+        }
+
+        #techEditModal .form-label,
+        #techEditModal .form-control,
+        #techEditModal .form-select,
+        #techEditModal .btn,
+        #techViewModalInline .btn {
+            font-size: 0.84rem;
+        }
+
+        #techEditModal .invalid-feedback {
+            font-size: 0.74rem;
+        }
+
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
     </style>
 </head>
@@ -47,6 +126,7 @@
                 </button>
                 <div class="collapse show" id="techMenu">
                     <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
                     <a class="nav-link active ps-4" href="sub-technical.html">Sub Technical</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
@@ -54,7 +134,7 @@
         </nav>
     </div>
 
-    <div class="main-content" id="main-content" role="main">
+    <div class="main-content compact-sub-technical" id="main-content" role="main">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
             <div>

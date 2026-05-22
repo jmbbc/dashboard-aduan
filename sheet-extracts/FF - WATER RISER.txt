@@ -1,0 +1,51 @@
+﻿Sheet: FF - WATER RISER
+UsedRows: 47
+UsedCols: 10
+
+ROW_1:  |  | WATER RISER |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Category |  | Fire Fighting |  | Reference No. |  | BC/MAINT/WAT/1 | 
+ROW_4: Month |  | Year |  | Status | Quaterly | Location |  |  | 
+ROW_5:  |  |  |  |  |  |  |  |  | 
+ROW_6:  |  |  |  |  |  |  |  |  | 
+ROW_7: 1) INSPECTION |  |  |  |  |  |  |  |  | 
+ROW_8:  |  |  |  |  |  |  |  |  | 
+ROW_9: No | Description |  |  |  | Status |  | Remarks |  | 
+ROW_10:  |  |  |  |  | Good | Defect |  |  | 
+ROW_11: 1 | Room security |  |  |  |  |  |  |  | 
+ROW_12: 2 | Lighting |  |  |  |  |  |  |  | 
+ROW_13: 3 | Room temperature |  |  |  |  |  |  |  | 
+ROW_14: 4 | Contactor |  |  |  |  |  |  |  | 
+ROW_15: 5 | Isolator switch/MCCB |  |  |  |  |  |  |  | 
+ROW_16: 6 | Start / Stop button |  |  |  |  |  |  |  | 
+ROW_17: 7 | Indicator light |  |  |  |  |  |  |  | 
+ROW_18: 8 | Cable connection |  |  |  |  |  |  |  | 
+ROW_19: 9 | Pump condition |  |  |  |  |  |  |  | 
+ROW_20: 10 | Pressure control switch |  |  |  |  |  |  |  | 
+ROW_21: 11 | Pressure gauge |  |  |  |  |  |  |  | 
+ROW_22: 12 | Check valve |  |  |  |  |  |  |  | 
+ROW_23: 13 | Battery |  |  |  |  |  |  |  | 
+ROW_24:  |  |  |  |  |  |  |  |  | 
+ROW_25: 2) TESTING |  |  |  |  |  |  |  |  | 
+ROW_26:  |  |  |  |  |  |  |  |  | 
+ROW_27: No | Description |  |  | Normal Cut-In | Normal Cut-Out | Test Cut-In | Test Cut-Out | Remarks | 
+ROW_28: 1 | Jockey Pump |  |  |  |  |  |  |  | 
+ROW_29: 2 | Duty Pump |  |  |  |  |  |  |  | 
+ROW_30: 3 | Standby Pump |  |  |  |  |  |  |  | 
+ROW_31:  |  |  |  |  |  |  |  |  | 
+ROW_32: NOTES |  |  |  |  |  |  |  |  | 
+ROW_33:  |  |  |  |  |  |  |  |  | 
+ROW_34:  |  |  |  |  |  |  |  |  | 
+ROW_35:  |  |  |  |  |  |  |  |  | 
+ROW_36: Carried out by :- |  |  |  |  | Verified by :- |  |  |  | 
+ROW_37: Signature |  | : |  |  | Signature |  | : |  | 
+ROW_38:  |  |  |  |  |  |  |  |  | 
+ROW_39: Name |  | : |  |  | Name |  | : |  | 
+ROW_40: Date |  | : |  |  | Date |  | : |  | 
+ROW_41:  |  |  |  |  |  |  |  |  | 
+ROW_42:  |  |  |  |  |  |  |  |  | 
+ROW_43:  |  |  |  |  |  |  |  |  | 
+ROW_44:  |  |  |  |  |  |  |  |  | 
+ROW_45:  |  |  |  |  |  |  |  |  | 
+ROW_46:  |  |  |  |  |  |  |  |  | 
+ROW_47:  |  |  |  |  |  |  |  |  | 

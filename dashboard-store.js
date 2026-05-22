@@ -12,7 +12,7 @@
             category: 'Teknikal',
             reporter: 'Ahmad Ali',
             phone: '012-3456789',
-            unit: 'B-12-3',
+            unit: 'B1-12-3',
             date: '2025-12-31',
             status: 'Dalam Proses',
             details: 'Transaksi gagal diproses selepas kemas kini aplikasi.',
@@ -24,7 +24,7 @@
             category: 'Perkhidmatan',
             reporter: 'Siti Nurhaliza',
             phone: '013-1112233',
-            unit: 'A-03-8',
+            unit: 'A-3-8',
             date: '2025-12-31',
             status: 'Baru',
             details: 'Pertanyaan tidak dijawab selama lebih 48 jam.',
@@ -36,7 +36,7 @@
             category: 'Produk',
             reporter: 'Mohd Razak',
             phone: '017-2233445',
-            unit: 'D-07-15',
+            unit: 'B2-7-5',
             date: '2025-12-30',
             status: 'Dalam Proses',
             details: 'Produk diterima rosak dengan kemasan tidak lengkap.',
@@ -48,7 +48,7 @@
             category: 'Pertanyaan',
             reporter: 'Fatimah Zahra',
             phone: '016-9090909',
-            unit: 'C-05-2',
+            unit: 'B3-5-2',
             date: '2025-12-30',
             status: 'Selesai',
             resolvedAt: '2025-12-31',
@@ -61,7 +61,7 @@
             category: 'Teknikal',
             reporter: 'Lim Wei Jian',
             phone: '012-8882233',
-            unit: 'E-10-1',
+            unit: 'B1-10-1',
             date: '2025-12-29',
             status: 'Dalam Proses',
             details: 'Aplikasi crash ketika membuka halaman pembayaran.',
@@ -73,7 +73,7 @@
             category: 'Logistik',
             reporter: 'Kumar Selvam',
             phone: '019-5556789',
-            unit: 'F-02-6',
+            unit: 'B2-2-6',
             date: '2025-12-29',
             status: 'Selesai',
             resolvedAt: '2025-12-30',
@@ -133,6 +133,92 @@
         }
     ];
 
+    function buildUnitRange(block, levelStart, levelEnd, unitStart, unitEnd) {
+        const list = [];
+        for (let level = levelStart; level <= levelEnd; level += 1) {
+            for (let unit = unitStart; unit <= unitEnd; unit += 1) {
+                list.push(`${block}-${level}-${unit}`);
+            }
+        }
+        return list;
+    }
+
+    function buildSingleLevelRange(block, levelCode, unitStart, unitEnd) {
+        const list = [];
+        for (let unit = unitStart; unit <= unitEnd; unit += 1) {
+            list.push(`${block}-${levelCode}-${unit}`);
+        }
+        return list;
+    }
+
+    const UNIT_MASTER_LIST = [
+        ...buildUnitRange('A', 1, 14, 1, 10),
+        ...buildUnitRange('B1', 1, 12, 1, 12),
+        ...buildSingleLevelRange('B1', 'G', 1, 12),
+        ...buildUnitRange('B2', 1, 15, 1, 12),
+        ...buildSingleLevelRange('B2', 'G', 1, 12),
+        ...buildUnitRange('B3', 1, 17, 1, 12),
+        ...buildSingleLevelRange('B3', 'G', 1, 12)
+    ];
+
+    function normalizeUnitCode(value) {
+        const raw = String(value || '').trim().toUpperCase();
+        if (!raw) return '';
+
+        const normalized = raw
+            .replace(/[\s_/]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        if (!normalized) return '';
+
+        return normalized
+            .split('-')
+            .map((part) => (/^\d+$/.test(part) ? String(Number(part)) : part))
+            .join('-');
+    }
+
+    const UNIT_CANONICAL_MAP = new Map(
+        UNIT_MASTER_LIST.map((unit) => [normalizeUnitCode(unit), unit])
+    );
+
+    function canonicalizeUnit(value) {
+        const key = normalizeUnitCode(value);
+        if (!key) return '';
+        return UNIT_CANONICAL_MAP.get(key) || '';
+    }
+
+    function isValidUnit(value) {
+        return Boolean(canonicalizeUnit(value));
+    }
+
+    function getUnitList() {
+        return UNIT_MASTER_LIST.slice();
+    }
+
+    function stableHash(text) {
+        let hash = 0;
+        const source = String(text || '');
+        for (let i = 0; i < source.length; i += 1) {
+            hash = ((hash * 31) + source.charCodeAt(i)) >>> 0;
+        }
+        return hash;
+    }
+
+    function pickMockupFallbackUnit(seed, index) {
+        if (!UNIT_MASTER_LIST.length) return '';
+        const base = stableHash(seed || `MOCK-${index}`);
+        const offset = Number.isFinite(index) ? index : 0;
+        const position = (base + offset) % UNIT_MASTER_LIST.length;
+        return UNIT_MASTER_LIST[position];
+    }
+
+    function normalizeUnitForMockup(value, index, seed) {
+        const canonical = canonicalizeUnit(value);
+        if (canonical) return canonical;
+        return pickMockupFallbackUnit(seed || normalizeUnitCode(value) || '', index);
+    }
+
     function clone(value) {
         return JSON.parse(JSON.stringify(value));
     }
@@ -166,33 +252,126 @@
         }
     }
 
+    function normalizeDateOnly(value, fallbackDate) {
+        const fallback = String(fallbackDate || new Date().toISOString().slice(0, 10));
+        const raw = String(value || '').trim();
+
+        if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            return raw;
+        }
+
+        const parsed = new Date(raw);
+        if (!Number.isNaN(parsed.getTime())) {
+            return parsed.toISOString().slice(0, 10);
+        }
+
+        return fallback;
+    }
+
+    function normalizeWorkLogs(rows, fallbackDate, fallbackDetails) {
+        const source = Array.isArray(rows) ? rows : [];
+        const logs = source
+            .map((row) => {
+                if (!row || typeof row !== 'object') {
+                    return null;
+                }
+
+                const note = String(row.note ?? row.details ?? row.butiran ?? row.message ?? '').trim();
+                if (!note) {
+                    return null;
+                }
+
+                return {
+                    date: normalizeDateOnly(row.date ?? row.tarikh, fallbackDate),
+                    note
+                };
+            })
+            .filter(Boolean);
+
+        const legacyNote = String(fallbackDetails || '').trim();
+        if (!logs.length && legacyNote) {
+            logs.push({
+                date: normalizeDateOnly(fallbackDate, fallbackDate),
+                note: legacyNote
+            });
+        }
+
+        return logs;
+    }
+
+    function normalizeImageAttachments(rows) {
+        const source = Array.isArray(rows) ? rows : [];
+        return source
+            .map((entry) => {
+                if (typeof entry === 'string') {
+                    const dataUrl = entry.trim();
+                    if (!dataUrl.startsWith('data:image/')) return null;
+                    return { dataUrl, name: 'Gambar', type: '', size: 0, details: '' };
+                }
+
+                if (!entry || typeof entry !== 'object') {
+                    return null;
+                }
+
+                const dataUrl = String(entry.dataUrl || entry.url || '').trim();
+                if (!dataUrl.startsWith('data:image/')) {
+                    return null;
+                }
+
+                return {
+                    dataUrl,
+                    name: String(entry.name || 'Gambar').slice(0, 120),
+                    type: String(entry.type || ''),
+                    size: Number.isFinite(Number(entry.size)) ? Number(entry.size) : 0,
+                    details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
+                };
+            })
+            .filter(Boolean)
+            .slice(0, 6);
+    }
+
     function normalizeComplaint(item, index) {
+        const id = String(item.id || `ADU-${index + 1}`);
+        const rawUnit = String(item.unit || '');
+        const canonicalUnit = normalizeUnitForMockup(rawUnit, index, id);
+        const complaintDate = normalizeDateOnly(item.date, new Date().toISOString().slice(0, 10));
+        const rawDetails = String(item.details || '').trim();
+        const workLogs = normalizeWorkLogs(item.workLogs, complaintDate, rawDetails);
+        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
         return {
-            id: String(item.id || `ADU-${index + 1}`),
+            id,
             title: String(item.title || '-'),
             category: String(item.category || '-'),
             reporter: String(item.reporter || '-'),
             phone: String(item.phone || ''),
-            unit: String(item.unit || ''),
-            date: String(item.date || new Date().toISOString().slice(0, 10)),
+            unit: canonicalUnit,
+            date: complaintDate,
             status: String(item.status || 'Baru'),
-            details: String(item.details || ''),
+            details: rawDetails || (workLogs[0] ? workLogs[0].note : ''),
+            workLogs,
+            imageAttachments,
             resolvedAt: item.resolvedAt || undefined,
             updatedAt: item.updatedAt || null
         };
     }
 
     function normalizeTechnical(item, index) {
+        const dueDate = normalizeDateOnly(item.due, new Date().toISOString().slice(0, 10));
+        const rawNotes = String(item.notes ?? item.details ?? '').trim();
+        const workLogs = normalizeWorkLogs(item.workLogs, dueDate, rawNotes);
+        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
         return {
             id: String(item.id || `TECH-${index + 1}`),
             title: String(item.title || '-'),
             type: String(item.type || '-'),
             asset: String(item.asset || '-'),
             owner: String(item.owner || '-'),
-            due: String(item.due || new Date().toISOString().slice(0, 10)),
+            due: dueDate,
             priority: String(item.priority || 'Sederhana'),
             status: String(item.status || 'Terbuka'),
-            notes: String(item.notes || ''),
+            notes: workLogs[0] ? workLogs[0].note : rawNotes,
+            workLogs,
+            imageAttachments,
             updatedAt: item.updatedAt || null
         };
     }
@@ -200,7 +379,18 @@
     function loadComplaints() {
         const parsed = parseJson(readStorage(STORAGE_KEYS.complaints), null);
         if (Array.isArray(parsed) && parsed.length) {
-            return parsed.map(normalizeComplaint);
+            const payload = parsed.map(normalizeComplaint);
+            const hasUnitAdjustments = parsed.some((row, index) => {
+                const rawUnit = String((row && row.unit) || '').trim();
+                return rawUnit !== payload[index].unit;
+            });
+
+            // Persist one-time cleanup so invalid unit formats become valid mockup units.
+            if (hasUnitAdjustments) {
+                writeStorage(STORAGE_KEYS.complaints, JSON.stringify(payload));
+            }
+
+            return payload;
         }
         return clone(DEFAULT_COMPLAINTS).map(normalizeComplaint);
     }
@@ -270,6 +460,7 @@
         STORAGE_KEYS,
         DEFAULT_COMPLAINTS: clone(DEFAULT_COMPLAINTS),
         DEFAULT_TECHNICAL: clone(DEFAULT_TECHNICAL),
+        UNIT_MASTER_LIST: UNIT_MASTER_LIST.slice(),
         loadComplaints,
         saveComplaints,
         upsertComplaint,
@@ -278,6 +469,11 @@
         saveTechnical,
         upsertTechnical,
         removeTechnical,
-        getLatestUpdatedAt
+        getLatestUpdatedAt,
+        getUnitList,
+        isValidUnit,
+        normalizeUnitCode,
+        normalizeUnit: canonicalizeUnit,
+        normalizeUnitForMockup
     };
 })(window);

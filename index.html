@@ -344,6 +344,11 @@
             overflow: hidden;
         }
 
+        .complaint-modal-compact {
+            --complaint-modal-body-height: clamp(340px, 60vh, 470px);
+            --complaint-details-min-height: 136px;
+        }
+
         .complaint-modal-compact .modal-header {
             padding: 0.62rem 0.8rem;
             border-bottom: 1px solid #edf0f5;
@@ -356,6 +361,8 @@
 
         .complaint-modal-compact .modal-body {
             padding: 0.72rem 0.8rem;
+            height: var(--complaint-modal-body-height);
+            overflow-y: auto;
         }
 
         .complaint-modal-compact .modal-footer {
@@ -367,6 +374,24 @@
         .complaint-modal-compact .row {
             --bs-gutter-x: 0.5rem;
             --bs-gutter-y: 0.5rem;
+        }
+
+        .complaint-modal-compact .complaint-meta-grid {
+            --bs-gutter-x: 0.42rem;
+            --bs-gutter-y: 0.34rem;
+        }
+
+        .complaint-modal-compact .complaint-meta-field .form-label {
+            margin-bottom: 0.14rem;
+            font-size: 0.72rem;
+            line-height: 1.1;
+        }
+
+        .complaint-modal-compact .complaint-meta-field .form-control,
+        .complaint-modal-compact .complaint-meta-field .form-select {
+            padding: 0.3rem 0.48rem;
+            font-size: 0.8rem;
+            min-height: calc(1.32em + 0.54rem + 2px);
         }
 
         .complaint-modal-compact .form-label {
@@ -384,7 +409,7 @@
         }
 
         .complaint-modal-compact textarea.form-control {
-            min-height: 78px;
+            min-height: var(--complaint-details-min-height);
             resize: vertical;
         }
 
@@ -397,6 +422,158 @@
         .complaint-modal-compact .btn {
             padding: 0.34rem 0.68rem;
             font-size: 0.82rem;
+        }
+
+        .complaint-modal-mode-view .form-control,
+        .complaint-modal-mode-view .form-select {
+            background: #f8fafc;
+            color: #1f2937;
+            opacity: 1;
+        }
+
+        .complaint-modal-mode-view .complaint-meta-grid {
+            --bs-gutter-x: 0.34rem;
+            --bs-gutter-y: 0.28rem;
+        }
+
+        .complaint-modal-mode-view .complaint-meta-field .form-label {
+            margin-bottom: 0.08rem;
+            font-size: 0.66rem;
+        }
+
+        .complaint-modal-mode-view .complaint-meta-field .form-control,
+        .complaint-modal-mode-view .complaint-meta-field .form-select {
+            padding: 0.24rem 0.42rem;
+            font-size: 0.76rem;
+            min-height: calc(1.18em + 0.42rem + 2px);
+        }
+
+        .complaint-modal-mode-view .form-text,
+        .complaint-modal-mode-view .invalid-feedback {
+            display: none;
+        }
+
+        .complaint-modal-mode-view textarea.form-control {
+            min-height: var(--complaint-details-min-height);
+        }
+
+        .complaint-log-wrap {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.45rem;
+        }
+
+        .complaint-log-table > :not(caption) > * > * {
+            padding: 0.36rem 0.42rem;
+            font-size: 0.8rem;
+            vertical-align: top;
+        }
+
+        .complaint-log-table tbody td:nth-child(2) {
+            white-space: pre-wrap;
+        }
+
+        .complaint-log-editor .form-control {
+            min-height: calc(1.5em + 0.62rem + 2px);
+            font-size: 0.8rem;
+        }
+
+        .complaint-log-empty {
+            color: #6b7280;
+            text-align: center;
+            font-size: 0.79rem;
+            padding: 0.6rem 0;
+        }
+
+        .complaint-modal-mode-view .complaint-log-editor,
+        .complaint-modal-mode-view .complaint-log-action-col {
+            display: none;
+        }
+
+        .complaint-image-wrap {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.45rem;
+        }
+
+        .complaint-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+            gap: 0.4rem;
+        }
+
+        .complaint-image-item {
+            position: relative;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .complaint-image-item img {
+            display: block;
+            width: 100%;
+            height: 84px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .complaint-image-caption {
+            font-size: 0.67rem;
+            color: #4b5563;
+            padding: 0.25rem 0.32rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .complaint-image-details-view {
+            font-size: 0.68rem;
+            color: #6b7280;
+            padding: 0 0.32rem 0.28rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .complaint-image-details-input {
+            border: 0;
+            border-top: 1px solid #edf0f5;
+            border-radius: 0;
+            font-size: 0.72rem;
+            padding: 0.24rem 0.32rem;
+            min-height: calc(1.4em + 0.45rem + 2px);
+        }
+
+        .complaint-image-details-input:focus {
+            box-shadow: none;
+            border-color: #d6dbe3;
+        }
+
+        .complaint-image-remove {
+            position: absolute;
+            top: 0.2rem;
+            right: 0.2rem;
+            padding: 0.08rem 0.25rem;
+            font-size: 0.68rem;
+            line-height: 1.1;
+        }
+
+        .complaint-image-empty {
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 0.65rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #6b7280;
+            background: #fff;
+        }
+
+        .complaint-modal-mode-view .complaint-image-editor,
+        .complaint-modal-mode-view .complaint-image-remove {
+            display: none;
         }
 
         .unit-summary-trigger {
@@ -441,6 +618,10 @@
         }
 
         @media (max-width: 768px) {
+            .complaint-modal-compact {
+                --complaint-modal-body-height: clamp(310px, 56vh, 390px);
+            }
+
             .complaint-modal-compact .modal-body,
             .complaint-modal-compact .modal-header,
             .complaint-modal-compact .modal-footer {
@@ -495,6 +676,7 @@
                 </button>
                 <div class="collapse" id="techMenu">
                     <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
                     <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
@@ -517,20 +699,20 @@
 
     <!-- Modals -->
     <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered complaint-modal-compact">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered complaint-modal-compact" id="complaintModalDialog">
             <form class="modal-content needs-validation" id="complaintForm" novalidate>
                 <div class="modal-header">
                     <h5 class="modal-title" id="complaintModalLabel">Aduan Baru</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-2">
-                        <div class="col-md-8">
+                    <div class="row g-2 complaint-meta-grid">
+                        <div class="col-md-8 complaint-meta-field">
                             <label class="form-label" for="inputTitle">Tajuk Aduan</label>
                             <input type="text" class="form-control" id="inputTitle" placeholder="Contoh: Sistem pembayaran gagal" required>
                             <div class="invalid-feedback">Sila masukkan tajuk.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputCategory">Kategori</label>
                             <select class="form-select" id="inputCategory" required>
                                 <option value="" disabled selected>Pilih kategori</option>
@@ -542,22 +724,23 @@
                             </select>
                             <div class="invalid-feedback">Pilih kategori.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputReporter">Nama Pengadu</label>
                             <input type="text" class="form-control" id="inputReporter" placeholder="Nama pengadu" required>
                             <div class="invalid-feedback">Masukkan nama pengadu.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputPhone">No. Telefon Pengadu</label>
                             <input type="tel" class="form-control" id="inputPhone" placeholder="Contoh: 012-3456789" required>
                             <div class="invalid-feedback">Masukkan nombor telefon.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputUnit">Unit Rumah Pengadu</label>
-                            <input type="text" class="form-control" id="inputUnit" placeholder="Contoh: B-12-3" required>
-                            <div class="invalid-feedback">Isi unit rumah.</div>
+                            <input type="text" class="form-control" id="inputUnit" placeholder="Contoh: A-1-1" list="inputUnitOptions" autocomplete="off" required>
+                            <datalist id="inputUnitOptions"></datalist>
+                            <div class="invalid-feedback">Pilih unit rumah yang sah daripada senarai.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputStatus">Status</label>
                             <select class="form-select" id="inputStatus" required>
                                 <option value="" disabled selected>Pilih status</option>
@@ -568,42 +751,67 @@
                             </select>
                             <div class="invalid-feedback">Pilih status.</div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 complaint-meta-field">
                             <label class="form-label" for="inputDate">Tarikh Terima</label>
                             <input type="date" class="form-control" id="inputDate" required>
                             <div class="form-text">Pilih tarikh terima (lalai hari ini).</div>
                             <div class="invalid-feedback">Pilih tarikh terima.</div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="inputDetails">Butiran Aduan</label>
-                            <textarea class="form-control" id="inputDetails" rows="2" placeholder="Nyatakan butiran aduan" required></textarea>
-                            <div class="invalid-feedback">Isi butiran aduan.</div>
+                            <label class="form-label mb-1">Butiran Aduan (Log Report)</label>
+                            <div class="complaint-log-wrap">
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-2 complaint-log-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 170px;">Tarikh</th>
+                                                <th>Butiran Aduan</th>
+                                                <th class="text-end complaint-log-action-col" style="width: 92px;">Tindakan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inputWorkLogBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row g-2 complaint-log-editor" id="inputWorkLogEditor">
+                                    <div class="col-md-3">
+                                        <label for="inputLogDate" class="visually-hidden">Tarikh log</label>
+                                        <input type="date" class="form-control" id="inputLogDate" aria-label="Tarikh log laporan">
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label for="inputLogDetails" class="visually-hidden">Butiran log</label>
+                                        <input type="text" class="form-control" id="inputLogDetails" placeholder="Contoh: Kerja pembaikan selesai 80%" aria-label="Butiran log laporan">
+                                    </div>
+                                    <div class="col-md-2 d-grid">
+                                        <button type="button" class="btn btn-outline-primary" id="addWorkLogBtn"><i class="bi bi-plus-lg me-1"></i>Tambah</button>
+                                    </div>
+                                </div>
+                                <div class="small text-danger mt-1 d-none" id="inputLogFeedback">Tambah sekurang-kurangnya satu log sebelum simpan.</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label mb-1">Lampiran Gambar (Opsyenal)</label>
+                            <div class="complaint-image-wrap">
+                                <div class="row g-2 complaint-image-editor">
+                                    <div class="col-md-8">
+                                        <label for="inputImageUpload" class="visually-hidden">Upload gambar aduan</label>
+                                        <input type="file" class="form-control" id="inputImageUpload" accept="image/*" multiple>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <small class="text-muted">Maks 3 gambar, 350KB setiap satu.</small>
+                                    </div>
+                                </div>
+                                <div class="small text-danger mt-1 d-none" id="inputImageFeedback"></div>
+                                <div class="complaint-image-grid mt-2" id="inputImagePreview"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-outline-secondary" id="closeComplaintBtn" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success d-none" id="complaintViewEditBtn">Edit</button>
                     <button type="submit" class="btn btn-primary" id="submitComplaintBtn">Simpan</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">Maklumat Aduan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3" id="viewDetails"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-success" id="viewEditBtn">Edit</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -892,6 +1100,7 @@
                 tableBody: document.getElementById('complaintsBody'),
                 searchBox: document.getElementById('searchAduan'),
                 categoryFilter: document.getElementById('categoryFilter'),
+                unitOptionsList: document.getElementById('inputUnitOptions'),
                 filterButtons: document.querySelectorAll('.filter-btn'),
                 statToday: document.getElementById('statToday'),
                 statNew: document.getElementById('statNew'),
@@ -908,9 +1117,19 @@
                 newButtons: document.querySelectorAll('.btn-new-complaint'),
                 complaintForm: document.getElementById('complaintForm'),
                 complaintModalEl: document.getElementById('complaintModal'),
-                viewModalEl: document.getElementById('viewModal'),
-                viewDetails: document.getElementById('viewDetails'),
-                viewEditBtn: document.getElementById('viewEditBtn'),
+                complaintModalDialog: document.getElementById('complaintModalDialog'),
+                complaintModalLabel: document.getElementById('complaintModalLabel'),
+                submitComplaintBtn: document.getElementById('submitComplaintBtn'),
+                closeComplaintBtn: document.getElementById('closeComplaintBtn'),
+                complaintViewEditBtn: document.getElementById('complaintViewEditBtn'),
+                workLogBody: document.getElementById('inputWorkLogBody'),
+                logDateInput: document.getElementById('inputLogDate'),
+                logDetailsInput: document.getElementById('inputLogDetails'),
+                addWorkLogBtn: document.getElementById('addWorkLogBtn'),
+                logFeedback: document.getElementById('inputLogFeedback'),
+                imageInput: document.getElementById('inputImageUpload'),
+                imageFeedback: document.getElementById('inputImageFeedback'),
+                imagePreview: document.getElementById('inputImagePreview'),
                 unitSummaryModalEl: document.getElementById('unitSummaryModal'),
                 unitSummaryName: document.getElementById('unitSummaryName'),
                 unitSummaryStats: document.getElementById('unitSummaryStats'),
@@ -926,22 +1145,26 @@
                 phone: document.getElementById('inputPhone'),
                 unit: document.getElementById('inputUnit'),
                 status: document.getElementById('inputStatus'),
-                date: document.getElementById('inputDate'),
-                details: document.getElementById('inputDetails')
+                date: document.getElementById('inputDate')
             };
 
             let complaints = store.loadComplaints();
+            const unitMasterList = typeof store.getUnitList === 'function' ? store.getUnitList() : [];
             let activityLog = loadFromStorage(ACTIVITY_KEY, defaultActivity);
             let currentStatus = 'Semua';
             let currentCategory = 'Semua';
             let currentSearch = '';
             let editingId = null;
             let viewingId = null;
+            let returnToViewAfterSave = false;
+            let draftWorkLogs = [];
+            let draftImages = [];
             const pageSize = 5;
             let currentPage = 1;
+            const MAX_COMPLAINT_IMAGES = 3;
+            const MAX_COMPLAINT_IMAGE_BYTES = 350 * 1024;
 
             const complaintModal = new bootstrap.Modal(refs.complaintModalEl);
-            const viewModal = new bootstrap.Modal(refs.viewModalEl);
             const unitSummaryModal = refs.unitSummaryModalEl ? new bootstrap.Modal(refs.unitSummaryModalEl) : null;
 
             let trendChart;
@@ -949,6 +1172,7 @@
             const sparkCharts = {};
 
             initCharts();
+            renderUnitOptions();
             renderAll();
             bindEvents();
 
@@ -973,6 +1197,44 @@
 
             function saveActivity() {
                 localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activityLog));
+            }
+
+            function renderUnitOptions() {
+                if (!refs.unitOptionsList) return;
+                refs.unitOptionsList.innerHTML = unitMasterList
+                    .map((unit) => `<option value="${unit}"></option>`)
+                    .join('');
+            }
+
+            function canonicalizeUnitValue(value) {
+                const raw = String(value || '').trim();
+                if (!raw) return '';
+                if (typeof store.normalizeUnitForMockup === 'function') {
+                    return store.normalizeUnitForMockup(raw, 0, raw);
+                }
+                if (typeof store.normalizeUnit === 'function') {
+                    return store.normalizeUnit(raw);
+                }
+                return raw.toUpperCase();
+            }
+
+            function validateUnitField(field) {
+                if (!field) return '';
+                const raw = String(field.value || '').trim();
+                if (!raw) {
+                    field.setCustomValidity('');
+                    return '';
+                }
+
+                const canonical = canonicalizeUnitValue(raw);
+                if (!canonical) {
+                    field.setCustomValidity('Unit rumah tidak sah.');
+                    return '';
+                }
+
+                field.value = canonical;
+                field.setCustomValidity('');
+                return canonical;
             }
 
             function bindEvents() {
@@ -1009,6 +1271,14 @@
                     if (e.key === 'Enter') {
                         document.querySelector('table')?.focus();
                     }
+                });
+
+                formFields.unit?.addEventListener('input', () => {
+                    formFields.unit.setCustomValidity('');
+                });
+
+                formFields.unit?.addEventListener('blur', () => {
+                    validateUnitField(formFields.unit);
                 });
 
                 refs.newButtons.forEach(btn => btn.addEventListener('click', () => openFormModal('new')));
@@ -1058,11 +1328,83 @@
 
                 refs.complaintForm.addEventListener('submit', handleSubmitForm);
 
-                refs.viewEditBtn.addEventListener('click', () => {
+                refs.complaintViewEditBtn.addEventListener('click', () => {
                     if (viewingId) {
-                        viewModal.hide();
                         openFormModal('edit', viewingId);
                     }
+                });
+
+                refs.addWorkLogBtn?.addEventListener('click', () => {
+                    const note = String(refs.logDetailsInput?.value || '').trim();
+                    if (!note) {
+                        showLogFeedback('Isi butiran log sebelum tambah.');
+                        refs.logDetailsInput?.focus();
+                        return;
+                    }
+
+                    const fallbackDate = formFields.date.value || new Date().toISOString().slice(0, 10);
+                    const logDate = normalizeLogDate(refs.logDateInput?.value, fallbackDate);
+                    draftWorkLogs.unshift({ date: logDate, note });
+                    refs.logDateInput.value = logDate;
+                    refs.logDetailsInput.value = '';
+                    clearLogFeedback();
+                    renderWorkLogTable();
+                });
+
+                refs.workLogBody?.addEventListener('click', (event) => {
+                    const removeBtn = event.target.closest('button[data-log-remove-index]');
+                    if (!removeBtn) return;
+
+                    const index = Number(removeBtn.dataset.logRemoveIndex);
+                    if (Number.isNaN(index)) return;
+
+                    draftWorkLogs.splice(index, 1);
+                    clearLogFeedback();
+                    renderWorkLogTable();
+                });
+
+                refs.imageInput?.addEventListener('change', (event) => {
+                    void handleImageSelection(event);
+                });
+
+                refs.imagePreview?.addEventListener('click', (event) => {
+                    const removeBtn = event.target.closest('button[data-image-remove-index]');
+                    if (!removeBtn) return;
+                    const index = Number(removeBtn.dataset.imageRemoveIndex);
+                    if (Number.isNaN(index)) return;
+
+                    draftImages.splice(index, 1);
+                    clearImageFeedback();
+                    renderImagePreview();
+                });
+
+                refs.imagePreview?.addEventListener('input', (event) => {
+                    const detailsInput = event.target.closest('input[data-image-details-index]');
+                    if (!detailsInput) return;
+                    const index = Number(detailsInput.dataset.imageDetailsIndex);
+                    if (Number.isNaN(index) || !draftImages[index]) return;
+
+                    draftImages[index].details = String(detailsInput.value || '').slice(0, 160);
+                });
+
+                refs.complaintModalEl.addEventListener('hidden.bs.modal', () => {
+                    viewingId = null;
+                    editingId = null;
+                    returnToViewAfterSave = false;
+                    draftWorkLogs = [];
+                    draftImages = [];
+                    setFormReadonly(false);
+                    refs.complaintModalDialog.classList.remove('complaint-modal-mode-view');
+                    refs.submitComplaintBtn.classList.remove('d-none');
+                    refs.complaintViewEditBtn.classList.add('d-none');
+                    refs.closeComplaintBtn.textContent = 'Batal';
+                    refs.logDateInput.value = new Date().toISOString().slice(0, 10);
+                    refs.logDetailsInput.value = '';
+                    if (refs.imageInput) refs.imageInput.value = '';
+                    clearLogFeedback();
+                    clearImageFeedback();
+                    renderWorkLogTable();
+                    renderImagePreview();
                 });
 
 
@@ -1126,8 +1468,11 @@
                 return complaints.filter(c => {
                     const statusMatch = currentStatus === 'Semua' ? true : c.status === currentStatus;
                     const categoryMatch = currentCategory === 'Semua' ? true : c.category === currentCategory;
+                    const workLogText = Array.isArray(c.workLogs)
+                        ? c.workLogs.map((log) => `${log.date || ''} ${log.note || ''}`).join(' ')
+                        : '';
                     const searchMatch = currentSearch
-                        ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details}`.toLowerCase().includes(currentSearch)
+                        ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details} ${workLogText}`.toLowerCase().includes(currentSearch)
                         : true;
                     return statusMatch && categoryMatch && searchMatch;
                 });
@@ -1317,29 +1662,273 @@
                 renderActivity();
             }
 
-            function openFormModal(mode, id) {
-                editingId = mode === 'edit' ? id : null;
-                refs.complaintForm.classList.remove('was-validated');
-                document.getElementById('complaintModalLabel').textContent = mode === 'edit' ? 'Edit Aduan' : 'Aduan Baru';
-                document.getElementById('submitComplaintBtn').textContent = mode === 'edit' ? 'Kemaskini' : 'Simpan';
+            function clearLogFeedback() {
+                if (!refs.logFeedback) return;
+                refs.logFeedback.textContent = '';
+                refs.logFeedback.classList.add('d-none');
+            }
 
-                if (mode === 'edit' && id) {
-                    const data = complaints.find(c => c.id === id);
-                    if (data) {
-                        formFields.title.value = data.title;
-                        formFields.category.value = data.category;
-                        formFields.reporter.value = data.reporter;
-                        formFields.status.value = data.status;
-                        formFields.phone.value = data.phone || '';
-                        formFields.unit.value = data.unit || '';
-                        formFields.date.value = data.date;
-                        formFields.details.value = data.details || '';
+            function showLogFeedback(message) {
+                if (!refs.logFeedback) return;
+                refs.logFeedback.textContent = message;
+                refs.logFeedback.classList.remove('d-none');
+            }
+
+            function clearImageFeedback() {
+                if (!refs.imageFeedback) return;
+                refs.imageFeedback.textContent = '';
+                refs.imageFeedback.classList.add('d-none');
+            }
+
+            function showImageFeedback(message) {
+                if (!refs.imageFeedback) return;
+                refs.imageFeedback.textContent = message;
+                refs.imageFeedback.classList.remove('d-none');
+            }
+
+            function normalizeLogDate(value, fallbackDate) {
+                const fallback = String(fallbackDate || new Date().toISOString().slice(0, 10));
+                const raw = String(value || '').trim();
+                if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+                const parsed = new Date(raw);
+                if (!Number.isNaN(parsed.getTime())) {
+                    return parsed.toISOString().slice(0, 10);
+                }
+                return fallback;
+            }
+
+            function normalizeWorkLogsForForm(logs, fallbackDate, fallbackDetails) {
+                const source = Array.isArray(logs) ? logs : [];
+                const normalized = source
+                    .map((row) => {
+                        if (!row || typeof row !== 'object') return null;
+                        const note = String(row.note ?? row.details ?? row.butiran ?? row.message ?? '').trim();
+                        if (!note) return null;
+                        return {
+                            date: normalizeLogDate(row.date ?? row.tarikh, fallbackDate),
+                            note
+                        };
+                    })
+                    .filter(Boolean);
+
+                const legacyNote = String(fallbackDetails || '').trim();
+                if (!normalized.length && legacyNote) {
+                    normalized.push({
+                        date: normalizeLogDate(fallbackDate, fallbackDate),
+                        note: legacyNote
+                    });
+                }
+
+                return normalized;
+            }
+
+            function normalizeImageAttachmentsForForm(rows) {
+                const source = Array.isArray(rows) ? rows : [];
+                return source
+                    .map((entry) => {
+                        if (!entry || typeof entry !== 'object') return null;
+                        const dataUrl = String(entry.dataUrl || entry.url || '').trim();
+                        if (!dataUrl.startsWith('data:image/')) return null;
+                        return {
+                            dataUrl,
+                            name: String(entry.name || 'Gambar').slice(0, 120),
+                            type: String(entry.type || ''),
+                            size: Number.isFinite(Number(entry.size)) ? Number(entry.size) : 0,
+                            details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
+                        };
+                    })
+                    .filter(Boolean)
+                    .slice(0, MAX_COMPLAINT_IMAGES);
+            }
+
+            function renderImagePreview() {
+                if (!refs.imagePreview) return;
+
+                if (!draftImages.length) {
+                    refs.imagePreview.innerHTML = '<div class="complaint-image-empty">Tiada gambar dilampirkan.</div>';
+                    return;
+                }
+
+                const isViewMode = refs.complaintModalDialog.classList.contains('complaint-modal-mode-view');
+                refs.imagePreview.innerHTML = draftImages.map((image, index) => `
+                    <div class="complaint-image-item">
+                        <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || `Gambar ${index + 1}`)}">
+                        ${isViewMode ? '' : `<button type="button" class="btn btn-sm btn-danger complaint-image-remove" data-image-remove-index="${index}"><i class="bi bi-x-lg"></i></button>`}
+                        <div class="complaint-image-caption">${escapeHtml(image.name || `Gambar ${index + 1}`)}</div>
+                        ${isViewMode
+                            ? `<div class="complaint-image-details-view">${escapeHtml(String(image.details || '').trim() || 'Tiada detail')}</div>`
+                            : `<input type="text" class="form-control complaint-image-details-input" data-image-details-index="${index}" maxlength="160" placeholder="Detail gambar (opsyenal)" value="${escapeHtml(String(image.details || ''))}">`
+                        }
+                    </div>
+                `).join('');
+            }
+
+            function readImageAsDataUrl(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = () => reject(new Error('Gagal membaca fail gambar.'));
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleImageSelection(event) {
+                const files = Array.from(event.target.files || []);
+                if (!files.length) return;
+
+                clearImageFeedback();
+
+                const availableSlots = MAX_COMPLAINT_IMAGES - draftImages.length;
+                if (availableSlots <= 0) {
+                    showImageFeedback(`Maksimum ${MAX_COMPLAINT_IMAGES} gambar dibenarkan.`);
+                    event.target.value = '';
+                    return;
+                }
+
+                const selectedFiles = files.slice(0, availableSlots);
+                const issues = [];
+
+                for (const file of selectedFiles) {
+                    if (!String(file.type || '').startsWith('image/')) {
+                        issues.push(`${file.name}: format fail bukan gambar.`);
+                        continue;
                     }
+
+                    if (file.size > MAX_COMPLAINT_IMAGE_BYTES) {
+                        issues.push(`${file.name}: melebihi 350KB.`);
+                        continue;
+                    }
+
+                    try {
+                        const dataUrl = await readImageAsDataUrl(file);
+                        if (!dataUrl.startsWith('data:image/')) {
+                            issues.push(`${file.name}: format data tidak sah.`);
+                            continue;
+                        }
+
+                        draftImages.push({
+                            dataUrl,
+                            name: String(file.name || 'Gambar').slice(0, 120),
+                            type: String(file.type || ''),
+                            size: Number(file.size) || 0,
+                            details: ''
+                        });
+                    } catch {
+                        issues.push(`${file.name}: gagal dibaca.`);
+                    }
+                }
+
+                if (files.length > selectedFiles.length) {
+                    issues.push(`Hanya ${availableSlots} gambar tambahan dibenarkan.`);
+                }
+
+                if (issues.length) {
+                    showImageFeedback(issues.join(' '));
+                }
+
+                renderImagePreview();
+                event.target.value = '';
+            }
+
+            function renderWorkLogTable() {
+                if (!refs.workLogBody) return;
+
+                if (!draftWorkLogs.length) {
+                    refs.workLogBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="complaint-log-empty">Belum ada log. Tambah tarikh dan butiran kerja untuk rekod.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                const isViewMode = refs.complaintModalDialog.classList.contains('complaint-modal-mode-view');
+                refs.workLogBody.innerHTML = draftWorkLogs.map((log, index) => `
+                    <tr>
+                        <td>${escapeHtml(formatDisplayDate(log.date))}</td>
+                        <td>${escapeHtml(log.note)}</td>
+                        <td class="text-end complaint-log-action-col">
+                            ${isViewMode ? '' : `<button type="button" class="btn btn-sm btn-outline-danger" data-log-remove-index="${index}">Padam</button>`}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function setFormReadonly(isReadonly) {
+                Object.values(formFields).forEach(field => {
+                    if (!field) return;
+                    field.disabled = isReadonly;
+                });
+                if (refs.logDateInput) refs.logDateInput.disabled = isReadonly;
+                if (refs.logDetailsInput) refs.logDetailsInput.disabled = isReadonly;
+                if (refs.addWorkLogBtn) refs.addWorkLogBtn.disabled = isReadonly;
+                if (refs.imageInput) refs.imageInput.disabled = isReadonly;
+                renderWorkLogTable();
+                renderImagePreview();
+            }
+
+            function populateForm(data) {
+                formFields.title.value = data.title;
+                formFields.category.value = data.category;
+                formFields.reporter.value = data.reporter;
+                formFields.status.value = data.status;
+                formFields.phone.value = data.phone || '';
+                formFields.unit.value = canonicalizeUnitValue(data.unit) || data.unit || '';
+                formFields.date.value = data.date;
+                draftWorkLogs = normalizeWorkLogsForForm(data.workLogs, data.date, data.details);
+                draftImages = normalizeImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments);
+                refs.logDateInput.value = data.date || new Date().toISOString().slice(0, 10);
+                refs.logDetailsInput.value = '';
+                if (refs.imageInput) refs.imageInput.value = '';
+                clearLogFeedback();
+                clearImageFeedback();
+                renderWorkLogTable();
+                renderImagePreview();
+            }
+
+            function openFormModal(mode, id) {
+                const isView = mode === 'view';
+                const isEdit = mode === 'edit';
+                const editFromView = isEdit && viewingId === id;
+
+                editingId = isEdit ? id : null;
+                viewingId = isView ? id : null;
+                returnToViewAfterSave = isEdit ? editFromView : false;
+                refs.complaintForm.classList.remove('was-validated');
+                formFields.unit.setCustomValidity('');
+
+                refs.complaintModalDialog.classList.toggle('complaint-modal-mode-view', isView);
+                refs.complaintViewEditBtn.classList.toggle('d-none', !isView);
+                refs.submitComplaintBtn.classList.toggle('d-none', isView);
+                refs.submitComplaintBtn.disabled = isView;
+                refs.closeComplaintBtn.textContent = isView || returnToViewAfterSave ? 'Tutup' : 'Batal';
+                setFormReadonly(isView);
+
+                if (isView) {
+                    refs.complaintModalLabel.textContent = 'Maklumat Aduan';
+                } else {
+                    refs.complaintModalLabel.textContent = isEdit ? 'Edit Aduan' : 'Aduan Baru';
+                    refs.submitComplaintBtn.textContent = isEdit ? 'Kemaskini' : 'Simpan';
+                }
+
+                if ((isEdit || isView) && id) {
+                    const data = complaints.find(c => c.id === id);
+                    if (!data) return;
+                    populateForm(data);
                 } else {
                     refs.complaintForm.reset();
                     const today = new Date().toISOString().slice(0, 10);
                     formFields.date.value = today;
                     formFields.status.value = 'Baru';
+                    draftWorkLogs = [];
+                    draftImages = [];
+                    refs.logDateInput.value = today;
+                    refs.logDetailsInput.value = '';
+                    if (refs.imageInput) refs.imageInput.value = '';
+                    clearLogFeedback();
+                    clearImageFeedback();
+                    renderWorkLogTable();
+                    renderImagePreview();
                 }
 
                 complaintModal.show();
@@ -1349,11 +1938,32 @@
                 event.preventDefault();
                 event.stopPropagation();
                 const form = refs.complaintForm;
+                const shouldReturnToView = Boolean(editingId && returnToViewAfterSave);
+
+                validateUnitField(formFields.unit);
 
                 if (!form.checkValidity()) {
                     form.classList.add('was-validated');
                     return;
                 }
+
+                if (!draftWorkLogs.length) {
+                    const pendingNote = String(refs.logDetailsInput?.value || '').trim();
+                    if (pendingNote) {
+                        const fallbackDate = formFields.date.value || new Date().toISOString().slice(0, 10);
+                        draftWorkLogs.unshift({
+                            date: normalizeLogDate(refs.logDateInput?.value, fallbackDate),
+                            note: pendingNote
+                        });
+                        refs.logDetailsInput.value = '';
+                        renderWorkLogTable();
+                    } else {
+                        showLogFeedback('Tambah sekurang-kurangnya satu log sebelum simpan.');
+                        return;
+                    }
+                }
+
+                clearLogFeedback();
 
                 const payload = collectFormData();
 
@@ -1380,46 +1990,60 @@
 
                 saveComplaints();
                 renderAll();
+
+                if (shouldReturnToView) {
+                    const savedId = payload.id;
+                    editingId = null;
+                    returnToViewAfterSave = false;
+                    openFormModal('view', savedId);
+                    return;
+                }
+
                 complaintModal.hide();
                 editingId = null;
+                returnToViewAfterSave = false;
             }
 
             function collectFormData() {
                 const id = editingId || generateId();
                 const status = formFields.status.value;
                 const dateValue = formFields.date.value || new Date().toISOString().slice(0, 10);
+                const canonicalUnit = canonicalizeUnitValue(formFields.unit.value) || formFields.unit.value.trim();
+                const workLogs = draftWorkLogs
+                    .map((log) => ({
+                        date: normalizeLogDate(log.date, dateValue),
+                        note: String(log.note || '').trim()
+                    }))
+                    .filter((log) => log.note);
+                const latestDetails = workLogs.length ? workLogs[0].note : '';
+                const imageAttachments = draftImages
+                    .map((image) => ({
+                        dataUrl: String(image.dataUrl || '').trim(),
+                        name: String(image.name || 'Gambar').slice(0, 120),
+                        type: String(image.type || ''),
+                        size: Number(image.size) || 0,
+                        details: String(image.details || '').trim().slice(0, 160)
+                    }))
+                    .filter((image) => image.dataUrl.startsWith('data:image/'))
+                    .slice(0, MAX_COMPLAINT_IMAGES);
                 return {
                     id,
                     title: formFields.title.value.trim(),
                     category: formFields.category.value,
                     reporter: formFields.reporter.value.trim(),
                     phone: formFields.phone.value.trim(),
-                    unit: formFields.unit.value.trim(),
+                    unit: canonicalUnit,
                     date: dateValue,
                     status,
-                    details: formFields.details.value.trim(),
+                    details: latestDetails,
+                    workLogs,
+                    imageAttachments,
                     updatedAt: new Date().toISOString()
                 };
             }
 
             function openViewModal(id) {
-                const data = complaints.find(c => c.id === id);
-                viewingId = id;
-                if (!data) return;
-
-                refs.viewDetails.innerHTML = `
-                    <div class="col-md-4"><small class="text-muted">ID Aduan</small><div class="fw-bold">${data.id}</div></div>
-                    <div class="col-md-4"><small class="text-muted">Tarikh</small><div class="fw-bold">${formatDisplayDate(data.date)}</div></div>
-                    <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${data.status}</div></div>
-                    <div class="col-md-6"><small class="text-muted">Tajuk</small><div class="fw-bold">${data.title}</div></div>
-                    <div class="col-md-6"><small class="text-muted">Kategori</small><div class="fw-bold">${data.category}</div></div>
-                    <div class="col-md-6"><small class="text-muted">Pengadu</small><div class="fw-bold">${data.reporter}</div></div>
-                    <div class="col-md-6"><small class="text-muted">No. Telefon</small><div class="fw-bold">${data.phone || '-'}</div></div>
-                    <div class="col-md-6"><small class="text-muted">Unit Rumah</small><div class="fw-bold">${data.unit || '-'}</div></div>
-                    <div class="col-12"><small class="text-muted">Butiran</small><div class="border rounded p-3 bg-light">${data.details || '-'}</div></div>
-                `;
-
-                viewModal.show();
+                openFormModal('view', id);
             }
 
             function handleDelete(id) {

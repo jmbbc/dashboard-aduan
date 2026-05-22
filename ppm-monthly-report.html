@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPM Monthly Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <style>
+        :root { --sidebar-width: 240px; }
+        body { background-color: #f5f7fb; }
+        .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: var(--sidebar-width); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding-top: 20px; z-index: 1000; }
+        .sidebar .nav-link { color: rgba(255, 255, 255, 0.88); padding: 12px 20px; transition: all 0.3s; border-left: 4px solid transparent; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: white; background-color: rgba(255,255,255,0.1); border-left-color: white; }
+        .main-content { margin-left: var(--sidebar-width); padding: 24px; min-height: 100vh; }
+        .ppm-layout { padding: 12px; }
+        .ppm-layout .row.g-3 { --bs-gutter-x: 0.5rem; --bs-gutter-y: 0.5rem; }
+        .card-light { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .ppm-layout .card-light .card-body { padding: 0.72rem 0.82rem; }
+        .badge-stage { border-radius: 16px; font-size: 0.76rem; padding: 0.3rem 0.55rem; }
+        .badge-draft { font-size: 0.76rem; padding: 0.34rem 0.56rem; }
+        .ppm-layout h2 { font-size: 1.35rem; }
+        .ppm-layout h5 { font-size: 1rem; }
+        .ppm-layout .small-title { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; margin-bottom: 0.2rem; }
+        .ppm-layout .quick-text { font-size: 0.82rem; color: #374151; margin-bottom: 0; line-height: 1.35; }
+        .flow-track { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.42rem; }
+        .flow-step { border: 1px solid #e5e7eb; border-radius: 8px; background: #f8fafc; padding: 0.45rem; }
+        .flow-step .num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #1d4ed8; color: #fff; font-size: 0.72rem; font-weight: 700; margin-bottom: 0.28rem; }
+        .flow-step .label { display: block; font-size: 0.77rem; font-weight: 600; color: #1f2937; line-height: 1.2; }
+        .path-mono { font-family: Consolas, "Courier New", monospace; font-size: 0.77rem; color: #374151; }
+        .ppm-layout .table th { font-size: 0.79rem; white-space: nowrap; }
+        .ppm-layout .table td { font-size: 0.8rem; }
+        .ppm-layout .table .col-no { width: 44px; }
+        .ppm-layout .table .col-status { width: 110px; }
+        .next-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.3rem 0.8rem; }
+        .next-grid li { margin-bottom: 0.1rem; }
+        .ppm-layout .text-muted.small,
+        .ppm-layout .breadcrumb,
+        .ppm-layout .table { font-size: 0.84rem; }
+        .ppm-layout .table > :not(caption) > * > * { padding: 0.45rem 0.5rem; }
+        @media (max-width: 768px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .sidebar.show { width: var(--sidebar-width); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .flow-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .next-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Main menu">
+        <div class="text-center mb-4">
+            <i class="bi bi-cpu fs-1"></i>
+            <h4 class="mt-2">Technical</h4>
+        </div>
+        <nav class="nav flex-column">
+            <div class="nav-item mb-1">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="false" aria-controls="aduanMenu">
+                    Complaints
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse" id="aduanMenu">
+                    <a class="nav-link ps-4" href="index.html">Complaints Dashboard</a>
+                    <a class="nav-link ps-4" href="unit-rumah.html">Residential Units</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="true" aria-controls="techMenu">
+                    Technical
+                    <i class="bi bi-chevron-down small"></i>
+                </button>
+                <div class="collapse show" id="techMenu">
+                    <a class="nav-link ps-4" href="technical.html">Technical Dashboard</a>
+                    <a class="nav-link active ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical-equipment.html">Equipment Status</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content ppm-layout" id="main-content" role="main">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="technical.html">Technical</a></li>
+                        <li class="breadcrumb-item active">PPM Monthly Report</li>
+                    </ol>
+                </nav>
+                <h2 class="mb-0">PPM Monthly Report - Page Map Draft</h2>
+                <p class="text-muted small mb-0">Compact phased version for reference before actual flow implementation.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a class="btn btn-sm btn-outline-primary" href="ppm-form.html">Open Form Structure</a>
+                <span class="badge text-bg-warning badge-draft">Draft Only</span>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <div class="small-title">Objective</div>
+                        <p class="quick-text">Complete flow for online submission, review, and physical reporting.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <div class="small-title">Main Roles</div>
+                        <p class="quick-text">Technician submit. Admin/Supervisor review, approve/reject, export.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <div class="small-title">Technician Access</div>
+                        <p class="quick-text">Technician can only see one screen: <span class="path-mono">ppm-form.html</span>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-light h-100">
+                    <div class="card-body">
+                        <div class="small-title">Status Workflow</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-secondary badge-stage">Draft</span>
+                            <span class="badge bg-primary badge-stage">Submitted</span>
+                            <span class="badge bg-info text-dark badge-stage">In Review</span>
+                            <span class="badge bg-success badge-stage">Approved</span>
+                            <span class="badge bg-danger badge-stage">Rejected</span>
+                            <span class="badge bg-dark badge-stage">Locked</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-light mb-3">
+            <div class="card-body">
+                <h5 class="mb-2">Implementation Sequence</h5>
+                <div class="flow-track">
+                    <div class="flow-step"><span class="num">1</span><span class="label">PPM Dashboard</span></div>
+                    <div class="flow-step"><span class="num">2</span><span class="label">PPM Form</span></div>
+                    <div class="flow-step"><span class="num">3</span><span class="label">PPM Review</span></div>
+                    <div class="flow-step"><span class="num">4</span><span class="label">Report Center</span></div>
+                    <div class="flow-step"><span class="num">5</span><span class="label">Print Preview</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info py-2 px-3 mb-3 small" role="alert">
+            <strong>Role rule:</strong> Technician view is restricted to the PPM form only. Dashboard, review, report center, and print preview screens are for admin/supervisor.
+        </div>
+
+        <div class="card card-light mb-3">
+            <div class="card-body">
+                <h5 class="mb-2">Page Map (Compact)</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="col-no">#</th>
+                                <th>Path (Planned)</th>
+                                <th>Screen</th>
+                                <th>Role</th>
+                                <th>Purpose</th>
+                                <th class="col-status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="path-mono">ppm-monthly-report.html</span></td>
+                                <td>PPM Dashboard</td>
+                                <td>Admin only</td>
+                                <td>Monitor monthly submissions, progress, and approval queue</td>
+                                <td><span class="badge text-bg-success">Draft completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><a class="path-mono" href="ppm-form.html">ppm-form.html</a></td>
+                                <td>PPM Submission Form</td>
+                                <td>Technician only</td>
+                                <td>Fill checklist, readings, corrective action, and photo evidence</td>
+                                <td><span class="badge text-bg-success">Structure draft completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><span class="path-mono">ppm-review.html</span></td>
+                                <td>PPM Detail & Review</td>
+                                <td>Admin/Supervisor</td>
+                                <td>Review checklist items, approve/reject with comments</td>
+                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><span class="path-mono">ppm-report-center.html</span></td>
+                                <td>Monthly Report Center</td>
+                                <td>Admin</td>
+                                <td>Filter monthly data and export CSV/PDF</td>
+                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><span class="path-mono">ppm-print-preview.html</span></td>
+                                <td>Print Preview</td>
+                                <td>Admin</td>
+                                <td>Preview physical format before printing</td>
+                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-body">
+                <h5 class="mb-2">Next Blueprint (Not Implemented Yet)</h5>
+                <ul class="small text-muted mb-0 next-grid">
+                    <li>Finalize checklist field list by equipment/asset type.</li>
+                    <li>Define photo evidence format and minimum submission requirements.</li>
+                    <li>Prepare data schema for monthly summary and report details.</li>
+                    <li>Plan route and permissions so technician can only access <span class="path-mono">ppm-form.html</span>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebarNav');
+            sidebar?.classList.toggle('show');
+        });
+    </script>
+</body>
+</html>

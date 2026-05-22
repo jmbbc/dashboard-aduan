@@ -1,0 +1,54 @@
+﻿Sheet: CIVIL - RISER LEAKING CHECK
+UsedRows: 50
+UsedCols: 9
+
+ROW_1:  |  | RISER LEAKING |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Category |  | CIVIL | Reference No. |  |  | 
+ROW_4: Month |  | Year |  | Status | Monthly | Location | A  /  B1  /  B2  /  B3 | 
+ROW_5:  |  |  |  |  |  |  |  | 
+ROW_6:  |  |  |  |  |  |  |  | 
+ROW_7: 1) INSPECTION |  |  |  |  |  |  |  | 
+ROW_8: Level | Bilik Meter Air | Bilik Pancur Basah | Bilik MATV | Bilik Saluran Telefon | Bilik Panel Meter | Bilik Saluran Elektrik | Tangga Kecemasan | Tangga Kecemasan
+ROW_9:  |  |  |  |  |  |  |  | 
+ROW_10:  |  |  |  |  |  |  |  | 
+ROW_11: PG |  |  |  |  |  |  |  | 
+ROW_12: P1 |  |  |  |  |  |  |  | 
+ROW_13: P2 |  |  |  |  |  |  |  | 
+ROW_14: P3 |  |  |  |  |  |  |  | 
+ROW_15: PL |  |  |  |  |  |  |  | 
+ROW_16: 1 |  |  |  |  |  |  |  | 
+ROW_17: 2 |  |  |  |  |  |  |  | 
+ROW_18: 3 |  |  |  |  |  |  |  | 
+ROW_19: 4 |  |  |  |  |  |  |  | 
+ROW_20: 5 |  |  |  |  |  |  |  | 
+ROW_21: 6 |  |  |  |  |  |  |  | 
+ROW_22: 7 |  |  |  |  |  |  |  | 
+ROW_23: 8 |  |  |  |  |  |  |  | 
+ROW_24: 9 |  |  |  |  |  |  |  | 
+ROW_25: 10 |  |  |  |  |  |  |  | 
+ROW_26: 11 |  |  |  |  |  |  |  | 
+ROW_27: 12 |  |  |  |  |  |  |  | 
+ROW_28: 13 |  |  |  |  |  |  |  | 
+ROW_29: 14 |  |  |  |  |  |  |  | 
+ROW_30: 15 |  |  |  |  |  |  |  | 
+ROW_31: 16 |  |  |  |  |  |  |  | 
+ROW_32: 17 |  |  |  |  |  |  |  | 
+ROW_33: Remark | OK | TIADA SAMPAH, TOMBOL BOLEH GUNA & LANTAI KERING |  |  | T | TOMBOL ROSAK / HILANG |  | 
+ROW_34:  | S | ADA SAMPAH |  |  | B | LANTAI BASAH / BOCOR |  | 
+ROW_35:  | TANGGA KECEMASAN |  | TOMBOL ADA DAN BOLEH BERFUNGSI, PINTU KECEMASAN TIDAK BERKUNCI |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  | 
+ROW_37: NOTES |  |  |  |  |  |  |  | 
+ROW_38:  |  |  |  |  |  |  |  | 
+ROW_39: Carried out by :- |  |  |  |  | Verified by :- |  |  | 
+ROW_40: Signature |  | : |  |  | Signature |  | : | 
+ROW_41:  |  |  |  |  |  |  |  | 
+ROW_42: Name |  | : |  |  | Name |  | : | 
+ROW_43: Date |  | : |  |  | Date |  | : | 
+ROW_44:  |  |  |  |  |  |  |  | 
+ROW_45:  |  |  |  |  |  |  |  | 
+ROW_46:  |  |  |  |  |  |  |  | 
+ROW_47:  |  |  |  |  |  |  |  | 
+ROW_48:  |  |  |  |  |  |  |  | 
+ROW_49:  |  |  |  |  |  |  |  | 
+ROW_50:  |  |  |  |  |  |  |  | 

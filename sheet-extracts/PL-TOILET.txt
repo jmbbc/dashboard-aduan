@@ -1,0 +1,48 @@
+﻿Sheet: PL-TOILET
+UsedRows: 44
+UsedCols: 15
+
+ROW_1:  |  | TANDAS AWAM |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Month |  | Year |  | Status | Monthly | Category | Plumbing |  | Reference No. |  | BC/MAINT/PLUM/T/1 | 
+ROW_4:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_5: Bil | Butiran kerja |  |  |  |  |  |  |  | Pejabat | Rumah Kelab | Gim | Rumah sampah B1 | Rumah sampah B3 | Pos kawalan
+ROW_6:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_7: 1 | Pili air |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_8:  | Periksa sebarang kebocoran pada pili air |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_9:  | Tiada lelehan air apabila kepala paip ditutup rapat. |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_10:  | Periksa tekanan air (tidak terlalu kuat / perlahan) |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_11:  | Tiada karat pada sekitar pili air. |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_12:  | Pastikan kepala pili air berfungsi dengan baik (tidak terlalu ketat/longar) |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_13:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_14: 2 | Mangkuk tandas |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_15:  | Pastikan tiada kebocoran sekitar mangkuk tandas |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_16:  | Periksa tangki mangkuk tandas bagi sebarang bunyi atau kebocoran |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_17:  | Pastikan pam tandas berfungsi dengan baik |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_18:  | Periksa paras air didalam tangki di tahap maksimum selepas dipam |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_19:  | Periksa tempat duduk tandas dalam keadaan baik |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_20:  | Pastikan penutup dan tempat duduk di ikat kemas (tidak bergoyang |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_21:  | Pastikan saluran paip tidak tersumbat |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_22:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_23: 3 | Kepala pancuran (shower head) |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_24:  | Pastikan kepala pancuran dalam keadaan baik dan tidak retak |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_25:  | Pastikan tekanan air yang keluar tidak terlalu kuat / perlahan. |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_26:  | Pastikan kawasan pancuran tiada lumut / karat |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_27:  | Pastikan saliran air pancuran kering (air tidak bertakung) |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_28: Nota |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_29:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_30: Carried out by :- |  |  |  |  |  |  |  | Verified by :- |  |  |  |  |  | 
+ROW_31: Name |  | : |  |  |  |  |  | Name |  | : |  |  |  | 
+ROW_32: Date |  | : |  |  |  |  |  | Date |  | : |  |  |  | 
+ROW_33:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_34:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_35:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_37:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_38:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_39:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_40:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_41:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_42:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_43:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_44:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 

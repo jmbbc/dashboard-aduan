@@ -1,0 +1,52 @@
+﻿Sheet: FF - WET RISER (2)
+UsedRows: 48
+UsedCols: 10
+
+ROW_1:  |  | WET RISER |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Category |  | Fire Fighting |  | Reference No. |  | BC/MAINT/WET/2 | 
+ROW_4: Month |  | Year |  | Status | Monthly | Location | A  /  B1  /  B2  /  B3 |  | 
+ROW_5:  |  |  |  |  |  |  |  |  | 
+ROW_6:  |  |  |  |  |  |  |  |  | 
+ROW_7: 1) INSPECTION |  |  |  |  |  |  |  |  | 
+ROW_8: Level | Hose Reel (Canvas) (1) | Noozle & Cupling (2) | Hose reel bracket (3) | Fire Extinguisher (4) | Wet Riser Pipe (Control Valve) (5) | Lamp (6) | Picture |  | 
+ROW_9: PG |  |  |  |  |  |  |  |  | 
+ROW_10: P1 |  |  |  |  |  |  |  |  | 
+ROW_11: P2 |  |  |  |  |  |  |  |  | 
+ROW_12: P3 |  |  |  |  |  |  |  |  | 
+ROW_13: PL |  |  |  |  |  |  |  |  | 
+ROW_14: 1 |  |  |  |  |  |  |  |  | 
+ROW_15: 2 |  |  |  |  |  |  |  |  | 
+ROW_16: 3 |  |  |  |  |  |  |  |  | 
+ROW_17: 4 |  |  |  |  |  |  |  |  | 
+ROW_18: 5 |  |  |  |  |  |  |  |  | 
+ROW_19: 6 |  |  |  |  |  |  |  |  | 
+ROW_20: 7 |  |  |  |  |  |  |  |  | 
+ROW_21: 8 |  |  |  |  |  |  |  |  | 
+ROW_22: 9 |  |  |  |  |  |  |  |  | 
+ROW_23: 10 |  |  |  |  |  |  |  |  | 
+ROW_24: 11 |  |  |  |  |  |  |  |  | 
+ROW_25: 12 |  |  |  |  |  |  |  |  | 
+ROW_26: 13 |  |  |  |  |  |  |  |  | 
+ROW_27: 14 |  |  |  |  |  |  |  |  | 
+ROW_28: 15 |  |  |  |  |  |  |  |  | 
+ROW_29: 16 |  |  |  |  |  |  |  |  | 
+ROW_30: 17 |  |  |  |  |  |  |  |  | 
+ROW_31: Remark | √ | Good | Kindly state the problem for the item if damaged / lost in notes section below in summary. Example :-  No lamp are installed / Fire extinguisher lost or expired / control valve broken or lost/ hose reels are damaged / nose and coupling are rusty or damaged. |  |  |  |  |  | 
+ROW_32:  | X | Damaged / Lost |  |  |  |  |  |  | 
+ROW_33:  |  |  |  |  |  |  |  |  | 
+ROW_34: NOTES |  |  |  |  |  |  |  |  | 
+ROW_35:  |  |  |  |  |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  |  | 
+ROW_37: Carried out by :- |  |  |  |  | Verified by :- |  |  |  | 
+ROW_38: Signature |  | : |  |  | Signature |  | : |  | 
+ROW_39:  |  |  |  |  |  |  |  |  | 
+ROW_40: Name |  | : |  |  | Name |  | : |  | 
+ROW_41: Date |  | : |  |  | Date |  | : |  | 
+ROW_42:  |  |  |  |  |  |  |  |  | 
+ROW_43:  |  |  |  |  |  |  |  |  | 
+ROW_44:  |  |  |  |  |  |  |  |  | 
+ROW_45:  |  |  |  |  |  |  |  |  | 
+ROW_46:  |  |  |  |  |  |  |  |  | 
+ROW_47:  |  |  |  |  |  |  |  |  | 
+ROW_48:  |  |  |  |  |  |  |  |  | 

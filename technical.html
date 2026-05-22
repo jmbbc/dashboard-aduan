@@ -26,6 +26,354 @@
         .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; }
         .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
         .skip-link:focus { left: 10px; top: 10px; width: auto; height: auto; background: #fff; padding: 8px 12px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 2000; }
+
+        .compact-technical {
+            padding: 14px;
+        }
+
+        .compact-technical .row.g-3 {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+        .compact-technical .card,
+        .compact-technical .chart-container,
+        .compact-technical .table-responsive {
+            border-radius: 10px;
+        }
+
+        .compact-technical .chart-container {
+            padding: 12px;
+        }
+
+        .compact-technical .stat-card .card-body {
+            min-height: 124px;
+            padding: 0.72rem 0.82rem;
+        }
+
+        .compact-technical .stat-card .card-body > small {
+            font-size: 0.77rem;
+            line-height: 1.2;
+        }
+
+        .compact-technical .stat-number {
+            font-size: 1.3rem;
+            line-height: 1.12;
+        }
+
+        .compact-technical h2 {
+            font-size: 1.35rem;
+        }
+
+        .compact-technical h5 {
+            font-size: 1rem;
+        }
+
+        .compact-technical .breadcrumb,
+        .compact-technical .text-muted.small {
+            font-size: 0.8rem;
+        }
+
+        .compact-technical .top-toolbar .btn {
+            padding: 0.25rem 0.55rem;
+            font-size: 0.82rem;
+        }
+
+        .compact-technical .form-label {
+            font-size: 0.82rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .compact-technical .form-control,
+        .compact-technical .form-select {
+            font-size: 0.84rem;
+        }
+
+        .compact-technical textarea.form-control {
+            font-size: 0.84rem;
+        }
+
+        .compact-technical .invalid-feedback {
+            font-size: 0.74rem;
+        }
+
+        .compact-technical .search-box {
+            padding: 7px 12px;
+            border-radius: 18px;
+            min-width: 190px;
+        }
+
+        .compact-technical .sort-select {
+            border-radius: 18px;
+            min-width: 190px;
+            padding: 6px 10px;
+            font-size: 0.84rem;
+        }
+
+        .compact-technical .filter-btn,
+        .compact-technical .tech-filter-btn {
+            padding: 6px 12px;
+            font-size: 0.82rem;
+        }
+
+        .compact-technical .sync-meta {
+            font-size: 0.78rem;
+        }
+
+        .compact-technical .table-responsive {
+            padding: 10px;
+        }
+
+        .compact-technical .table > :not(caption) > * > * {
+            padding: 0.45rem 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .compact-technical .badge-status {
+            padding: 4px 9px;
+            font-size: 0.76rem;
+        }
+
+        .compact-technical .pagination {
+            margin-bottom: 0;
+        }
+
+        .compact-technical .pagination .page-link {
+            font-size: 0.82rem;
+            padding: 0.28rem 0.62rem;
+        }
+
+        .compact-technical .mb-4 {
+            margin-bottom: 0.95rem !important;
+        }
+
+        .tech-modal-compact .modal-content {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tech-modal-compact {
+            --tech-modal-body-height: clamp(340px, 60vh, 470px);
+            --tech-details-min-height: 136px;
+        }
+
+        .tech-modal-compact .modal-header {
+            padding: 0.62rem 0.8rem;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .tech-modal-compact .modal-body {
+            padding: 0.72rem 0.8rem;
+            height: var(--tech-modal-body-height);
+            overflow-y: auto;
+        }
+
+        .tech-modal-compact .modal-footer {
+            padding: 0.62rem 0.8rem;
+            border-top: 1px solid #edf0f5;
+            gap: 0.4rem;
+        }
+
+        .tech-modal-compact .row {
+            --bs-gutter-x: 0.5rem;
+            --bs-gutter-y: 0.5rem;
+        }
+
+        .tech-modal-compact .tech-meta-grid {
+            --bs-gutter-x: 0.42rem;
+            --bs-gutter-y: 0.34rem;
+        }
+
+        .tech-modal-compact .tech-meta-field .form-label {
+            margin-bottom: 0.14rem;
+            font-size: 0.72rem;
+            line-height: 1.1;
+        }
+
+        .tech-modal-compact .tech-meta-field .form-control,
+        .tech-modal-compact .tech-meta-field .form-select {
+            padding: 0.3rem 0.48rem;
+            font-size: 0.8rem;
+            min-height: calc(1.32em + 0.54rem + 2px);
+        }
+
+        .tech-modal-compact textarea.form-control {
+            min-height: var(--tech-details-min-height);
+            resize: vertical;
+        }
+
+        .tech-modal-compact .form-text,
+        .tech-modal-compact .invalid-feedback {
+            margin-top: 0.2rem;
+            font-size: 0.72rem;
+        }
+
+        .tech-modal-compact .btn {
+            padding: 0.34rem 0.68rem;
+            font-size: 0.82rem;
+        }
+
+        .tech-modal-mode-view .form-control,
+        .tech-modal-mode-view .form-select {
+            background: #f8fafc;
+            color: #1f2937;
+            opacity: 1;
+        }
+
+        .tech-modal-mode-view .tech-meta-grid {
+            --bs-gutter-x: 0.34rem;
+            --bs-gutter-y: 0.28rem;
+        }
+
+        .tech-modal-mode-view .tech-meta-field .form-label {
+            margin-bottom: 0.08rem;
+            font-size: 0.66rem;
+        }
+
+        .tech-modal-mode-view .tech-meta-field .form-control,
+        .tech-modal-mode-view .tech-meta-field .form-select {
+            padding: 0.24rem 0.42rem;
+            font-size: 0.76rem;
+            min-height: calc(1.18em + 0.42rem + 2px);
+        }
+
+        .tech-modal-mode-view .form-text,
+        .tech-modal-mode-view .invalid-feedback {
+            display: none;
+        }
+
+        .tech-log-wrap {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.45rem;
+        }
+
+        .tech-log-table > :not(caption) > * > * {
+            padding: 0.36rem 0.42rem;
+            font-size: 0.8rem;
+            vertical-align: top;
+        }
+
+        .tech-log-table tbody td:nth-child(2) {
+            white-space: pre-wrap;
+        }
+
+        .tech-log-editor .form-control {
+            min-height: calc(1.5em + 0.62rem + 2px);
+            font-size: 0.8rem;
+        }
+
+        .tech-log-empty {
+            color: #6b7280;
+            text-align: center;
+            font-size: 0.79rem;
+            padding: 0.6rem 0;
+        }
+
+        .tech-modal-mode-view .tech-log-editor,
+        .tech-modal-mode-view .tech-log-action-col {
+            display: none;
+        }
+
+        .tech-image-wrap {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0.45rem;
+        }
+
+        .tech-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+            gap: 0.4rem;
+        }
+
+        .tech-image-item {
+            position: relative;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .tech-image-item img {
+            display: block;
+            width: 100%;
+            height: 84px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .tech-image-caption {
+            font-size: 0.67rem;
+            color: #4b5563;
+            padding: 0.25rem 0.32rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tech-image-details-view {
+            font-size: 0.68rem;
+            color: #6b7280;
+            padding: 0 0.32rem 0.28rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tech-image-details-input {
+            border: 0;
+            border-top: 1px solid #edf0f5;
+            border-radius: 0;
+            font-size: 0.72rem;
+            padding: 0.24rem 0.32rem;
+            min-height: calc(1.4em + 0.45rem + 2px);
+        }
+
+        .tech-image-details-input:focus {
+            box-shadow: none;
+            border-color: #d6dbe3;
+        }
+
+        .tech-image-remove {
+            position: absolute;
+            top: 0.2rem;
+            right: 0.2rem;
+            padding: 0.08rem 0.25rem;
+            font-size: 0.68rem;
+            line-height: 1.1;
+        }
+
+        .tech-image-empty {
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 0.65rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #6b7280;
+            background: #fff;
+        }
+
+        .tech-modal-mode-view .tech-image-editor,
+        .tech-modal-mode-view .tech-image-remove {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .tech-modal-compact {
+                --tech-modal-body-height: clamp(310px, 56vh, 390px);
+            }
+
+            .tech-modal-compact .modal-body,
+            .tech-modal-compact .modal-header,
+            .tech-modal-compact .modal-footer {
+                padding-left: 0.68rem;
+                padding-right: 0.68rem;
+            }
+        }
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .main-content { margin-left: 0; padding: 16px; } .sidebar.show { width: var(--sidebar-width); } }
     </style>
 </head>
@@ -54,6 +402,7 @@
                 </button>
                 <div class="collapse show" id="techMenu">
                     <a class="nav-link active ps-4" href="technical.html">Dashboard Technical</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
                     <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
@@ -67,7 +416,7 @@
         </div>
     </div>
 
-    <div class="main-content" id="main-content" role="main" aria-label="Dashboard technical">
+    <div class="main-content compact-technical" id="main-content" role="main" aria-label="Dashboard technical">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
             <div>
@@ -257,20 +606,20 @@
 
     <!-- Modals -->
     <div class="modal fade" id="techModal" tabindex="-1" aria-labelledby="techModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered tech-modal-compact" id="techModalDialog">
             <form class="modal-content needs-validation" id="techForm" novalidate>
                 <div class="modal-header">
                     <h5 class="modal-title" id="techModalLabel">Catatan Teknikal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
+                    <div class="row g-2 tech-meta-grid">
+                        <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techTitle">Perkara</label>
                             <input type="text" class="form-control" id="techTitle" placeholder="Contoh: Lesen AV Endpoint" required>
                             <div class="invalid-feedback">Isi perkara teknikal.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techType">Kategori</label>
                             <select class="form-select" id="techType" required>
                                 <option value="" disabled selected>Pilih kategori</option>
@@ -281,22 +630,22 @@
                             </select>
                             <div class="invalid-feedback">Pilih kategori.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techAsset">Aset / Peralatan</label>
                             <input type="text" class="form-control" id="techAsset" placeholder="Contoh: Server RDS-01" required>
                             <div class="invalid-feedback">Isi aset/peralatan.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techOwner">Pemilik / PIC</label>
                             <input type="text" class="form-control" id="techOwner" placeholder="Nama PIC" required>
                             <div class="invalid-feedback">Isi PIC.</div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techDue">Tarikh Tamat / Due</label>
                             <input type="date" class="form-control" id="techDue" required>
                             <div class="invalid-feedback">Pilih tarikh tamat/due.</div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 tech-meta-field">
                             <label class="form-label" for="techPriority">Prioriti</label>
                             <select class="form-select" id="techPriority" required>
                                 <option value="" disabled selected>Pilih prioriti</option>
@@ -306,7 +655,7 @@
                             </select>
                             <div class="invalid-feedback">Pilih prioriti.</div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 tech-meta-field">
                             <label class="form-label" for="techStatus">Status</label>
                             <select class="form-select" id="techStatus" required>
                                 <option value="" disabled selected>Pilih status</option>
@@ -318,33 +667,60 @@
                             <div class="invalid-feedback">Pilih status.</div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="techNotes">Butiran</label>
-                            <textarea class="form-control" id="techNotes" rows="3" placeholder="Nyatakan butiran teknikal" required></textarea>
-                            <div class="invalid-feedback">Isi butiran.</div>
+                            <label class="form-label mb-1">Butiran Teknikal (Log Report)</label>
+                            <div class="tech-log-wrap">
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-2 tech-log-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 170px;">Tarikh</th>
+                                                <th>Butiran</th>
+                                                <th class="text-end tech-log-action-col" style="width: 92px;">Tindakan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="techLogBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row g-2 tech-log-editor">
+                                    <div class="col-md-3">
+                                        <label for="techLogDate" class="visually-hidden">Tarikh log</label>
+                                        <input type="date" class="form-control" id="techLogDate" aria-label="Tarikh log teknikal">
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label for="techLogDetails" class="visually-hidden">Butiran log</label>
+                                        <input type="text" class="form-control" id="techLogDetails" placeholder="Contoh: Penukaran PSU dijadualkan" aria-label="Butiran log teknikal">
+                                    </div>
+                                    <div class="col-md-2 d-grid">
+                                        <button type="button" class="btn btn-outline-primary" id="addTechLogBtn"><i class="bi bi-plus-lg me-1"></i>Tambah</button>
+                                    </div>
+                                </div>
+                                <div class="small text-danger mt-1 d-none" id="techLogFeedback">Tambah sekurang-kurangnya satu log sebelum simpan.</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label mb-1">Lampiran Gambar (Opsyenal)</label>
+                            <div class="tech-image-wrap">
+                                <div class="row g-2 tech-image-editor">
+                                    <div class="col-md-8">
+                                        <label for="techImageUpload" class="visually-hidden">Upload gambar technical</label>
+                                        <input type="file" class="form-control" id="techImageUpload" accept="image/*" multiple>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <small class="text-muted">Maks 3 gambar, 350KB setiap satu.</small>
+                                    </div>
+                                </div>
+                                <div class="small text-danger mt-1 d-none" id="techImageFeedback"></div>
+                                <div class="tech-image-grid mt-2" id="techImagePreview"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-outline-secondary" id="closeTechBtn" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success d-none" id="techModalEditBtn">Edit</button>
                     <button type="submit" class="btn btn-success" id="submitTechBtn">Simpan</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div class="modal fade" id="techViewModal" tabindex="-1" aria-labelledby="techViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="techViewModalLabel">Butiran Technical</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body" id="techViewBody"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-success" id="techViewEditBtn">Edit</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -373,11 +749,21 @@
                 techLastSync: document.getElementById('techLastSync'),
                 newTechBtn: document.getElementById('newTechBtn'),
                 techModalEl: document.getElementById('techModal'),
+                techModalDialog: document.getElementById('techModalDialog'),
                 techForm: document.getElementById('techForm'),
+                techModalLabel: document.getElementById('techModalLabel'),
+                closeTechBtn: document.getElementById('closeTechBtn'),
+                techModalEditBtn: document.getElementById('techModalEditBtn'),
+                submitTechBtn: document.getElementById('submitTechBtn'),
+                techLogBody: document.getElementById('techLogBody'),
+                techLogDateInput: document.getElementById('techLogDate'),
+                techLogDetailsInput: document.getElementById('techLogDetails'),
+                addTechLogBtn: document.getElementById('addTechLogBtn'),
+                techLogFeedback: document.getElementById('techLogFeedback'),
+                techImageInput: document.getElementById('techImageUpload'),
+                techImageFeedback: document.getElementById('techImageFeedback'),
+                techImagePreview: document.getElementById('techImagePreview'),
                 quickTechForm: document.getElementById('quickTechForm'),
-                techViewModalEl: document.getElementById('techViewModal'),
-                techViewBody: document.getElementById('techViewBody'),
-                techViewEditBtn: document.getElementById('techViewEditBtn'),
                 statTechExpiring: document.getElementById('statTechExpiring'),
                 statTechRepairs: document.getElementById('statTechRepairs'),
                 statTechOpen: document.getElementById('statTechOpen'),
@@ -391,8 +777,7 @@
                 owner: document.getElementById('techOwner'),
                 due: document.getElementById('techDue'),
                 priority: document.getElementById('techPriority'),
-                status: document.getElementById('techStatus'),
-                notes: document.getElementById('techNotes')
+                status: document.getElementById('techStatus')
             };
 
             const quickTechFields = {
@@ -411,11 +796,16 @@
             let techSearch = '';
             let techSort = 'updated';
             let techEditingId = null;
+            let techViewingId = null;
+            let techReturnToViewAfterSave = false;
+            let techDraftLogs = [];
+            let techDraftImages = [];
             const techPageSize = 5;
             let techPage = 1;
+            const MAX_TECH_IMAGES = 3;
+            const MAX_TECH_IMAGE_BYTES = 350 * 1024;
 
             const techModal = new bootstrap.Modal(refs.techModalEl);
-            const techViewModal = new bootstrap.Modal(refs.techViewModalEl);
 
             bindEvents();
             bindSyncEvents();
@@ -444,10 +834,86 @@
 
                 refs.techForm?.addEventListener('submit', handleTechSubmit);
 
-                refs.techViewEditBtn?.addEventListener('click', () => {
-                    const id = refs.techViewEditBtn.dataset.id;
-                    techViewModal.hide();
-                    if (id) openTechModal('edit', id);
+                refs.techModalEditBtn?.addEventListener('click', () => {
+                    if (techViewingId) {
+                        openTechModal('edit', techViewingId);
+                    }
+                });
+
+                refs.addTechLogBtn?.addEventListener('click', () => {
+                    const note = String(refs.techLogDetailsInput?.value || '').trim();
+                    if (!note) {
+                        showTechLogFeedback('Isi butiran log sebelum tambah.');
+                        refs.techLogDetailsInput?.focus();
+                        return;
+                    }
+
+                    const fallbackDate = techFields.due.value || new Date().toISOString().slice(0, 10);
+                    const logDate = normalizeTechLogDate(refs.techLogDateInput?.value, fallbackDate);
+                    techDraftLogs.unshift({ date: logDate, note });
+                    refs.techLogDateInput.value = logDate;
+                    refs.techLogDetailsInput.value = '';
+                    clearTechLogFeedback();
+                    renderTechLogTable();
+                });
+
+                refs.techLogBody?.addEventListener('click', (event) => {
+                    const removeBtn = event.target.closest('button[data-tech-log-remove-index]');
+                    if (!removeBtn) return;
+
+                    const index = Number(removeBtn.dataset.techLogRemoveIndex);
+                    if (Number.isNaN(index)) return;
+
+                    techDraftLogs.splice(index, 1);
+                    clearTechLogFeedback();
+                    renderTechLogTable();
+                });
+
+                refs.techImageInput?.addEventListener('change', (event) => {
+                    void handleTechImageSelection(event);
+                });
+
+                refs.techImagePreview?.addEventListener('click', (event) => {
+                    const removeBtn = event.target.closest('button[data-tech-image-remove-index]');
+                    if (!removeBtn) return;
+
+                    const index = Number(removeBtn.dataset.techImageRemoveIndex);
+                    if (Number.isNaN(index)) return;
+
+                    techDraftImages.splice(index, 1);
+                    clearTechImageFeedback();
+                    renderTechImagePreview();
+                });
+
+                refs.techImagePreview?.addEventListener('input', (event) => {
+                    const detailsInput = event.target.closest('input[data-tech-image-details-index]');
+                    if (!detailsInput) return;
+                    const index = Number(detailsInput.dataset.techImageDetailsIndex);
+                    if (Number.isNaN(index) || !techDraftImages[index]) return;
+
+                    techDraftImages[index].details = String(detailsInput.value || '').slice(0, 160);
+                });
+
+                refs.techModalEl?.addEventListener('hidden.bs.modal', () => {
+                    techEditingId = null;
+                    techViewingId = null;
+                    techReturnToViewAfterSave = false;
+                    techDraftLogs = [];
+                    techDraftImages = [];
+                    refs.techForm?.classList.remove('was-validated');
+                    refs.techModalDialog?.classList.remove('tech-modal-mode-view');
+                    refs.techModalEditBtn?.classList.add('d-none');
+                    refs.submitTechBtn?.classList.remove('d-none');
+                    if (refs.submitTechBtn) refs.submitTechBtn.disabled = false;
+                    if (refs.closeTechBtn) refs.closeTechBtn.textContent = 'Batal';
+                    if (refs.techLogDateInput) refs.techLogDateInput.value = new Date().toISOString().slice(0, 10);
+                    if (refs.techLogDetailsInput) refs.techLogDetailsInput.value = '';
+                    if (refs.techImageInput) refs.techImageInput.value = '';
+                    clearTechLogFeedback();
+                    clearTechImageFeedback();
+                    setTechFormReadonly(false);
+                    renderTechLogTable();
+                    renderTechImagePreview();
                 });
 
                 refs.techSearch?.addEventListener('input', (e) => {
@@ -540,8 +1006,14 @@
             function getFilteredTech() {
                 const rows = techItems.filter(item => {
                     const statusMatch = techStatus === 'Semua' ? true : item.status === techStatus;
+                    const logText = Array.isArray(item.workLogs)
+                        ? item.workLogs.map((log) => `${log.date || ''} ${log.note || ''}`).join(' ')
+                        : '';
+                    const imageText = Array.isArray(item.imageAttachments)
+                        ? item.imageAttachments.map((img) => `${img.name || ''} ${img.details || ''}`).join(' ')
+                        : '';
                     const searchMatch = techSearch
-                        ? `${item.id} ${item.title} ${item.type} ${item.asset} ${item.owner} ${item.notes || ''}`.toLowerCase().includes(techSearch)
+                        ? `${item.id} ${item.title} ${item.type} ${item.asset} ${item.owner} ${item.notes || ''} ${logText} ${imageText}`.toLowerCase().includes(techSearch)
                         : true;
                     return statusMatch && searchMatch;
                 });
@@ -698,27 +1170,275 @@
                 if (quickTechFields.due) quickTechFields.due.value = new Date().toISOString().slice(0, 10);
             }
 
-            function openTechModal(mode, id) {
-                techEditingId = mode === 'edit' ? id : null;
-                refs.techForm.classList.remove('was-validated');
-                document.getElementById('techModalLabel').textContent = mode === 'edit' ? 'Edit Technical' : 'Catatan Teknikal';
-                document.getElementById('submitTechBtn').textContent = mode === 'edit' ? 'Kemaskini' : 'Simpan';
+            function clearTechLogFeedback() {
+                if (!refs.techLogFeedback) return;
+                refs.techLogFeedback.textContent = '';
+                refs.techLogFeedback.classList.add('d-none');
+            }
 
-                if (mode === 'edit' && id) {
-                    const data = techItems.find(t => t.id === id);
-                    if (data) {
-                        techFields.title.value = data.title;
-                        techFields.type.value = data.type;
-                        techFields.asset.value = data.asset;
-                        techFields.owner.value = data.owner;
-                        techFields.due.value = data.due;
-                        techFields.priority.value = data.priority;
-                        techFields.status.value = data.status;
-                        techFields.notes.value = data.notes || '';
+            function showTechLogFeedback(message) {
+                if (!refs.techLogFeedback) return;
+                refs.techLogFeedback.textContent = message;
+                refs.techLogFeedback.classList.remove('d-none');
+            }
+
+            function clearTechImageFeedback() {
+                if (!refs.techImageFeedback) return;
+                refs.techImageFeedback.textContent = '';
+                refs.techImageFeedback.classList.add('d-none');
+            }
+
+            function showTechImageFeedback(message) {
+                if (!refs.techImageFeedback) return;
+                refs.techImageFeedback.textContent = message;
+                refs.techImageFeedback.classList.remove('d-none');
+            }
+
+            function normalizeTechLogDate(value, fallbackDate) {
+                const fallback = String(fallbackDate || new Date().toISOString().slice(0, 10));
+                const raw = String(value || '').trim();
+                if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+                const parsed = new Date(raw);
+                if (!Number.isNaN(parsed.getTime())) {
+                    return parsed.toISOString().slice(0, 10);
+                }
+                return fallback;
+            }
+
+            function normalizeTechLogsForForm(logs, fallbackDate, fallbackNotes) {
+                const source = Array.isArray(logs) ? logs : [];
+                const normalized = source
+                    .map((row) => {
+                        if (!row || typeof row !== 'object') return null;
+                        const note = String(row.note ?? row.details ?? row.butiran ?? row.message ?? '').trim();
+                        if (!note) return null;
+                        return {
+                            date: normalizeTechLogDate(row.date ?? row.tarikh, fallbackDate),
+                            note
+                        };
+                    })
+                    .filter(Boolean);
+
+                const legacyNote = String(fallbackNotes || '').trim();
+                if (!normalized.length && legacyNote) {
+                    normalized.push({
+                        date: normalizeTechLogDate(fallbackDate, fallbackDate),
+                        note: legacyNote
+                    });
+                }
+
+                return normalized;
+            }
+
+            function normalizeTechImageAttachmentsForForm(rows) {
+                const source = Array.isArray(rows) ? rows : [];
+                return source
+                    .map((entry) => {
+                        if (!entry || typeof entry !== 'object') return null;
+                        const dataUrl = String(entry.dataUrl || entry.url || '').trim();
+                        if (!dataUrl.startsWith('data:image/')) return null;
+                        return {
+                            dataUrl,
+                            name: String(entry.name || 'Gambar').slice(0, 120),
+                            type: String(entry.type || ''),
+                            size: Number.isFinite(Number(entry.size)) ? Number(entry.size) : 0,
+                            details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
+                        };
+                    })
+                    .filter(Boolean)
+                    .slice(0, MAX_TECH_IMAGES);
+            }
+
+            function renderTechLogTable() {
+                if (!refs.techLogBody) return;
+
+                if (!techDraftLogs.length) {
+                    refs.techLogBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="tech-log-empty">Belum ada log. Tambah tarikh dan butiran kerja untuk rekod.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                const isViewMode = refs.techModalDialog?.classList.contains('tech-modal-mode-view');
+                refs.techLogBody.innerHTML = techDraftLogs.map((log, index) => `
+                    <tr>
+                        <td>${escapeHtml(formatDisplayDate(log.date))}</td>
+                        <td>${escapeHtml(log.note)}</td>
+                        <td class="text-end tech-log-action-col">
+                            ${isViewMode ? '' : `<button type="button" class="btn btn-sm btn-outline-danger" data-tech-log-remove-index="${index}">Padam</button>`}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function renderTechImagePreview() {
+                if (!refs.techImagePreview) return;
+
+                if (!techDraftImages.length) {
+                    refs.techImagePreview.innerHTML = '<div class="tech-image-empty">Tiada gambar dilampirkan.</div>';
+                    return;
+                }
+
+                const isViewMode = refs.techModalDialog?.classList.contains('tech-modal-mode-view');
+                refs.techImagePreview.innerHTML = techDraftImages.map((image, index) => `
+                    <div class="tech-image-item">
+                        <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || `Gambar ${index + 1}`)}">
+                        ${isViewMode ? '' : `<button type="button" class="btn btn-sm btn-danger tech-image-remove" data-tech-image-remove-index="${index}"><i class="bi bi-x-lg"></i></button>`}
+                        <div class="tech-image-caption">${escapeHtml(image.name || `Gambar ${index + 1}`)}</div>
+                        ${isViewMode
+                            ? `<div class="tech-image-details-view">${escapeHtml(String(image.details || '').trim() || 'Tiada detail')}</div>`
+                            : `<input type="text" class="form-control tech-image-details-input" data-tech-image-details-index="${index}" maxlength="160" placeholder="Detail gambar (opsyenal)" value="${escapeHtml(String(image.details || ''))}">`
+                        }
+                    </div>
+                `).join('');
+            }
+
+            function readTechImageAsDataUrl(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = () => reject(new Error('Gagal membaca fail gambar.'));
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleTechImageSelection(event) {
+                const files = Array.from(event.target.files || []);
+                if (!files.length) return;
+
+                clearTechImageFeedback();
+
+                const availableSlots = MAX_TECH_IMAGES - techDraftImages.length;
+                if (availableSlots <= 0) {
+                    showTechImageFeedback(`Maksimum ${MAX_TECH_IMAGES} gambar dibenarkan.`);
+                    event.target.value = '';
+                    return;
+                }
+
+                const selectedFiles = files.slice(0, availableSlots);
+                const issues = [];
+
+                for (const file of selectedFiles) {
+                    if (!String(file.type || '').startsWith('image/')) {
+                        issues.push(`${file.name}: format fail bukan gambar.`);
+                        continue;
                     }
+
+                    if (file.size > MAX_TECH_IMAGE_BYTES) {
+                        issues.push(`${file.name}: melebihi 350KB.`);
+                        continue;
+                    }
+
+                    try {
+                        const dataUrl = await readTechImageAsDataUrl(file);
+                        if (!dataUrl.startsWith('data:image/')) {
+                            issues.push(`${file.name}: format data tidak sah.`);
+                            continue;
+                        }
+
+                        techDraftImages.push({
+                            dataUrl,
+                            name: String(file.name || 'Gambar').slice(0, 120),
+                            type: String(file.type || ''),
+                            size: Number(file.size) || 0,
+                            details: ''
+                        });
+                    } catch {
+                        issues.push(`${file.name}: gagal dibaca.`);
+                    }
+                }
+
+                if (files.length > selectedFiles.length) {
+                    issues.push(`Hanya ${availableSlots} gambar tambahan dibenarkan.`);
+                }
+
+                if (issues.length) {
+                    showTechImageFeedback(issues.join(' '));
+                }
+
+                renderTechImagePreview();
+                event.target.value = '';
+            }
+
+            function setTechFormReadonly(isReadonly) {
+                Object.values(techFields).forEach((field) => {
+                    if (!field) return;
+                    field.disabled = isReadonly;
+                });
+                if (refs.techLogDateInput) refs.techLogDateInput.disabled = isReadonly;
+                if (refs.techLogDetailsInput) refs.techLogDetailsInput.disabled = isReadonly;
+                if (refs.addTechLogBtn) refs.addTechLogBtn.disabled = isReadonly;
+                if (refs.techImageInput) refs.techImageInput.disabled = isReadonly;
+                renderTechLogTable();
+                renderTechImagePreview();
+            }
+
+            function populateTechForm(data) {
+                techFields.title.value = data.title || '';
+                techFields.type.value = data.type || '';
+                techFields.asset.value = data.asset || '';
+                techFields.owner.value = data.owner || '';
+                techFields.due.value = data.due || new Date().toISOString().slice(0, 10);
+                techFields.priority.value = data.priority || '';
+                techFields.status.value = data.status || '';
+
+                techDraftLogs = normalizeTechLogsForForm(data.workLogs, data.due, data.notes);
+                techDraftImages = normalizeTechImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments);
+
+                if (refs.techLogDateInput) refs.techLogDateInput.value = data.due || new Date().toISOString().slice(0, 10);
+                if (refs.techLogDetailsInput) refs.techLogDetailsInput.value = '';
+                if (refs.techImageInput) refs.techImageInput.value = '';
+
+                clearTechLogFeedback();
+                clearTechImageFeedback();
+                renderTechLogTable();
+                renderTechImagePreview();
+            }
+
+            function openTechModal(mode, id) {
+                const isView = mode === 'view';
+                const isEdit = mode === 'edit';
+                const editFromView = isEdit && techViewingId === id;
+
+                techEditingId = isEdit ? id : null;
+                techViewingId = isView ? id : null;
+                techReturnToViewAfterSave = isEdit ? editFromView : false;
+
+                refs.techForm.classList.remove('was-validated');
+                refs.techModalDialog?.classList.toggle('tech-modal-mode-view', isView);
+                refs.techModalEditBtn?.classList.toggle('d-none', !isView);
+                refs.submitTechBtn?.classList.toggle('d-none', isView);
+                if (refs.submitTechBtn) refs.submitTechBtn.disabled = isView;
+                if (refs.closeTechBtn) refs.closeTechBtn.textContent = isView || techReturnToViewAfterSave ? 'Tutup' : 'Batal';
+
+                setTechFormReadonly(isView);
+
+                if (isView) {
+                    refs.techModalLabel.textContent = 'Butiran Technical';
+                } else {
+                    refs.techModalLabel.textContent = isEdit ? 'Edit Technical' : 'Catatan Teknikal';
+                    refs.submitTechBtn.textContent = isEdit ? 'Kemaskini' : 'Simpan';
+                }
+
+                if ((isEdit || isView) && id) {
+                    const data = techItems.find(t => t.id === id);
+                    if (!data) return;
+                    populateTechForm(data);
                 } else {
                     refs.techForm.reset();
-                    techFields.due.value = new Date().toISOString().slice(0, 10);
+                    const today = new Date().toISOString().slice(0, 10);
+                    techFields.due.value = today;
+                    techDraftLogs = [];
+                    techDraftImages = [];
+                    if (refs.techLogDateInput) refs.techLogDateInput.value = today;
+                    if (refs.techLogDetailsInput) refs.techLogDetailsInput.value = '';
+                    if (refs.techImageInput) refs.techImageInput.value = '';
+                    clearTechLogFeedback();
+                    clearTechImageFeedback();
+                    renderTechLogTable();
+                    renderTechImagePreview();
                 }
 
                 techModal.show();
@@ -726,8 +1446,37 @@
  
             function collectTechData() {
                 const id = techEditingId || generateTechId();
+                const dueValue = techFields.due.value || new Date().toISOString().slice(0, 10);
+                const workLogs = techDraftLogs
+                    .map((log) => ({
+                        date: normalizeTechLogDate(log.date, dueValue),
+                        note: String(log.note || '').trim()
+                    }))
+                    .filter((log) => log.note);
+                const latestNotes = workLogs.length ? workLogs[0].note : '';
+                const imageAttachments = techDraftImages
+                    .map((image) => ({
+                        dataUrl: String(image.dataUrl || '').trim(),
+                        name: String(image.name || 'Gambar').slice(0, 120),
+                        type: String(image.type || ''),
+                        size: Number(image.size) || 0,
+                        details: String(image.details || '').trim().slice(0, 160)
+                    }))
+                    .filter((image) => image.dataUrl.startsWith('data:image/'))
+                    .slice(0, MAX_TECH_IMAGES);
+
                 return {
-                    ...buildTechPayload(techFields, id),
+                    id,
+                    title: techFields.title.value.trim(),
+                    type: techFields.type.value,
+                    asset: techFields.asset.value.trim(),
+                    owner: techFields.owner.value.trim(),
+                    due: dueValue,
+                    priority: techFields.priority.value,
+                    status: techFields.status.value,
+                    notes: latestNotes,
+                    workLogs,
+                    imageAttachments,
                     updatedAt: new Date().toISOString()
                 };
             }
@@ -735,10 +1484,30 @@
             function handleTechSubmit(event) {
                 event.preventDefault();
                 event.stopPropagation();
+                const shouldReturnToView = Boolean(techEditingId && techReturnToViewAfterSave);
+
                 if (!refs.techForm.checkValidity()) {
                     refs.techForm.classList.add('was-validated');
                     return;
                 }
+
+                if (!techDraftLogs.length) {
+                    const pendingNote = String(refs.techLogDetailsInput?.value || '').trim();
+                    if (pendingNote) {
+                        const fallbackDate = techFields.due.value || new Date().toISOString().slice(0, 10);
+                        techDraftLogs.unshift({
+                            date: normalizeTechLogDate(refs.techLogDateInput?.value, fallbackDate),
+                            note: pendingNote
+                        });
+                        refs.techLogDetailsInput.value = '';
+                        renderTechLogTable();
+                    } else {
+                        showTechLogFeedback('Tambah sekurang-kurangnya satu log sebelum simpan.');
+                        return;
+                    }
+                }
+
+                clearTechLogFeedback();
 
                 const data = collectTechData();
                 const existingIndex = techItems.findIndex(t => t.id === data.id);
@@ -750,8 +1519,18 @@
 
                 saveTech();
                 renderAll();
+
+                if (shouldReturnToView) {
+                    const savedId = data.id;
+                    techEditingId = null;
+                    techReturnToViewAfterSave = false;
+                    openTechModal('view', savedId);
+                    return;
+                }
+
                 techModal.hide();
                 techEditingId = null;
+                techReturnToViewAfterSave = false;
             }
 
             function handleTechDelete(id) {
@@ -762,23 +1541,7 @@
             }
 
             function openTechView(id) {
-                const data = techItems.find(t => t.id === id);
-                if (!data) return;
-                refs.techViewBody.innerHTML = `
-                    <div class="row g-3">
-                        <div class="col-md-4"><small class="text-muted">ID</small><div class="fw-bold">${data.id}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Perkara</small><div class="fw-bold">${data.title}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Kategori</small><div class="fw-bold">${data.type}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Aset</small><div class="fw-bold">${data.asset}</div></div>
-                        <div class="col-md-4"><small class="text-muted">PIC</small><div class="fw-bold">${data.owner}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Tarikh Due</small><div class="fw-bold">${formatDisplayDate(data.due)}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Prioriti</small><div class="fw-bold">${getPriorityBadge(data.priority)}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${getTechStatusBadge(data.status)}</div></div>
-                        <div class="col-12"><small class="text-muted">Butiran</small><div class="fw-bold">${data.notes || '-'}</div></div>
-                    </div>
-                `;
-                refs.techViewEditBtn.dataset.id = data.id;
-                techViewModal.show();
+                openTechModal('view', id);
             }
 
             function downloadTechReport(rows) {
@@ -818,6 +1581,15 @@
                  const d = new Date(dateStr);
                  if (Number.isNaN(d.getTime())) return '-';
                  return d.toLocaleString('ms-MY');
+             }
+
+             function escapeHtml(value) {
+                 return String(value || '')
+                     .replace(/&/g, '&amp;')
+                     .replace(/</g, '&lt;')
+                     .replace(/>/g, '&gt;')
+                     .replace(/"/g, '&quot;')
+                     .replace(/'/g, '&#39;');
              }
  
              function getTechStatusBadge(status) {

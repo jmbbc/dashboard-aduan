@@ -1,0 +1,51 @@
+﻿Sheet: MECH - Exhaust fan
+UsedRows: 47
+UsedCols: 15
+
+ROW_1:  |  | EXHAUST FAN |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_2:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_3:  |  | Month |  | Year |  | Status | Monthly | Category | Mechanical |  | Reference No. |  | BC/MAINT/EXHF/1 | 
+ROW_4:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_5: ITEM | DESCRIPTION |  |  |  |  | PUMP ROOM (Main pump) | PUMP ROOM (Pressure pump) | LV ROOM (A) | LV ROOM (B) | S.POOL PUMP ROOM | LIFT MOTOR ROOM A | LIFT MOTOR ROOM B1 | LIFT MOTOR ROOM B2 | LIFT MOTOR ROOM B3
+ROW_6: A | Physical Check |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_7: 1 | Check bolt & nut for tightness |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_8: 2 | Check for abnormal sound of vibration |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_9: 3 | Check casing for signs of corrosion |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_10: 4 | Lubricate bearing |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_11: 5 | Check switchboard and wiring |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_12: 6 | Inlet and outlet grilles is fitted |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_13: 7 | Damper is fully open |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_14: 8 | Flexible connection are fitted and undamaged |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_15: 9 | Fan hung on anti-vibration devices |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_16:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_17: NOTES |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_18:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_19:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_20: Carried out by :- |  |  |  |  |  |  |  | Verified by :- |  |  |  |  |  | 
+ROW_21: Signature |  | : |  |  |  |  |  | Signature |  | : |  |  |  | 
+ROW_22:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_23: Name |  | : |  |  |  |  |  | Name |  | : |  |  |  | 
+ROW_24: Date |  | : |  |  |  |  |  | Date |  | : |  |  |  | 
+ROW_25:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_26:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_27:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_28:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_29:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_30:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_31:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_32:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_33:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_34:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_35:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_36:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_37:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_38:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_39:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_40:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_41:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_42:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_43:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_44:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_45:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_46:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ROW_47:  |  |  |  |  |  |  |  |  |  |  |  |  |  | 

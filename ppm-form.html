@@ -1,0 +1,3818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPM Form - Technician</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: #f5f7fb;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+
+        .ppm-shell {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0.75rem;
+        }
+
+        .ppm-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(245, 247, 251, 0.96);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.5rem 0;
+            margin-bottom: 0.6rem;
+        }
+
+        .ppm-title {
+            font-size: 1.06rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .ppm-subtitle {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.78rem;
+        }
+
+        .tech-badge {
+            font-size: 0.72rem;
+            padding: 0.24rem 0.48rem;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        .submission-track {
+            position: sticky;
+            top: 4.9rem;
+            z-index: 90;
+            background: rgba(245, 247, 251, 0.96);
+            backdrop-filter: blur(4px);
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.45rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .submission-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .submission-title {
+            margin: 0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .submission-summary {
+            font-size: 0.72rem;
+            border-radius: 999px;
+            padding: 0.24rem 0.48rem;
+        }
+
+        .submission-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 0.42rem;
+        }
+
+        .submission-group {
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 0.34rem 0.42rem;
+        }
+
+        .submission-group summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.42rem;
+            cursor: pointer;
+            list-style: none;
+            color: #334155;
+            font-size: 0.74rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .submission-group summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .submission-group summary::before {
+            content: '▸';
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-right: 0.2rem;
+        }
+
+        .submission-group[open] summary::before {
+            content: '▾';
+        }
+
+        .submission-group-title {
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .submission-group-summary {
+            font-size: 0.68rem;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 0.2rem 0.44rem;
+        }
+
+        .submission-group-track {
+            margin-top: 0.34rem;
+        }
+
+        .step-track {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.32rem;
+        }
+
+        .step-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.26rem;
+            border: 1px solid #dbe2ea;
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 0.24rem 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #4b5563;
+            line-height: 1.2;
+            width: 100%;
+        }
+
+        .step-pill.submitted {
+            border-color: #86efac;
+            background: #ecfdf3;
+            color: #166534;
+        }
+
+        .step-pill.pending {
+            border-color: #fca5a5;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .step-pill.current {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.22);
+        }
+
+        .step-pill .loc-name {
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ppm-card {
+            border: 1px solid #000000;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            margin-bottom: 0.56rem;
+            overflow: hidden;
+        }
+
+        .ppm-card .card-header {
+            background: #f8fafc;
+            border-bottom: 1px solid #000000;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.44rem 0.6rem;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+        }
+
+        .ppm-card .card-body {
+            padding: 0.6rem;
+        }
+
+        .ppm-card .form-label {
+            font-size: 0.76rem;
+            margin-bottom: 0.18rem;
+            color: #374151;
+        }
+
+        .ppm-card .form-control,
+        .ppm-card .form-select {
+            font-size: 0.82rem;
+            padding: 0.32rem 0.48rem;
+        }
+
+        .ppm-card .form-text,
+        .ppm-card .invalid-feedback {
+            font-size: 0.72rem;
+        }
+
+        .corp-banner {
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            padding: 0.44rem 0.5rem;
+            background: #f8fafc;
+            margin-bottom: 0.45rem;
+        }
+
+        .corp-banner .corp-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1f2937;
+            line-height: 1.25;
+            text-transform: uppercase;
+        }
+
+        .corp-banner .corp-sub {
+            font-size: 0.72rem;
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .template-note {
+            font-size: 0.74rem;
+            color: #4b5563;
+        }
+
+        .checklist-table {
+            border: 1px solid #e3e8ef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .checklist-table .table {
+            margin-bottom: 0;
+        }
+
+        .checklist-table .table > :not(caption) > * > * {
+            padding: 0.38rem 0.42rem;
+            font-size: 0.8rem;
+            vertical-align: middle;
+        }
+
+        .checklist-table thead th {
+            white-space: nowrap;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #4b5563;
+            background: #f8fafc;
+        }
+
+        .checklist-group-row td {
+            background: #f0f7ff;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+
+        .step-item-wrap {
+            line-height: 1.2;
+        }
+
+        .step-item-wrap .step-main {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .step-item-wrap .step-sub {
+            margin-top: 0.08rem;
+            font-size: 0.72rem;
+            color: #6b7280;
+        }
+
+        .col-bil {
+            width: 42px;
+            text-align: center;
+        }
+
+        .checklist-table .table th.col-bil,
+        .checklist-table .table td.col-bil {
+            padding-left: 0.18rem;
+            padding-right: 0.18rem;
+        }
+
+        .checklist-table .table th:nth-child(2),
+        .checklist-table .table td:nth-child(2) {
+            padding-left: 0.24rem;
+        }
+
+        .col-status {
+            width: 170px;
+        }
+
+        .col-remark {
+            width: 220px;
+        }
+
+        .status-icon-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.22rem;
+        }
+
+        .status-icon-option {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .status-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            width: 100%;
+            padding: 0.2rem 0.3rem;
+            border: 1px solid #dbe2ea;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #4b5563;
+            background: #ffffff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .status-icon-btn i {
+            font-size: 0.78rem;
+        }
+
+        .btn-check:focus + .status-icon-btn {
+            outline: 2px solid rgba(59, 130, 246, 0.25);
+            outline-offset: 1px;
+        }
+
+        .btn-check:checked + .status-icon-btn.status-ok {
+            border-color: #16a34a;
+            background: #ecfdf3;
+            color: #166534;
+        }
+
+        .btn-check:checked + .status-icon-btn.status-ng {
+            border-color: #dc2626;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .btn-check:checked + .status-icon-btn.status-auto {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .btn-check:checked + .status-icon-btn.status-manual {
+            border-color: #d97706;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .civil-wall-status-wrap {
+            display: grid;
+            gap: 0.26rem;
+        }
+
+        .civil-wall-status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.26rem;
+        }
+
+        .ff-wet2-status-wrap {
+            display: grid;
+            gap: 0.26rem;
+        }
+
+        .ff-wet2-status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.26rem;
+        }
+
+        .civil-wall-status-tile {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            border: 1px solid #dbe2ea;
+            border-radius: 6px;
+            padding: 0.24rem 0.18rem;
+            min-height: 44px;
+            font-size: 0.64rem;
+            font-weight: 700;
+            line-height: 1.15;
+            text-align: center;
+            white-space: normal;
+            color: #334155;
+            cursor: pointer;
+            user-select: none;
+            background: #ffffff;
+        }
+
+        .civil-wall-status-tile.ok {
+            background: #ecfdf3;
+            border-color: #16a34a;
+            color: #166534;
+        }
+
+        .civil-wall-status-tile.ng {
+            background: #fce7f3;
+            border-color: #db2777;
+            color: #9d174d;
+        }
+
+        .civil-wall-status-tile.empty {
+            background: #ffffff;
+            border-color: #dbe2ea;
+            color: #334155;
+        }
+
+        .civil-wall-ng-code-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.38rem 0.6rem;
+        }
+
+        .phase-reading-grid {
+            display: grid;
+            gap: 0.24rem;
+        }
+
+        .phase-reading-label {
+            min-width: 44px;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #374151;
+            background: #f8fafc;
+        }
+
+        .water-riser-testing-grid {
+            display: grid;
+            grid-template-columns: 74px repeat(2, minmax(0, 1fr));
+            gap: 0.24rem 0.32rem;
+            align-items: center;
+        }
+
+        .water-riser-testing-head {
+            border: 1px solid #dbe2ea;
+            border-radius: 6px;
+            background: #f8fafc;
+            padding: 0.2rem 0.3rem;
+            text-align: center;
+            font-size: 0.69rem;
+            font-weight: 700;
+            color: #334155;
+            line-height: 1.2;
+        }
+
+        .water-riser-testing-key {
+            border: 1px solid #dbe2ea;
+            border-radius: 6px;
+            background: #ffffff;
+            padding: 0.22rem 0.28rem;
+            text-align: center;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #374151;
+            line-height: 1.2;
+        }
+
+        .water-riser-testing-value {
+            width: 100%;
+            min-height: calc(1.5em + 0.5rem + 2px);
+        }
+
+        @media (max-width: 768px) {
+            .water-riser-testing-grid {
+                grid-template-columns: 68px repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .status-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.45rem;
+            font-size: 0.72rem;
+            color: #6b7280;
+        }
+
+        .step2-scope-note {
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 0.32rem 0.42rem;
+            margin-bottom: 0.42rem;
+            font-size: 0.73rem;
+            color: #475569;
+            line-height: 1.3;
+        }
+
+        .notes-toolbar {
+            display: flex;
+            gap: 0.35rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .notes-toolbar .btn {
+            font-size: 0.74rem;
+            padding: 0.22rem 0.5rem;
+        }
+
+        .notes-summary-area {
+            background: #f8fafc;
+            color: #475569;
+            min-height: 6.1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .notes-input-area {
+            min-height: 6.6rem;
+        }
+
+        .legend-pill {
+            border: 1px solid #dbe2ea;
+            border-radius: 999px;
+            padding: 0.18rem 0.45rem;
+            background: #ffffff;
+            color: #4b5563;
+        }
+
+        .upload-block {
+            border: 1px dashed #d6dce5;
+            border-radius: 8px;
+            background: #fafcff;
+            padding: 0.5rem;
+            margin-bottom: 0.42rem;
+        }
+
+        .upload-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .upload-feedback {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .upload-status {
+            font-size: 0.72rem;
+            color: #6b7280;
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .picture-entry-list {
+            margin-top: 0.42rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.38rem;
+        }
+
+        .picture-entry-empty {
+            border: 1px dashed #d6dce5;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 0.4rem 0.5rem;
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        .picture-entry-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 0.45rem;
+            align-items: start;
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 0.32rem;
+        }
+
+        .picture-entry-media {
+            width: 100%;
+        }
+
+        .picture-entry-thumb {
+            width: 100%;
+            height: 88px;
+            border-radius: 6px;
+            border: 1px solid #edf0f5;
+            background: #f8fafc;
+            object-fit: cover;
+        }
+
+        .picture-entry-thumb.is-clickable {
+            cursor: zoom-in;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .picture-entry-thumb.is-clickable:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .picture-entry-meta {
+            font-size: 0.68rem;
+            color: #64748b;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .picture-entry-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.35rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .picture-entry-remove {
+            padding: 0.05rem 0.32rem;
+            font-size: 0.66rem;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .picture-entry-note {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #f8fafc;
+            padding: 0.3rem 0.38rem;
+            font-size: 0.72rem;
+            color: #334155;
+            min-height: 2.1rem;
+            line-height: 1.3;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .picture-viewer-image {
+            max-height: min(78vh, 760px);
+            width: auto;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .picture-entry-row {
+                grid-template-columns: 1fr;
+            }
+
+            .picture-entry-thumb {
+                height: 110px;
+            }
+        }
+
+        .sticky-actions {
+            position: sticky;
+            bottom: 0;
+            z-index: 120;
+            background: rgba(245, 247, 251, 0.96);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid #e5e7eb;
+            padding: 0.52rem 0;
+            margin-top: 0.3rem;
+        }
+
+        .sticky-actions .btn {
+            font-size: 0.82rem;
+            padding: 0.34rem 0.56rem;
+        }
+
+        @media (max-width: 768px) {
+            .submission-track {
+                top: 7rem;
+            }
+
+            .submission-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .step-track {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .step-pill .loc-name {
+                max-width: 130px;
+            }
+
+            .col-status,
+            .col-remark {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="ppm-shell">
+        <header class="ppm-header">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <a href="ppm-monthly-report.html" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+                        <span class="tech-badge">Technician View Only</span>
+                    </div>
+                    <h1 class="ppm-title">Checklist PPM Electrical - Banjaria Court</h1>
+                    <p class="ppm-subtitle">Structure aligned with your current checklist format.</p>
+                </div>
+                <span class="badge text-bg-warning">Draft Structure</span>
+            </div>
+        </header>
+
+        <section class="submission-track" aria-label="Submission status by location">
+            <div class="submission-head">
+                <p class="submission-title">Submission Status by Block Location</p>
+                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 submitted</span>
+            </div>
+            <div class="submission-groups" id="locationStatusTrack" aria-live="polite"></div>
+        </section>
+
+        <form id="ppmTechnicianForm" class="needs-validation" novalidate>
+            <section class="card ppm-card">
+                <div class="card-header">Step 1 - Form Details</div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label" for="categoryField">Checklist Category</label>
+                            <select class="form-select" id="categoryField"></select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="templateType">Checklist Template</label>
+                            <select class="form-select" id="templateType" required>
+                                <option value="bilikSuis" selected>ELEKT - Switch Room</option>
+                                <option value="waterPump">ELEKT - Water Pump</option>
+                                <option value="swimmingPump">ELEKT - Swimming Water Pump</option>
+                                <option value="standbyGenset">ELEKT - Standby Genset</option>
+                                <option value="capacitorBank">ELEKT - Capacitor Bank</option>
+                                <option value="mechExhaustFan">MECH - Exhaust fan</option>
+                                <option value="ffWaterTank">FF - Water Tank</option>
+                                <option value="ffAlarmPanel">FF - Alarm Panel</option>
+                                <option value="ffFireControlRoom">FF - Fire Control Room</option>
+                                <option value="ffWaterRiser">FF - Water Riser</option>
+                                <option value="ffWetRiser">FF - Wet Riser</option>
+                                <option value="civilRiserLeaking">CIVIL - Riser Leaking Check</option>
+                                <option value="civilWallLeaking">CIVIL - Wall Leaking Checking</option>
+                                <option value="plToilet">PL - Toilet</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a checklist template.</div>
+                        </div>
+
+                        <div class="w-100"></div>
+
+                        <div class="col-6">
+                            <label class="form-label" for="frequencyField">Frequency</label>
+                            <input type="text" class="form-control" id="frequencyField" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="inspectionDate">Date</label>
+                            <input type="date" class="form-control" id="inspectionDate" required>
+                            <div class="invalid-feedback">Please select a date.</div>
+                        </div>
+
+                        <div class="w-100"></div>
+
+                        <div class="col-6">
+                            <label class="form-label" for="referenceNo">Reference No.</label>
+                            <input type="text" class="form-control" id="referenceNo" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" id="locationLabel" for="locationSelect">Block Location</label>
+                            <select class="form-select" id="locationSelect" required></select>
+                            <div class="invalid-feedback">Please select a location.</div>
+                        </div>
+
+                        <div class="w-100"></div>
+
+                        <div class="col-md-8">
+                            <label class="form-label" for="copyFromLocationSelect">Copy Submitted Data (Same Month)</label>
+                            <select class="form-select" id="copyFromLocationSelect">
+                                <option value="">Select source location</option>
+                            </select>
+                            <div class="form-text">Copies filled values from submitted data in the same checklist template and month.</div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-primary w-100" id="copyFromLocationBtn" disabled>Copy To Current Location</button>
+                        </div>
+                    </div>
+
+                    <p class="template-note mt-2 mb-0" id="templateDescription"></p>
+                </div>
+            </section>
+
+            <section class="card ppm-card">
+                <div class="card-header">Step 2 - Checklist (No. | Item | Status | Remarks)</div>
+                <div class="card-body">
+                    <div class="step2-scope-note d-none" id="step2ScopeNote"></div>
+                    <div class="checklist-table">
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle">
+                                <thead>
+                                    <tr>
+                                        <th class="col-bil">NO.</th>
+                                        <th>ITEM</th>
+                                        <th class="col-status">STATUS</th>
+                                        <th class="col-remark">REMARKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="checklistBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="status-legend" id="statusLegend"></div>
+                </div>
+            </section>
+
+            <section class="card ppm-card">
+                <div class="card-header">Step 3 - Notes</div>
+                <div class="card-body">
+                    <label class="form-label" for="autoRemarkSummary">Auto Summary (from Item Remarks)</label>
+                    <textarea class="form-control notes-summary-area" id="autoRemarkSummary" rows="5" readonly></textarea>
+
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <label class="form-label mb-0" for="technicianNotes">Technician Additional Notes</label>
+                        <div class="notes-toolbar">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesBulletBtn">Bullet</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesNumberBtn">Numbering</button>
+                        </div>
+                    </div>
+                    <textarea class="form-control notes-input-area" id="technicianNotes" rows="6" placeholder="Add additional notes here..."></textarea>
+                </div>
+            </section>
+
+            <section class="card ppm-card">
+                <div class="card-header">Step 4 - Attachments / Evidence</div>
+                <div class="card-body">
+                    <div class="upload-block">
+                        <label class="form-label" for="pictureUpload">Upload Picture</label>
+                        <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*">
+                        <label class="form-label" for="pictureNote">Picture Note</label>
+                        <textarea class="form-control" id="pictureNote" rows="2" placeholder="Add notes regarding the uploaded picture (optional)"></textarea>
+                        <div class="upload-feedback">
+                            <span class="upload-status" id="pictureUploadStatus">No picture selected.</span>
+                            <div class="upload-actions">
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" id="clearPictureBtn" disabled>Clear</button>
+                                <button type="button" class="btn btn-sm btn-primary py-0 px-2" id="confirmPictureBtn" disabled>Confirm Picture</button>
+                            </div>
+                        </div>
+                        <div class="picture-entry-list" id="pictureEntryList">
+                            <div class="picture-entry-empty">No confirmed picture yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card ppm-card">
+                <div class="card-header">Step 5 - Confirmation</div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <label class="form-label" for="techDeclaration">Technician Confirmation</label>
+                        <input type="text" class="form-control" id="techDeclaration" placeholder="Full name as confirmation" required>
+                        <div class="invalid-feedback">Please enter technician confirmation.</div>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmChecklist" required>
+                        <label class="form-check-label" for="confirmChecklist">I confirm all checklist items were filled based on actual inspection.</label>
+                        <div class="invalid-feedback">Please check the confirmation box.</div>
+                    </div>
+                    <p class="form-text mt-2 mb-0">Note: This form structure is not yet connected to backend online submission.</p>
+                </div>
+            </section>
+
+            <div class="sticky-actions">
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary" id="saveDraftBtn">Save Draft</button>
+                    <button type="submit" class="btn btn-primary">Submit PPM</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <div class="modal fade" id="pictureViewerModal" tabindex="-1" aria-labelledby="pictureViewerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title fs-6" id="pictureViewerModalLabel">Picture Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2 text-center bg-light">
+                    <img id="pictureViewerImage" class="img-fluid picture-viewer-image" alt="Picture preview">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="civilWallNgReasonModal" tabindex="-1" aria-labelledby="civilWallNgReasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title fs-6" id="civilWallNgReasonTitle">NG Problem Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-2">
+                    <p class="small text-muted mb-2">Select one or more problem code(s).</p>
+                    <div class="civil-wall-ng-code-grid" id="civilWallNgReasonOptions">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="P" id="civilWallNgCodeP" name="civilWallNgReasonOption">
+                            <label class="form-check-label" for="civilWallNgCodeP">P</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="T" id="civilWallNgCodeT" name="civilWallNgReasonOption">
+                            <label class="form-check-label" for="civilWallNgCodeT">T</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="B" id="civilWallNgCodeB" name="civilWallNgReasonOption">
+                            <label class="form-check-label" for="civilWallNgCodeB">B</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="LS" id="civilWallNgCodeLS" name="civilWallNgReasonOption">
+                            <label class="form-check-label" for="civilWallNgCodeLS">LS</label>
+                        </div>
+                    </div>
+                    <div class="small text-danger mt-2 d-none" id="civilWallNgReasonFeedback">Please select at least one code.</div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="civilWallNgReasonSaveBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const TEMPLATE_CONFIG = {
+                bilikSuis: {
+                    category: 'Electrical',
+                    referenceNo: 'BC/MAINT/BS/22/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet ELEKT - SWITCH ROOM, including Main Switchboard Building, Main Switchboard, and Others sections.',
+                    locationLabel: 'Block Location',
+                    locations: [
+                        'SSB Block A',
+                        'SSB Block B1',
+                        'SSB Block B2',
+                        'SSB Block B3',
+                        'LV Room A',
+                        'LV Room B'
+                    ],
+                    groups: [
+                        {
+                            title: '1) MAIN SWITCHBOARD BUILDING - A) CLEANING',
+                            items: [
+                                'Clean main switch room',
+                                'Entrance route',
+                                'Roof top area'
+                            ]
+                        },
+                        {
+                            title: '1) MAIN SWITCHBOARD BUILDING - B) INSPECTION',
+                            items: [
+                                'Main entrance door',
+                                'No-entry warning sign',
+                                'Danger warning sign',
+                                'First aid diagram',
+                                'Electrical schematic wiring diagram',
+                                'Fire suppression gas canister',
+                                'EFR/OCR protection device',
+                                'Rubber safety mat',
+                                'Insect barrier net',
+                                'Earthing'
+                            ]
+                        },
+                        {
+                            title: '2) MAIN SWITCHBOARD - A) INSPECTION',
+                            items: [
+                                'Switchboard condition',
+                                'ACB air circuit breaker operation',
+                                'Indicator lights',
+                                'Selector switch',
+                                'Voltmeter',
+                                'Ammeter',
+                                'Power factor meter',
+                                'Cable condition',
+                                'Heater',
+                                'Capacitor bank'
+                            ]
+                        },
+                        {
+                            title: '2) MAIN SWITCHBOARD - B) CHECK AND TIGHTEN',
+                            items: [
+                                'All screws and terminals'
+                            ]
+                        },
+                        {
+                            title: '2) MAIN SWITCHBOARD - C) RECORD READINGS IN LOGBOOK',
+                            items: [
+                                'Voltage (1-Phase, R-N / Y-N / B-N)',
+                                'Voltage (3-Phase, R-Y / Y-B / B-R)',
+                                'Current (R / Y / B)',
+                                'Power factor',
+                                'Maximum load'
+                            ]
+                        },
+                        {
+                            title: '3) OTHERS',
+                            items: [
+                                'Fire extinguisher',
+                                'OCR / EFR'
+                            ]
+                        }
+                    ]
+                },
+                waterPump: {
+                    category: 'Electrical',
+                    referenceNo: 'BC/MAINT/WP/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet ELEKT - WATER PUMP (Manual Operation and Physical Check).',
+                    locationLabel: 'Pump Unit (Block / Pump No.)',
+                    locations: [
+                        'Main Pump - Block A - Pump #1',
+                        'Main Pump - Block A - Pump #2',
+                        'Pressure Pump - Block A - Pump #1',
+                        'Pressure Pump - Block A - Pump #2',
+                        'Pressure Pump - Block A - Pump #3',
+
+                        'Main Pump - Block B1 - Pump #1',
+                        'Main Pump - Block B1 - Pump #2',
+                        'Pressure Pump - Block B1 - Pump #1',
+                        'Pressure Pump - Block B1 - Pump #2',
+                        'Pressure Pump - Block B1 - Pump #3',
+
+                        'Main Pump - Block B2 - Pump #1',
+                        'Main Pump - Block B2 - Pump #2',
+                        'Pressure Pump - Block B2 - Pump #1',
+                        'Pressure Pump - Block B2 - Pump #2',
+                        'Pressure Pump - Block B2 - Pump #3',
+
+                        'Main Pump - Block B3 - Pump #1',
+                        'Main Pump - Block B3 - Pump #2',
+                        'Pressure Pump - Block B3 - Pump #1',
+                        'Pressure Pump - Block B3 - Pump #2',
+                        'Pressure Pump - Block B3 - Pump #3'
+                    ],
+                    groups: [
+                        {
+                            title: 'A) MANUAL OPERATION',
+                            items: [
+                                'Incoming water pressure',
+                                'Outgoing water pressure',
+                                'Determine flow rate',
+                                'Check mechanical seal for leakage',
+                                'Check alignment between pump and motor',
+                                'Check casing and base plate for signs of corrosion',
+                                'Check bolt and nut for tightness',
+                                'Check for abnormal sound or vibration',
+                                'Clean all cooling air passages and external fins at motor',
+                                'Lubricate bearing when necessary'
+                            ]
+                        },
+                        {
+                            title: 'B) PHYSICAL CHECK',
+                            items: [
+                                'Voltage',
+                                'Motor',
+                                'Full load current',
+                                'Overload setting',
+                                'All valves are correctly installed and in open position',
+                                'Check pump alignment',
+                                'Running AMP (Phase R / Y / B)',
+                                'Tighten',
+                                'Selector switch'
+                            ]
+                        }
+                    ]
+                },
+                swimmingPump: {
+                    category: 'Electrical',
+                    referenceNo: 'BC/MAINT/PWP/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet ELEKT - SWIMMING WATER PUMP (Manual Operation and Physical Check).',
+                    locationLabel: 'Pump Unit',
+                    locations: ['Swimming Pool Pump #1', 'Swimming Pool Pump #2'],
+                    groups: [
+                        {
+                            title: 'A) MANUAL OPERATION',
+                            items: [
+                                'Incoming water pressure',
+                                'Outgoing water pressure',
+                                'Determine flow rate',
+                                'Check mechanical seal for leakage',
+                                'Check alignment between pump and motor',
+                                'Check casing and base plate for signs of corrosion',
+                                'Check bolt and nut for tightness',
+                                'Check for abnormal sound or vibration',
+                                'Clean all cooling air passages and external fins at motor',
+                                'Lubricate bearing when necessary'
+                            ]
+                        },
+                        {
+                            title: 'B) PHYSICAL CHECK',
+                            items: [
+                                'Voltage',
+                                'Motor',
+                                'Full load current',
+                                'Overload setting',
+                                'All valves are correctly installed and in open position',
+                                'Check pump alignment',
+                                'Running AMP (Phase R / Y / B)',
+                                'Tighten',
+                                'Selector switch'
+                            ]
+                        }
+                    ]
+                },
+                standbyGenset: {
+                    category: 'Electrical',
+                    referenceNo: 'BC/MAINT/GS/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet ELEKT - STANDBY GENSET (full monthly checklist).',
+                    locationLabel: 'Genset Unit',
+                    locations: ['S. Genset #1', 'S. Genset #2'],
+                    groups: [
+                        {
+                            title: 'A) STANDBY GENSET CHECKLIST',
+                            items: [
+                                'Check diesel fuel level in tank. Top up when necessary. Check fuel supply and return piping for leakage',
+                                'Check coolant level and top up if necessary',
+                                'Check engine oil level and top up if necessary',
+                                'Check battery electrolyte level and top up if necessary',
+                                'Check battery condition, terminal and connection',
+                                'Condition of hoses',
+                                'Check fan belt and adjust tension when necessary',
+                                'Check charging alternator',
+                                'Start up engine and warm up engine',
+                                'Check engine instrumentation',
+                                'Check engine protection system (LOP, HWT)',
+                                'Clean up genset and AMF switchboard',
+                                'Check genset voltage and frequency and readjust when necessary',
+                                'Check AMF switchboard and battery charger',
+                                'RPM',
+                                'Oil pressure',
+                                'Water temperature',
+                                'Drain and change lubricating oil',
+                                'Change lubricating oil filter',
+                                'Change fuel filter elements',
+                                'Service/change air filter element'
+                            ]
+                        }
+                    ]
+                },
+                capacitorBank: {
+                    category: 'Electrical',
+                    referenceNo: 'BC/MAINT/CB/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet ELEKT - CAPACITOR BANK (Mechanical + ACB1 phase readings).',
+                    locationLabel: 'LV Room Block',
+                    locations: ['A', 'B1', 'B2', 'B3'],
+                    groups: [
+                        {
+                            title: 'A) MECHANICAL',
+                            items: [
+                                'MCCB / ACB',
+                                'Contactor',
+                                'Regulator Switch',
+                                'Control Fuse',
+                                'Indicator Light',
+                                'Power Factor Meter',
+                                'Power Factor Regulator',
+                                'Connection Cable',
+                                'Capacitor'
+                            ]
+                        },
+                        {
+                            title: 'B) CAPACITOR BANK - ACB 1 (PHASE R / Y / B)',
+                            items: [
+                                'Step 1 (25 kVar) (MCCB : 40 A)',
+                                'Step 2 (25 kVar) (MCCB : 40 A)',
+                                'Step 3 (25 kVar) (MCCB : 40 A)',
+                                'Step 4 (25 kVar) (MCCB : 40 A)',
+                                'Step 5 (25 kVar) (MCCB : 40 A)',
+                                'Step 6 (25 kVar) (MCCB : 40 A)',
+                                'Step 7 (50 kVar) (MCCB : 100 A)',
+                                'Step 8 (50 kVar) (MCCB : 100 A)',
+                                'Step 9 (50 kVar) (MCCB : 100 A)',
+                                'Step 10 (50 kVar) (MCCB : 100 A)',
+                                'Step 11 (100 kVar) (MCCB : 175 A)',
+                                'Step 12 (100 kVar) (MCCB : 175 A)'
+                            ]
+                        }
+                    ]
+                },
+                mechExhaustFan: {
+                    category: 'Mechanical',
+                    referenceNo: 'BC/MAINT/EXHF/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet MECH - EXHAUST FAN (physical checks by room location).',
+                    locationLabel: 'Room Location',
+                    locations: [
+                        'Pump Room (Main Pump)',
+                        'Pump Room (Pressure Pump)',
+                        'LV Room A',
+                        'LV Room B',
+                        'S.Pool Pump Room',
+                        'Lift Motor Room A',
+                        'Lift Motor Room B1',
+                        'Lift Motor Room B2',
+                        'Lift Motor Room B3'
+                    ],
+                    groups: [
+                        {
+                            title: 'A) PHYSICAL CHECK',
+                            items: [
+                                'Check bolt and nut for tightness',
+                                'Check for abnormal sound or vibration',
+                                'Check casing for signs of corrosion',
+                                'Lubricate bearing',
+                                'Check switchboard and wiring',
+                                'Inlet and outlet grilles are fitted',
+                                'Damper is fully open',
+                                'Flexible connection is fitted and undamaged',
+                                'Fan hung on anti-vibration devices'
+                            ]
+                        }
+                    ]
+                },
+                ffWaterTank: {
+                    category: 'Fire Fighting',
+                    referenceNo: 'BC/MAINT/WT/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet FF - WATER TANK (status checks per tank location).',
+                    locationLabel: 'Tank Location',
+                    locations: [
+                        'Suction Tank (JBA)',
+                        'Fire Tank (PG)',
+                        'Domestic Tank Rooftop Block A',
+                        'Domestic Tank Rooftop Block B1',
+                        'Domestic Tank Rooftop Block B2',
+                        'Domestic Tank Rooftop Block B3'
+                    ],
+                    groups: [
+                        {
+                            title: 'A) STATUS CHECK',
+                            items: [
+                                'Piping',
+                                'Valve',
+                                'Water level indicator',
+                                'Tank condition',
+                                'Painting',
+                                'Ball valve',
+                                'Sensor rod',
+                                'Float switch',
+                                'Check valve',
+                                'Ladder'
+                            ]
+                        }
+                    ]
+                },
+                ffAlarmPanel: {
+                    category: 'Fire Fighting',
+                    referenceNo: 'BC/MAINT/FCR/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet FF - FIRE CONTROL ROOM, alarm panel section only.',
+                    locationLabel: 'Room Location',
+                    locations: ['Fire Control Room'],
+                    groups: [
+                        {
+                            title: 'A) FIRE ALARM PANEL',
+                            items: [
+                                'Floor plan',
+                                'Indicator light (testing)',
+                                'Volt meter',
+                                'Amp meter',
+                                'CMS',
+                                'Cable connection',
+                                'Battery cell / charger (service)',
+                                'Zone switch (ISO/N/TA/TF test)',
+                                'Buzzer',
+                                'Master reset',
+                                'Bell (testing)',
+                                'Break glass (testing)',
+                                'Smoke detector (testing)',
+                                'Heat detector (testing)',
+                                'Flow switch (testing)'
+                            ]
+                        }
+                    ]
+                },
+                ffFireControlRoom: {
+                    category: 'Fire Fighting',
+                    referenceNo: 'BC/MAINT/FCR/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet FF - FIRE CONTROL ROOM (fire alarm panel and intercom panel).',
+                    locationLabel: 'Room Location',
+                    locations: ['Fire Control Room'],
+                    groups: [
+                        {
+                            title: 'A) FIRE ALARM PANEL',
+                            items: [
+                                'Floor plan',
+                                'Indicator light (testing)',
+                                'Volt meter',
+                                'Amp meter',
+                                'CMS',
+                                'Cable connection',
+                                'Battery cell / charger (service)',
+                                'Zone switch (ISO/N/TA/TF test)',
+                                'Buzzer',
+                                'Master reset',
+                                'Bell (testing)',
+                                'Break glass (testing)',
+                                'Smoke detector (testing)',
+                                'Heat detector (testing)',
+                                'Flow switch (testing)'
+                            ]
+                        },
+                        {
+                            title: 'B) INTERCOM PANEL',
+                            items: [
+                                'Voltage',
+                                'Ampere',
+                                'Battery cell',
+                                'Battery charger',
+                                'Indicator light (testing)',
+                                'Call button',
+                                'Phone (testing)'
+                            ]
+                        }
+                    ]
+                },
+                ffWaterRiser: {
+                    category: 'Fire Fighting',
+                    referenceNo: 'BC/MAINT/WAT/1',
+                    frequency: 'Quarterly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet FF - WATER RISER (inspection and cut-in/cut-out testing).',
+                    locationLabel: 'Location',
+                    locations: ['Water Riser Room'],
+                    groups: [
+                        {
+                            title: '1) INSPECTION',
+                            items: [
+                                'Room security',
+                                'Lighting',
+                                'Room temperature',
+                                'Contactor',
+                                'Isolator switch / MCCB',
+                                'Start / Stop button',
+                                'Indicator light',
+                                'Cable connection',
+                                'Pump condition',
+                                'Pressure control switch',
+                                'Pressure gauge',
+                                'Check valve',
+                                'Battery'
+                            ]
+                        },
+                        {
+                            title: '2) TESTING (CUT-IN / CUT-OUT)',
+                            items: [
+                                'Jockey Pump',
+                                'Duty Pump',
+                                'Standby Pump'
+                            ]
+                        }
+                    ]
+                },
+                ffWetRiser: {
+                    category: 'Fire Fighting',
+                    referenceNo: 'BC/MAINT/WET/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet FF - WET RISER with added bracket, control valve, lamp, and picture references.',
+                    step2ScopeNote: 'Scope of inspection: Hose Reel (Canvas), Nozzle & Coupling, Hose Reel Bracket, Fire Extinguisher, Wet Riser Pipe (Control Valve), Lamp.',
+                    locationLabel: 'Block Location',
+                    locations: ['A', 'B1', 'B2', 'B3'],
+                    groups: [
+                        {
+                            title: '1) INSPECTION BY LEVEL',
+                            items: [
+                                'Level PG',
+                                'Level P1',
+                                'Level P2',
+                                'Level P3',
+                                'Level PL',
+                                'Level 1',
+                                'Level 2',
+                                'Level 3',
+                                'Level 4',
+                                'Level 5',
+                                'Level 6',
+                                'Level 7',
+                                'Level 8',
+                                'Level 9',
+                                'Level 10',
+                                'Level 11',
+                                'Level 12',
+                                'Level 13',
+                                'Level 14',
+                                'Level 15',
+                                'Level 16',
+                                'Level 17'
+                            ]
+                        }
+                    ]
+                },
+                civilRiserLeaking: {
+                    category: 'Civil',
+                    referenceNo: 'BC/MAINT/CIVIL/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet CIVIL - RISER LEAKING CHECK (multi-room inspection by level).',
+                    step2ScopeNote: 'Room scope: Bilik Meter Air, Bilik Pancur Basah, Bilik MATV, Bilik Saluran Telefon, Bilik Panel Meter, Bilik Saluran Elektrik, Bilik Gegelung Hos, Tangga Kecemasan.',
+                    locationLabel: 'Block Location',
+                    locations: ['A', 'B1', 'B2', 'B3'],
+                    groups: [
+                        {
+                            title: '1) INSPECTION BY LEVEL',
+                            items: [
+                                'Level PG',
+                                'Level P1',
+                                'Level P2',
+                                'Level P3',
+                                'Level PL',
+                                'Level 1',
+                                'Level 2',
+                                'Level 3',
+                                'Level 4',
+                                'Level 5',
+                                'Level 6',
+                                'Level 7',
+                                'Level 8',
+                                'Level 9',
+                                'Level 10',
+                                'Level 11',
+                                'Level 12',
+                                'Level 13',
+                                'Level 14',
+                                'Level 15',
+                                'Level 16',
+                                'Level 17'
+                            ]
+                        }
+                    ]
+                },
+                civilWallLeaking: {
+                    category: 'Civil',
+                    referenceNo: 'BC/MAINT/CIVIL/2',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet CIVIL - WALL LEAKING CHECKING (block wall condition by level).',
+                    locationLabel: 'Block Location',
+                    locations: ['A', 'B1', 'B2', 'B3'],
+                    groups: [
+                        {
+                            title: '1) WALL LEAKING INSPECTION BY LEVEL',
+                            items: [
+                                'Level PG',
+                                'Level P1',
+                                'Level P2',
+                                'Level P3',
+                                'Level PL',
+                                'Level 1',
+                                'Level 2',
+                                'Level 3',
+                                'Level 4',
+                                'Level 5',
+                                'Level 6',
+                                'Level 7',
+                                'Level 8',
+                                'Level 9',
+                                'Level 10',
+                                'Level 11',
+                                'Level 12',
+                                'Level 13',
+                                'Level 14',
+                                'Level 15',
+                                'Level 16',
+                                'Level 17'
+                            ]
+                        }
+                    ]
+                },
+                plToilet: {
+                    category: 'Plumbing',
+                    referenceNo: 'BC/MAINT/PLUM/T/1',
+                    frequency: 'Monthly',
+                    statusCode: 'OK / NG',
+                    statusOptions: ['OK', 'NG'],
+                    description: 'Template based on sheet PL-TOILET (public toilet fixture checks by location).',
+                    locationLabel: 'Toilet Location',
+                    locations: [
+                        'Pejabat',
+                        'Rumah Kelab',
+                        'Gim',
+                        'Rumah Sampah B1',
+                        'Rumah Sampah B3',
+                        'Pos Kawalan'
+                    ],
+                    groups: [
+                        {
+                            title: '1) PILI AIR',
+                            items: [
+                                'Periksa sebarang kebocoran pada pili air',
+                                'Tiada lelehan air apabila kepala paip ditutup rapat',
+                                'Periksa tekanan air (tidak terlalu kuat / perlahan)',
+                                'Tiada karat pada sekitar pili air',
+                                'Pastikan kepala pili air berfungsi dengan baik (tidak terlalu ketat / longgar)'
+                            ]
+                        },
+                        {
+                            title: '2) MANGKUK TANDAS',
+                            items: [
+                                'Pastikan tiada kebocoran sekitar mangkuk tandas',
+                                'Periksa tangki mangkuk tandas bagi sebarang bunyi atau kebocoran',
+                                'Pastikan pam tandas berfungsi dengan baik',
+                                'Periksa paras air dalam tangki di tahap maksimum selepas dipam',
+                                'Periksa tempat duduk tandas dalam keadaan baik',
+                                'Pastikan penutup dan tempat duduk diikat kemas (tidak bergoyang)',
+                                'Pastikan saluran paip tidak tersumbat'
+                            ]
+                        },
+                        {
+                            title: '3) KEPALA PANCURAN (SHOWER HEAD)',
+                            items: [
+                                'Pastikan kepala pancuran dalam keadaan baik dan tidak retak',
+                                'Pastikan tekanan air yang keluar tidak terlalu kuat / perlahan',
+                                'Pastikan kawasan pancuran tiada lumut / karat',
+                                'Pastikan saliran air pancuran kering (air tidak bertakung)'
+                            ]
+                        }
+                    ]
+                }
+            };
+
+            const refs = {
+                form: document.getElementById('ppmTechnicianForm'),
+                templateType: document.getElementById('templateType'),
+                categoryField: document.getElementById('categoryField'),
+                referenceNo: document.getElementById('referenceNo'),
+                frequencyField: document.getElementById('frequencyField'),
+                locationLabel: document.getElementById('locationLabel'),
+                locationSelect: document.getElementById('locationSelect'),
+                inspectionDate: document.getElementById('inspectionDate'),
+                templateDescription: document.getElementById('templateDescription'),
+                locationStatusTrack: document.getElementById('locationStatusTrack'),
+                submissionSummary: document.getElementById('submissionSummary'),
+                technicianName: document.getElementById('technicianName'),
+                verifiedBy: document.getElementById('verifiedBy'),
+                techDeclaration: document.getElementById('techDeclaration'),
+                confirmChecklist: document.getElementById('confirmChecklist'),
+                copyFromLocationSelect: document.getElementById('copyFromLocationSelect'),
+                copyFromLocationBtn: document.getElementById('copyFromLocationBtn'),
+                autoRemarkSummary: document.getElementById('autoRemarkSummary'),
+                technicianNotes: document.getElementById('technicianNotes'),
+                notesBulletBtn: document.getElementById('notesBulletBtn'),
+                notesNumberBtn: document.getElementById('notesNumberBtn'),
+                pictureUpload: document.getElementById('pictureUpload'),
+                pictureNote: document.getElementById('pictureNote'),
+                pictureUploadStatus: document.getElementById('pictureUploadStatus'),
+                pictureEntryList: document.getElementById('pictureEntryList'),
+                clearPictureBtn: document.getElementById('clearPictureBtn'),
+                confirmPictureBtn: document.getElementById('confirmPictureBtn'),
+                pictureViewerModal: document.getElementById('pictureViewerModal'),
+                pictureViewerImage: document.getElementById('pictureViewerImage'),
+                pictureViewerModalLabel: document.getElementById('pictureViewerModalLabel'),
+                civilWallNgReasonModal: document.getElementById('civilWallNgReasonModal'),
+                civilWallNgReasonTitle: document.getElementById('civilWallNgReasonTitle'),
+                civilWallNgReasonOptions: document.getElementById('civilWallNgReasonOptions'),
+                civilWallNgReasonFeedback: document.getElementById('civilWallNgReasonFeedback'),
+                civilWallNgReasonSaveBtn: document.getElementById('civilWallNgReasonSaveBtn'),
+                checklistBody: document.getElementById('checklistBody'),
+                step2ScopeNote: document.getElementById('step2ScopeNote'),
+                statusLegend: document.getElementById('statusLegend'),
+                saveDraftBtn: document.getElementById('saveDraftBtn')
+            };
+
+            const SUBMISSION_TRACKER_KEY = 'ppmSubmissionTrackerV1';
+            const SUBMISSION_FORM_DATA_KEY = 'ppmSubmissionFormDataV1';
+            const CIVIL_RISER_ROOM_SCOPES = [
+                { key: 'BMA', label: 'Bilik Meter Air' },
+                { key: 'BPB', label: 'Bilik Pancur Basah' },
+                { key: 'MATV', label: 'Bilik MATV' },
+                { key: 'BST', label: 'Bilik Saluran Telefon' },
+                { key: 'BPM', label: 'Bilik Panel Meter' },
+                { key: 'BSE', label: 'Bilik Saluran Elektrik' },
+                { key: 'BGH', label: 'Bilik Gegelung Hos' },
+                { key: 'TK', label: 'Tangga Kecemasan' }
+            ];
+            const FF_WET_RISER2_SCOPE_ITEMS = [
+                { key: 'HRC', label: 'Hose Reel (Canvas)' },
+                { key: 'NAC', label: 'Nozzle & Coupling' },
+                { key: 'HRB', label: 'Hose Reel Bracket' },
+                { key: 'FE', label: 'Fire Extinguisher' },
+                { key: 'CV', label: 'Control Valve' },
+                { key: 'LAMP', label: 'Lamp' }
+            ];
+            const CIVIL_NG_REASON_CODES = ['P', 'T', 'B', 'LS'];
+            const TECHNICIAN_NOTES_DEFAULT_BULLETS = ['- ', '- ', '- ', '- ', '- '].join('\n');
+            const confirmedPictureEntries = [];
+            const pictureViewerModal = refs.pictureViewerModal
+                ? new bootstrap.Modal(refs.pictureViewerModal)
+                : null;
+            const civilWallNgReasonModal = refs.civilWallNgReasonModal
+                ? new bootstrap.Modal(refs.civilWallNgReasonModal)
+                : null;
+            const civilWallNgReasonState = {
+                rowNumber: '',
+                scopeKey: '',
+                saved: false
+            };
+
+            function escapeHtml(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function buildLocationOptions(locations) {
+                return locations
+                    .map((entry) => `<option value="${escapeHtml(entry)}">${escapeHtml(entry)}</option>`)
+                    .join('');
+            }
+
+            function formatFileSize(byteLength) {
+                const size = Number(byteLength || 0);
+                if (!Number.isFinite(size) || size <= 0) {
+                    return '0 B';
+                }
+
+                if (size < 1024) {
+                    return `${size} B`;
+                }
+
+                const kb = size / 1024;
+                if (kb < 1024) {
+                    return `${kb.toFixed(1)} KB`;
+                }
+
+                const mb = kb / 1024;
+                return `${mb.toFixed(1)} MB`;
+            }
+
+            function updatePictureInputState(customMessage) {
+                if (!refs.pictureUploadStatus || !refs.clearPictureBtn || !refs.confirmPictureBtn) {
+                    return;
+                }
+
+                const selectedPicture = refs.pictureUpload?.files?.[0] || null;
+                if (!selectedPicture) {
+                    refs.pictureUploadStatus.textContent = customMessage || 'No picture selected.';
+                    refs.clearPictureBtn.disabled = true;
+                    refs.confirmPictureBtn.disabled = true;
+                    return;
+                }
+
+                refs.pictureUploadStatus.textContent = customMessage || `Selected: ${selectedPicture.name}`;
+                refs.clearPictureBtn.disabled = false;
+                refs.confirmPictureBtn.disabled = false;
+            }
+
+            function clearUnconfirmedPictureInput() {
+                if (refs.pictureUpload) {
+                    refs.pictureUpload.value = '';
+                }
+
+                if (refs.pictureNote) {
+                    refs.pictureNote.value = '';
+                }
+
+                updatePictureInputState();
+            }
+
+            function clearAllConfirmedPictureEntries() {
+                confirmedPictureEntries.forEach((entry) => {
+                    if (entry?.previewUrl) {
+                        URL.revokeObjectURL(entry.previewUrl);
+                    }
+                });
+
+                confirmedPictureEntries.length = 0;
+                pictureViewerModal?.hide();
+                renderConfirmedPictureEntries();
+            }
+
+            function normalizeSingleLineText(value) {
+                return String(value || '').replace(/\s+/g, ' ').trim();
+            }
+
+            function collectRemarkSummaryLines() {
+                if (!refs.checklistBody) {
+                    return [];
+                }
+
+                const rows = Array.from(refs.checklistBody.querySelectorAll('tr'));
+                const summaryLines = [];
+
+                rows.forEach((row) => {
+                    if (row.classList.contains('checklist-group-row')) {
+                        return;
+                    }
+
+                    const cells = Array.from(row.querySelectorAll('td'));
+                    if (cells.length < 2) {
+                        return;
+                    }
+
+                    const rowNumber = normalizeSingleLineText(cells[0]?.textContent);
+                    const rowNumberMatch = rowNumber.match(/\d+/);
+                    const rowNumberKey = rowNumberMatch ? rowNumberMatch[0] : '';
+                    if (!rowNumberKey) {
+                        return;
+                    }
+
+                    const statusFieldName = `checkStatus_${rowNumberKey}`;
+                    const statusFields = Array.from(refs.form?.querySelectorAll(`[name="${statusFieldName}"]`) || []);
+                    if (statusFields.length === 0) {
+                        return;
+                    }
+
+                    let statusValue = '';
+                    if (statusFields[0].type === 'radio') {
+                        const checkedStatusField = statusFields.find((field) => field.checked);
+                        statusValue = normalizeSingleLineText(checkedStatusField?.value);
+                    } else {
+                        statusValue = normalizeSingleLineText(statusFields[0].value);
+                    }
+
+                    if (statusValue.toUpperCase() !== 'NG') {
+                        return;
+                    }
+
+                    const itemText = normalizeSingleLineText(cells[1]?.textContent);
+                    const remarkFields = Array.from(row.querySelectorAll('[name^="checkRemark_"]'));
+
+                    const detailParts = [];
+                    remarkFields.forEach((field) => {
+                        const isScopeReasonHiddenField = field.type === 'hidden'
+                            && String(field.name || '').includes('_ng_');
+                        if (isScopeReasonHiddenField) {
+                            return;
+                        }
+
+                        const value = normalizeSingleLineText(field.value);
+                        if (!value) {
+                            return;
+                        }
+
+                        const groupLabel = normalizeSingleLineText(
+                            field.closest('.input-group')?.querySelector('.input-group-text')?.textContent
+                        );
+                        const label = groupLabel || (field.tagName === 'SELECT' ? 'Mode' : '');
+
+                        if (label) {
+                            detailParts.push(`${label}: ${value}`);
+                            return;
+                        }
+
+                        detailParts.push(value);
+                    });
+
+                    const scopeStatusFields = Array.from(
+                        refs.form?.querySelectorAll(`[name^="checkStatus_${rowNumberKey}_"]`) || []
+                    );
+
+                    const ngScopeParts = [];
+                    scopeStatusFields.forEach((field) => {
+                        const scopedStatusValue = normalizeSingleLineText(field?.value).toUpperCase();
+                        if (scopedStatusValue !== 'NG') {
+                            return;
+                        }
+
+                        const scopeMatch = String(field.name || '').match(new RegExp(`^checkStatus_${rowNumberKey}_(.+)$`));
+                        const scopeKey = String(scopeMatch?.[1] || '').trim().toUpperCase();
+                        if (!scopeKey) {
+                            return;
+                        }
+
+                        const isCivilScope = CIVIL_RISER_ROOM_SCOPES.some((scope) => scope.key === scopeKey);
+                        const isFfWet2Scope = FF_WET_RISER2_SCOPE_ITEMS.some((scope) => scope.key === scopeKey);
+                        const scopeLabel = isCivilScope
+                            ? getCivilRiserRoomLabel(scopeKey)
+                            : (isFfWet2Scope ? getFfWetRiser2ScopeLabel(scopeKey) : scopeKey);
+
+                        const reasonField = refs.form?.querySelector(`[name="checkRemark_${rowNumberKey}_ng_${scopeKey}"]`);
+                        const reasonRaw = normalizeSingleLineText(reasonField?.value || '');
+                        const normalizedReason = reasonRaw.includes(':')
+                            ? normalizeSingleLineText(reasonRaw.split(':').slice(1).join(':'))
+                            : reasonRaw;
+
+                        ngScopeParts.push(normalizedReason
+                            ? `${scopeLabel} (${normalizedReason})`
+                            : scopeLabel);
+                    });
+
+                    if (ngScopeParts.length > 0) {
+                        detailParts.push(`NG at: ${ngScopeParts.join(', ')}`);
+                    }
+
+                    if (detailParts.length === 0) {
+                        detailParts.push('NG');
+                    }
+
+                    const rowLabel = rowNumber || '?';
+                    const itemLabel = itemText || 'Item';
+                    summaryLines.push(`${rowLabel}. ${itemLabel} - ${detailParts.join(', ')}`);
+                });
+
+                return summaryLines;
+            }
+
+            function renderAutoRemarkSummary() {
+                if (!refs.autoRemarkSummary) {
+                    return;
+                }
+
+                const summaryLines = collectRemarkSummaryLines();
+                refs.autoRemarkSummary.value = summaryLines.length > 0
+                    ? summaryLines.map((line) => `- ${line}`).join('\n')
+                    : '- No NG item remarks entered yet.';
+            }
+
+            function validateNgRemarkRequirements() {
+                if (!refs.form || !refs.checklistBody) {
+                    return { missingRows: [], firstMissingRemarkField: null };
+                }
+
+                const rows = Array.from(refs.checklistBody.querySelectorAll('tr'));
+                const missingRows = [];
+                let firstMissingRemarkField = null;
+
+                rows.forEach((row) => {
+                    if (row.classList.contains('checklist-group-row')) {
+                        return;
+                    }
+
+                    const rowNumberText = normalizeSingleLineText(row.querySelector('td.col-bil')?.textContent);
+                    const rowNumberMatch = rowNumberText.match(/\d+/);
+                    const rowNumberKey = rowNumberMatch ? rowNumberMatch[0] : '';
+                    if (!rowNumberKey) {
+                        return;
+                    }
+
+                    const remarkFields = Array.from(row.querySelectorAll('[name^="checkRemark_"]'));
+                    remarkFields.forEach((field) => {
+                        if (typeof field.setCustomValidity === 'function') {
+                            field.setCustomValidity('');
+                        }
+                    });
+
+                    const statusFieldName = `checkStatus_${rowNumberKey}`;
+                    const statusFields = Array.from(refs.form.querySelectorAll(`[name="${statusFieldName}"]`));
+                    if (statusFields.length === 0) {
+                        return;
+                    }
+
+                    let statusValue = '';
+                    if (statusFields[0].type === 'radio') {
+                        const checkedStatusField = statusFields.find((field) => field.checked);
+                        statusValue = normalizeSingleLineText(checkedStatusField?.value);
+                    } else {
+                        statusValue = normalizeSingleLineText(statusFields[0].value);
+                    }
+
+                    if (statusValue.toUpperCase() !== 'NG') {
+                        return;
+                    }
+
+                    const hasRemark = remarkFields.some((field) => normalizeSingleLineText(field.value).length > 0);
+                    if (hasRemark) {
+                        return;
+                    }
+
+                    const targetRemarkField = remarkFields.find((field) => !field.disabled) || remarkFields[0] || null;
+                    if (targetRemarkField && typeof targetRemarkField.setCustomValidity === 'function') {
+                        targetRemarkField.setCustomValidity('Remarks is required when status is NG.');
+                    }
+
+                    if (!firstMissingRemarkField) {
+                        firstMissingRemarkField = targetRemarkField;
+                    }
+
+                    missingRows.push(rowNumberKey);
+                });
+
+                return {
+                    missingRows: Array.from(new Set(missingRows)),
+                    firstMissingRemarkField
+                };
+            }
+
+            function applyNoteListFormatting(formatType) {
+                if (!refs.technicianNotes) {
+                    return;
+                }
+
+                const textarea = refs.technicianNotes;
+                const value = textarea.value || '';
+                const selectionStart = Number(textarea.selectionStart || 0);
+                const selectionEnd = Number(textarea.selectionEnd || selectionStart);
+                const blockStart = value.lastIndexOf('\n', Math.max(selectionStart - 1, 0)) + 1;
+                let blockEnd = value.indexOf('\n', selectionEnd);
+                if (blockEnd === -1) {
+                    blockEnd = value.length;
+                }
+
+                const selectedBlock = value.slice(blockStart, blockEnd);
+                const lines = selectedBlock.length > 0 ? selectedBlock.split('\n') : [''];
+                let numbering = 1;
+
+                const formattedBlock = lines.map((line) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) {
+                        return line;
+                    }
+
+                    const content = trimmed.replace(/^([-*]|\d+\.)\s+/, '').trim();
+                    if (formatType === 'number') {
+                        return `${numbering++}. ${content}`;
+                    }
+
+                    return `- ${content}`;
+                }).join('\n');
+
+                textarea.value = `${value.slice(0, blockStart)}${formattedBlock}${value.slice(blockEnd)}`;
+                textarea.focus();
+                textarea.setSelectionRange(blockStart, blockStart + formattedBlock.length);
+            }
+
+            function ensureTechnicianNotesAutoBulletSeed(placeCursor = false) {
+                const textarea = refs.technicianNotes;
+                if (!textarea) {
+                    return;
+                }
+
+                if (String(textarea.value || '').trim().length > 0) {
+                    return;
+                }
+
+                textarea.value = TECHNICIAN_NOTES_DEFAULT_BULLETS;
+                if (placeCursor) {
+                    textarea.focus();
+                    textarea.setSelectionRange(2, 2);
+                }
+            }
+
+            function handleTechnicianNotesAutoListEnter(event) {
+                if (!event || event.key !== 'Enter' || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+                    return;
+                }
+
+                const textarea = refs.technicianNotes;
+                if (!textarea) {
+                    return;
+                }
+
+                const selectionStart = Number(textarea.selectionStart || 0);
+                const selectionEnd = Number(textarea.selectionEnd || selectionStart);
+                const value = String(textarea.value || '');
+                const lineStart = value.lastIndexOf('\n', Math.max(selectionStart - 1, 0)) + 1;
+                const currentLine = value.slice(lineStart, selectionStart);
+
+                if (selectionStart !== selectionEnd) {
+                    return;
+                }
+
+                const bulletMatch = currentLine.match(/^(\s*)-\s+/);
+                const numberMatch = currentLine.match(/^(\s*)(\d+)\.\s+/);
+                const currentLineTrimmed = currentLine.trim();
+
+                let insertion = '\n';
+                if (numberMatch) {
+                    insertion = `\n${numberMatch[1]}${Number(numberMatch[2]) + 1}. `;
+                } else if (bulletMatch) {
+                    if (currentLineTrimmed === '-') {
+                        insertion = '\n';
+                    } else {
+                        insertion = `\n${bulletMatch[1]}- `;
+                    }
+                } else if (currentLineTrimmed.length > 0) {
+                    insertion = '\n- ';
+                }
+
+                event.preventDefault();
+                textarea.setRangeText(insertion, selectionStart, selectionEnd, 'end');
+            }
+
+            function renderConfirmedPictureEntries() {
+                if (!refs.pictureEntryList) {
+                    return;
+                }
+
+                if (confirmedPictureEntries.length === 0) {
+                    refs.pictureEntryList.innerHTML = '<div class="picture-entry-empty">No confirmed picture yet.</div>';
+                    return;
+                }
+
+                refs.pictureEntryList.innerHTML = confirmedPictureEntries.map((entry, index) => {
+                    const noteText = entry.note
+                        ? escapeHtml(entry.note)
+                        : '<span class="text-muted">No note provided.</span>';
+
+                    return `
+                        <div class="picture-entry-row">
+                            <div class="picture-entry-media">
+                                <img
+                                    src="${entry.previewUrl}"
+                                    alt="${escapeHtml(entry.fileName)}"
+                                    class="picture-entry-thumb is-clickable"
+                                    data-preview-picture-index="${index}"
+                                    title="Click to view larger image"
+                                >
+                            </div>
+                            <div>
+                                <div class="picture-entry-head">
+                                    <div class="picture-entry-meta">Picture ${index + 1} | ${escapeHtml(entry.fileName)} | ${escapeHtml(entry.fileSize)}</div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger picture-entry-remove" data-remove-picture-index="${index}">Delete</button>
+                                </div>
+                                <div class="picture-entry-note">${noteText}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function confirmSelectedPictureEntry() {
+                const selectedPicture = refs.pictureUpload?.files?.[0] || null;
+                if (!selectedPicture) {
+                    updatePictureInputState('Please choose a picture first.');
+                    return;
+                }
+
+                const previewUrl = URL.createObjectURL(selectedPicture);
+                const pictureNote = String(refs.pictureNote?.value || '').trim();
+
+                confirmedPictureEntries.push({
+                    previewUrl,
+                    fileName: selectedPicture.name || `Picture ${confirmedPictureEntries.length + 1}`,
+                    fileSize: formatFileSize(selectedPicture.size),
+                    note: pictureNote
+                });
+
+                renderConfirmedPictureEntries();
+                clearUnconfirmedPictureInput();
+                updatePictureInputState('Picture confirmed. You can add another picture.');
+            }
+
+            function openConfirmedPictureEntryPreview(index) {
+                if (!Number.isInteger(index) || index < 0 || index >= confirmedPictureEntries.length) {
+                    return;
+                }
+
+                const entry = confirmedPictureEntries[index];
+                if (!entry || !refs.pictureViewerImage || !pictureViewerModal) {
+                    return;
+                }
+
+                refs.pictureViewerImage.src = entry.previewUrl;
+                refs.pictureViewerImage.alt = entry.fileName || `Picture ${index + 1}`;
+
+                if (refs.pictureViewerModalLabel) {
+                    refs.pictureViewerModalLabel.textContent = `Picture ${index + 1} - ${entry.fileName || 'Preview'}`;
+                }
+
+                pictureViewerModal.show();
+            }
+
+            function removeConfirmedPictureEntry(index) {
+                if (!Number.isInteger(index) || index < 0 || index >= confirmedPictureEntries.length) {
+                    return;
+                }
+
+                const [removedEntry] = confirmedPictureEntries.splice(index, 1);
+                if (removedEntry?.previewUrl && refs.pictureViewerImage?.src === removedEntry.previewUrl) {
+                    pictureViewerModal?.hide();
+                }
+
+                if (removedEntry?.previewUrl) {
+                    URL.revokeObjectURL(removedEntry.previewUrl);
+                }
+
+                renderConfirmedPictureEntries();
+                updatePictureInputState('Picture deleted.');
+            }
+
+            function readSubmissionTracker() {
+                const rawValue = localStorage.getItem(SUBMISSION_TRACKER_KEY);
+
+                if (!rawValue) {
+                    return {};
+                }
+
+                try {
+                    const parsed = JSON.parse(rawValue);
+                    return parsed && typeof parsed === 'object' ? parsed : {};
+                } catch (error) {
+                    return {};
+                }
+            }
+
+            function writeSubmissionTracker(state) {
+                localStorage.setItem(SUBMISSION_TRACKER_KEY, JSON.stringify(state));
+            }
+
+            function readSubmissionFormDataStore() {
+                const rawValue = localStorage.getItem(SUBMISSION_FORM_DATA_KEY);
+
+                if (!rawValue) {
+                    return {};
+                }
+
+                try {
+                    const parsed = JSON.parse(rawValue);
+                    return parsed && typeof parsed === 'object' ? parsed : {};
+                } catch (error) {
+                    return {};
+                }
+            }
+
+            function writeSubmissionFormDataStore(state) {
+                localStorage.setItem(SUBMISSION_FORM_DATA_KEY, JSON.stringify(state));
+            }
+
+            function collectChecklistFieldValues() {
+                if (!refs.form) {
+                    return {};
+                }
+
+                const fields = Array.from(
+                    refs.form.querySelectorAll('[name^="checkStatus_"], [name^="checkRemark_"]')
+                );
+                const values = {};
+                const handledRadioNames = new Set();
+
+                fields.forEach((field) => {
+                    if (!field?.name) {
+                        return;
+                    }
+
+                    if (field.type === 'radio') {
+                        if (handledRadioNames.has(field.name)) {
+                            return;
+                        }
+
+                        handledRadioNames.add(field.name);
+                        const checkedField = refs.form.querySelector(`input[name="${field.name}"]:checked`);
+                        values[field.name] = checkedField?.value || '';
+                        return;
+                    }
+
+                    values[field.name] = field.value;
+                });
+
+                return values;
+            }
+
+            function applyChecklistFieldValues(fieldValues) {
+                if (!refs.form || !fieldValues || typeof fieldValues !== 'object') {
+                    return;
+                }
+
+                Object.entries(fieldValues).forEach(([fieldName, fieldValue]) => {
+                    const fields = Array.from(refs.form.querySelectorAll(`[name="${fieldName}"]`));
+                    if (fields.length === 0) {
+                        return;
+                    }
+
+                    if (fields[0].type === 'radio') {
+                        fields.forEach((field) => {
+                            field.checked = String(field.value) === String(fieldValue || '');
+                        });
+                        return;
+                    }
+
+                    fields[0].value = String(fieldValue ?? '');
+                });
+
+                syncCivilWallRowsStatusSummary();
+                syncFfWetRiser2RowsStatusSummary();
+            }
+
+            function clearFormValuesForUnsubmittedContext() {
+                if (!refs.form) {
+                    return;
+                }
+
+                if (refs.technicianName) {
+                    refs.technicianName.value = '';
+                }
+
+                if (refs.verifiedBy) {
+                    refs.verifiedBy.value = '';
+                }
+
+                if (refs.techDeclaration) {
+                    refs.techDeclaration.value = '';
+                }
+
+                if (refs.confirmChecklist) {
+                    refs.confirmChecklist.checked = false;
+                }
+
+                if (refs.technicianNotes) {
+                    refs.technicianNotes.value = '';
+                    ensureTechnicianNotesAutoBulletSeed();
+                }
+
+                const checklistFields = Array.from(
+                    refs.form.querySelectorAll('[name^="checkStatus_"], [name^="checkRemark_"]')
+                );
+                const handledRadioNames = new Set();
+
+                checklistFields.forEach((field) => {
+                    if (!field?.name) {
+                        return;
+                    }
+
+                    if (field.type === 'radio') {
+                        if (handledRadioNames.has(field.name)) {
+                            return;
+                        }
+
+                        handledRadioNames.add(field.name);
+                        const radioGroup = Array.from(refs.form.querySelectorAll(`[name="${field.name}"]`));
+                        radioGroup.forEach((radioInput) => {
+                            radioInput.checked = false;
+                            if (typeof radioInput.setCustomValidity === 'function') {
+                                radioInput.setCustomValidity('');
+                            }
+                        });
+                        return;
+                    }
+
+                    field.value = '';
+                    if (typeof field.setCustomValidity === 'function') {
+                        field.setCustomValidity('');
+                    }
+                });
+
+                refs.form.classList.remove('was-validated');
+                syncCivilWallRowsStatusSummary();
+                syncFfWetRiser2RowsStatusSummary();
+                validateNgRemarkRequirements();
+                renderAutoRemarkSummary();
+            }
+
+            function collectSubmittedFormSnapshot() {
+                return {
+                    inspectionDate: String(refs.inspectionDate?.value || ''),
+                    technicianName: String(refs.technicianName?.value || ''),
+                    verifiedBy: String(refs.verifiedBy?.value || ''),
+                    techDeclaration: String(refs.techDeclaration?.value || ''),
+                    confirmChecklist: Boolean(refs.confirmChecklist?.checked),
+                    technicianNotes: String(refs.technicianNotes?.value || ''),
+                    checklistFieldValues: collectChecklistFieldValues()
+                };
+            }
+
+            function saveSubmittedFormSnapshot(templateKey, monthKey, location) {
+                if (!templateKey || !monthKey || !location) {
+                    return;
+                }
+
+                const store = readSubmissionFormDataStore();
+                store[templateKey] = store[templateKey] || {};
+                store[templateKey][monthKey] = store[templateKey][monthKey] || {};
+                store[templateKey][monthKey][location] = {
+                    savedAt: new Date().toISOString(),
+                    snapshot: collectSubmittedFormSnapshot()
+                };
+
+                writeSubmissionFormDataStore(store);
+            }
+
+            function getSubmittedFormSnapshot(templateKey, monthKey, location) {
+                const store = readSubmissionFormDataStore();
+                return store?.[templateKey]?.[monthKey]?.[location]?.snapshot || null;
+            }
+
+            function applySubmittedSnapshotToForm(snapshot, options = {}) {
+                if (!snapshot || typeof snapshot !== 'object') {
+                    return false;
+                }
+
+                clearFormValuesForUnsubmittedContext();
+
+                const applyInspectionDate = options.applyInspectionDate === true;
+
+                if (applyInspectionDate && typeof snapshot.inspectionDate === 'string' && snapshot.inspectionDate) {
+                    refs.inspectionDate.value = snapshot.inspectionDate;
+                }
+
+                if (refs.technicianName && typeof snapshot.technicianName === 'string') {
+                    refs.technicianName.value = snapshot.technicianName;
+                }
+
+                if (refs.verifiedBy && typeof snapshot.verifiedBy === 'string') {
+                    refs.verifiedBy.value = snapshot.verifiedBy;
+                }
+
+                if (refs.techDeclaration && typeof snapshot.techDeclaration === 'string') {
+                    refs.techDeclaration.value = snapshot.techDeclaration;
+                }
+
+                if (refs.confirmChecklist && typeof snapshot.confirmChecklist === 'boolean') {
+                    refs.confirmChecklist.checked = snapshot.confirmChecklist;
+                }
+
+                if (refs.technicianNotes && typeof snapshot.technicianNotes === 'string') {
+                    refs.technicianNotes.value = snapshot.technicianNotes;
+                    ensureTechnicianNotesAutoBulletSeed();
+                }
+
+                applyChecklistFieldValues(snapshot.checklistFieldValues || {});
+                validateNgRemarkRequirements();
+                renderAutoRemarkSummary();
+                refs.form?.classList.remove('was-validated');
+                return true;
+            }
+
+            function restoreSubmittedDataForCurrentContext() {
+                const templateKey = String(refs.templateType?.value || 'bilikSuis');
+                const monthKey = getMonthKeyFromInspectionDate();
+                const location = String(refs.locationSelect?.value || '').trim();
+                if (!location) {
+                    clearFormValuesForUnsubmittedContext();
+                    return false;
+                }
+
+                const snapshot = getSubmittedFormSnapshot(templateKey, monthKey, location);
+                if (!snapshot) {
+                    clearFormValuesForUnsubmittedContext();
+                    return false;
+                }
+
+                return applySubmittedSnapshotToForm(snapshot, { applyInspectionDate: false });
+            }
+
+            function renderCopySourceOptions() {
+                if (!refs.copyFromLocationSelect || !refs.copyFromLocationBtn) {
+                    return;
+                }
+
+                const templateKey = String(refs.templateType?.value || 'bilikSuis');
+                const monthKey = getMonthKeyFromInspectionDate();
+                const currentLocation = String(refs.locationSelect?.value || '');
+                const store = readSubmissionFormDataStore();
+                const monthData = store?.[templateKey]?.[monthKey] || {};
+
+                const sourceLocations = Object.keys(monthData)
+                    .filter((location) => location !== currentLocation)
+                    .sort((a, b) => a.localeCompare(b));
+
+                const previousSelection = String(refs.copyFromLocationSelect.value || '');
+                refs.copyFromLocationSelect.innerHTML = [
+                    '<option value="">Select source location</option>',
+                    ...sourceLocations.map((location) => `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`)
+                ].join('');
+
+                if (sourceLocations.includes(previousSelection)) {
+                    refs.copyFromLocationSelect.value = previousSelection;
+                }
+
+                const hasSourceSelection = String(refs.copyFromLocationSelect.value || '').trim().length > 0;
+                refs.copyFromLocationSelect.disabled = sourceLocations.length === 0;
+                refs.copyFromLocationBtn.disabled = !hasSourceSelection;
+            }
+
+            function copySubmittedDataToCurrentLocation() {
+                const templateKey = String(refs.templateType?.value || 'bilikSuis');
+                const monthKey = getMonthKeyFromInspectionDate();
+                const sourceLocation = String(refs.copyFromLocationSelect?.value || '').trim();
+
+                if (!sourceLocation) {
+                    return;
+                }
+
+                const snapshot = getSubmittedFormSnapshot(templateKey, monthKey, sourceLocation);
+                if (!snapshot) {
+                    alert('No submitted data found for the selected source location in this month.');
+                    return;
+                }
+
+                applySubmittedSnapshotToForm(snapshot, { applyInspectionDate: true });
+
+                const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
+                renderSubmissionTrack(templateKey, template);
+                renderCopySourceOptions();
+
+                alert(`Copied submitted values from ${sourceLocation} to current location.`);
+            }
+
+            function markLocationSubmitted(templateKey, monthKey, location) {
+                if (!templateKey || !monthKey || !location) {
+                    return;
+                }
+
+                const tracker = readSubmissionTracker();
+                tracker[templateKey] = tracker[templateKey] || {};
+                tracker[templateKey][monthKey] = tracker[templateKey][monthKey] || {};
+                tracker[templateKey][monthKey][location] = {
+                    submittedAt: new Date().toISOString()
+                };
+
+                writeSubmissionTracker(tracker);
+            }
+
+            function getMonthKeyFromInspectionDate() {
+                const dateValue = String(refs.inspectionDate?.value || '');
+                if (dateValue.length >= 7) {
+                    return dateValue.slice(0, 7);
+                }
+
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                return `${yyyy}-${mm}`;
+            }
+
+            function formatSubmissionPillLabel(templateKey, location) {
+                const locationText = String(location || '').trim();
+                if (templateKey !== 'waterPump') {
+                    return locationText;
+                }
+
+                const matched = locationText.match(/^(Main Pump|Pressure Pump)\s*-\s*Block\s+([A-Za-z0-9]+)\s*-\s*Pump\s*#(\d+)$/i);
+                if (!matched) {
+                    return locationText;
+                }
+
+                const pumpPrefix = matched[1].toLowerCase().startsWith('main') ? 'MP' : 'PP';
+                const blockCode = String(matched[2] || '').toUpperCase();
+                const pumpNumber = matched[3];
+                return `${pumpPrefix} #${pumpNumber} Block ${blockCode}`;
+            }
+
+            function renderSubmissionTrack(templateKey, template, options = {}) {
+                if (!refs.locationStatusTrack || !refs.submissionSummary) {
+                    return;
+                }
+
+                const forceCollapse = options?.forceCollapse === true;
+
+                const locations = Array.isArray(template?.locations) ? template.locations : [];
+                const monthKey = getMonthKeyFromInspectionDate();
+                const selectedLocation = String(refs.locationSelect?.value || '');
+                const tracker = readSubmissionTracker();
+                const submissionMap = monthKey
+                    ? (tracker?.[templateKey]?.[monthKey] || {})
+                    : {};
+
+                const openGroupKeys = forceCollapse
+                    ? []
+                    : Array.from(
+                        refs.locationStatusTrack.querySelectorAll('details.submission-group[open]')
+                    ).map((entry) => String(entry.dataset.groupKey || ''));
+
+                const groups = (() => {
+                    if (templateKey !== 'waterPump') {
+                        return [{
+                            key: 'all-locations',
+                            title: 'All Locations',
+                            locations,
+                            defaultOpen: true
+                        }];
+                    }
+
+                    const mainPumpLocations = locations.filter((location) =>
+                        String(location || '').trim().toLowerCase().startsWith('main pump')
+                    );
+                    const pressurePumpLocations = locations.filter((location) =>
+                        String(location || '').trim().toLowerCase().startsWith('pressure pump')
+                    );
+                    const otherLocations = locations.filter((location) => {
+                        const normalized = String(location || '').trim().toLowerCase();
+                        return !normalized.startsWith('main pump')
+                            && !normalized.startsWith('pressure pump');
+                    });
+
+                    const result = [];
+                    if (mainPumpLocations.length > 0) {
+                        result.push({
+                            key: 'main-pump',
+                            title: 'Main Pump',
+                            locations: mainPumpLocations,
+                            defaultOpen: true
+                        });
+                    }
+
+                    if (pressurePumpLocations.length > 0) {
+                        result.push({
+                            key: 'pressure-pump',
+                            title: 'Pressure Pump',
+                            locations: pressurePumpLocations,
+                            defaultOpen: true
+                        });
+                    }
+
+                    if (otherLocations.length > 0) {
+                        result.push({
+                            key: 'other-pump',
+                            title: 'Other Pump',
+                            locations: otherLocations,
+                            defaultOpen: true
+                        });
+                    }
+
+                    return result;
+                })();
+
+                let submittedCount = 0;
+                const groupsHtml = groups.map((group, index) => {
+                    let groupSubmittedCount = 0;
+
+                    const groupPills = group.locations.map((location) => {
+                        const submitted = Boolean(submissionMap[location]);
+                        if (submitted) {
+                            submittedCount += 1;
+                            groupSubmittedCount += 1;
+                        }
+
+                        const statusClass = submitted ? 'submitted' : 'pending';
+                        const currentClass = location === selectedLocation ? 'current' : '';
+                        const pillLabel = formatSubmissionPillLabel(templateKey, location);
+
+                        return `
+                            <span class="step-pill ${statusClass} ${currentClass}" title="${escapeHtml(location)}">
+                                <span class="loc-name">${escapeHtml(pillLabel)}</span>
+                            </span>
+                        `;
+                    }).join('');
+
+                    const groupSummaryClass = groupSubmittedCount === group.locations.length && group.locations.length > 0
+                        ? 'badge text-bg-success submission-group-summary'
+                        : 'badge text-bg-danger submission-group-summary';
+                    const shouldOpen = !forceCollapse && openGroupKeys.includes(group.key);
+                    const openAttr = shouldOpen ? ' open' : '';
+
+                    return `
+                        <details class="submission-group" data-group-key="${group.key}"${openAttr}>
+                            <summary>
+                                <span class="submission-group-title">${escapeHtml(group.title)}</span>
+                                <span class="${groupSummaryClass}">${groupSubmittedCount}/${group.locations.length} submitted</span>
+                            </summary>
+                            <div class="step-track submission-group-track">
+                                ${groupPills}
+                            </div>
+                        </details>
+                    `;
+                }).join('');
+
+                refs.locationStatusTrack.innerHTML = groupsHtml || '<div class="step-pill pending"><span class="loc-name">No locations configured</span></div>';
+
+                refs.submissionSummary.textContent = `${submittedCount}/${locations.length} submitted`;
+                refs.submissionSummary.className = submittedCount === locations.length && locations.length > 0
+                    ? 'badge text-bg-success submission-summary'
+                    : 'badge text-bg-danger submission-summary';
+            }
+
+            function buildStatusOptions(statusOptions) {
+                const optionHtml = statusOptions
+                    .map((entry) => `<option value="${escapeHtml(entry)}">${escapeHtml(entry)}</option>`)
+                    .join('');
+                return `<option value="" selected disabled>Select status</option>${optionHtml}`;
+            }
+
+            function isCivilRiserLeakingTemplate(template) {
+                return String(template?.referenceNo || '') === 'BC/MAINT/CIVIL/1';
+            }
+
+            function isFfWetRiser2Template(template) {
+                return String(template?.referenceNo || '') === 'BC/MAINT/WET/1';
+            }
+
+            function getCivilWallNgReasonCheckboxes() {
+                return Array.from(
+                    refs.civilWallNgReasonOptions?.querySelectorAll('input[name="civilWallNgReasonOption"]') || []
+                );
+            }
+
+            function getCivilRiserRoomLabel(scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const matchedScope = CIVIL_RISER_ROOM_SCOPES.find((scope) => scope.key === normalizedScopeKey);
+                return matchedScope?.label || normalizedScopeKey;
+            }
+
+            function getFfWetRiser2ScopeLabel(scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const matchedScope = FF_WET_RISER2_SCOPE_ITEMS.find((scope) => scope.key === normalizedScopeKey);
+                return matchedScope?.label || normalizedScopeKey;
+            }
+
+            function getCivilWallReasonField(rowNumber, scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                return refs.form?.querySelector(`[name="checkRemark_${rowNumber}_ng_${normalizedScopeKey}"]`) || null;
+            }
+
+            function getCivilWallBlockReasonCodes(rowNumber, scopeKey) {
+                const reasonField = getCivilWallReasonField(rowNumber, scopeKey);
+                const rawValue = String(reasonField?.value || '').trim();
+                if (!rawValue) {
+                    return [];
+                }
+
+                const codeSection = rawValue.includes(':')
+                    ? rawValue.split(':').slice(1).join(':')
+                    : rawValue;
+
+                return codeSection
+                    .split(/[\s,\/|]+/)
+                    .map((entry) => String(entry || '').trim().toUpperCase())
+                    .filter((entry) => CIVIL_NG_REASON_CODES.includes(entry));
+            }
+
+            function setCivilWallBlockReasonCodes(rowNumber, scopeKey, codes) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const reasonField = getCivilWallReasonField(rowNumber, normalizedScopeKey);
+                if (!reasonField) {
+                    return;
+                }
+
+                const normalizedCodes = (Array.isArray(codes) ? codes : [])
+                    .map((entry) => String(entry || '').trim().toUpperCase())
+                    .filter((entry) => CIVIL_NG_REASON_CODES.includes(entry));
+
+                reasonField.value = normalizedCodes.length > 0
+                    ? `${normalizedScopeKey}:${normalizedCodes.join('/')}`
+                    : '';
+            }
+
+            function getCivilWallBlockStatusValue(rowNumber, scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const statusField = refs.form?.querySelector(`[name="checkStatus_${rowNumber}_${normalizedScopeKey}"]`);
+                return String(statusField?.value || '').trim().toUpperCase();
+            }
+
+            function setCivilWallBlockStatusValue(rowNumber, scopeKey, statusValue) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const normalizedStatus = String(statusValue || '').trim().toUpperCase();
+                const statusField = refs.form?.querySelector(`[name="checkStatus_${rowNumber}_${normalizedScopeKey}"]`);
+                if (!statusField) {
+                    return;
+                }
+
+                statusField.value = normalizedStatus;
+            }
+
+            function renderCivilRiserTileState(rowNumber, scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const statusValue = getCivilWallBlockStatusValue(rowNumber, normalizedScopeKey);
+                const roomLabel = getCivilRiserRoomLabel(normalizedScopeKey);
+                const selectedCodes = getCivilWallBlockReasonCodes(rowNumber, normalizedScopeKey);
+                const tileButton = refs.checklistBody?.querySelector(
+                    `button[data-row-number="${rowNumber}"][data-civil-riser-room="${normalizedScopeKey}"]`
+                );
+
+                if (!tileButton) {
+                    return;
+                }
+
+                tileButton.classList.remove('ok', 'ng', 'empty');
+                if (statusValue === 'NG') {
+                    tileButton.classList.add('ng');
+                } else if (statusValue === 'OK') {
+                    tileButton.classList.add('ok');
+                } else {
+                    tileButton.classList.add('empty');
+                }
+
+                const statusText = statusValue === 'NG'
+                    ? (selectedCodes.length > 0 ? `NG (${selectedCodes.join('/')})` : 'NG')
+                    : (statusValue === 'OK' ? 'OK' : 'Not set');
+                tileButton.title = `${roomLabel} - ${statusText}`;
+                tileButton.setAttribute('aria-pressed', statusValue ? 'true' : 'false');
+            }
+
+            function updateCivilWallRowStatusSummary(rowNumber) {
+                const normalizedRowNumber = String(rowNumber || '').trim();
+                if (!normalizedRowNumber) {
+                    return;
+                }
+
+                let hasAnyNg = false;
+                let areAllScopesChecked = true;
+
+                CIVIL_RISER_ROOM_SCOPES.forEach((scope) => {
+                    const scopeKey = scope.key;
+                    const scopeStatus = getCivilWallBlockStatusValue(normalizedRowNumber, scopeKey);
+                    if (!scopeStatus) {
+                        areAllScopesChecked = false;
+                    }
+
+                    if (scopeStatus === 'NG') {
+                        hasAnyNg = true;
+                    }
+
+                    if (scopeStatus === 'OK') {
+                        setCivilWallBlockReasonCodes(normalizedRowNumber, scopeKey, []);
+                    }
+
+                    renderCivilRiserTileState(normalizedRowNumber, scopeKey);
+                });
+
+                const rowStatusField = refs.form?.querySelector(`[name="checkStatus_${normalizedRowNumber}"]`);
+                if (!rowStatusField) {
+                    return;
+                }
+
+                if (hasAnyNg) {
+                    rowStatusField.value = 'NG';
+                    return;
+                }
+
+                rowStatusField.value = areAllScopesChecked ? 'OK' : '';
+            }
+
+            function syncCivilWallRowsStatusSummary() {
+                if (!refs.checklistBody) {
+                    return;
+                }
+
+                const rowWrappers = Array.from(
+                    refs.checklistBody.querySelectorAll('.civil-wall-status-wrap[data-row-number]')
+                );
+
+                rowWrappers.forEach((wrapper) => {
+                    updateCivilWallRowStatusSummary(wrapper.dataset.rowNumber || '');
+                });
+            }
+
+            function renderFfWetRiser2TileState(rowNumber, scopeKey) {
+                const normalizedScopeKey = String(scopeKey || '').trim().toUpperCase();
+                const statusValue = getCivilWallBlockStatusValue(rowNumber, normalizedScopeKey);
+                const scopeLabel = getFfWetRiser2ScopeLabel(normalizedScopeKey);
+                const tileButton = refs.checklistBody?.querySelector(
+                    `button[data-row-number="${rowNumber}"][data-ff-wet2-scope="${normalizedScopeKey}"]`
+                );
+
+                if (!tileButton) {
+                    return;
+                }
+
+                tileButton.classList.remove('ok', 'ng', 'empty');
+                if (statusValue === 'NG') {
+                    tileButton.classList.add('ng');
+                } else if (statusValue === 'OK') {
+                    tileButton.classList.add('ok');
+                } else {
+                    tileButton.classList.add('empty');
+                }
+
+                const statusText = statusValue === 'NG'
+                    ? 'NG'
+                    : (statusValue === 'OK' ? 'OK' : 'Not set');
+                tileButton.title = `${scopeLabel} - ${statusText}`;
+                tileButton.setAttribute('aria-pressed', statusValue ? 'true' : 'false');
+            }
+
+            function updateFfWetRiser2RowStatusSummary(rowNumber) {
+                const normalizedRowNumber = String(rowNumber || '').trim();
+                if (!normalizedRowNumber) {
+                    return;
+                }
+
+                let hasAnyNg = false;
+                let areAllScopesChecked = true;
+
+                FF_WET_RISER2_SCOPE_ITEMS.forEach((scope) => {
+                    const scopeKey = scope.key;
+                    const scopeStatus = getCivilWallBlockStatusValue(normalizedRowNumber, scopeKey);
+                    if (!scopeStatus) {
+                        areAllScopesChecked = false;
+                    }
+
+                    if (scopeStatus === 'NG') {
+                        hasAnyNg = true;
+                    }
+
+                    renderFfWetRiser2TileState(normalizedRowNumber, scopeKey);
+                });
+
+                const rowStatusField = refs.form?.querySelector(`[name="checkStatus_${normalizedRowNumber}"]`);
+                if (!rowStatusField) {
+                    return;
+                }
+
+                if (hasAnyNg) {
+                    rowStatusField.value = 'NG';
+                    return;
+                }
+
+                rowStatusField.value = areAllScopesChecked ? 'OK' : '';
+            }
+
+            function syncFfWetRiser2RowsStatusSummary() {
+                if (!refs.checklistBody) {
+                    return;
+                }
+
+                const rowWrappers = Array.from(
+                    refs.checklistBody.querySelectorAll('.ff-wet2-status-wrap[data-row-number]')
+                );
+
+                rowWrappers.forEach((wrapper) => {
+                    updateFfWetRiser2RowStatusSummary(wrapper.dataset.rowNumber || '');
+                });
+            }
+
+            function clearCivilWallReasonFeedback() {
+                if (!refs.civilWallNgReasonFeedback) {
+                    return;
+                }
+
+                refs.civilWallNgReasonFeedback.textContent = '';
+                refs.civilWallNgReasonFeedback.classList.add('d-none');
+            }
+
+            function showCivilWallReasonFeedback(message) {
+                if (!refs.civilWallNgReasonFeedback) {
+                    return;
+                }
+
+                refs.civilWallNgReasonFeedback.textContent = String(message || '').trim() || 'Please select at least one code.';
+                refs.civilWallNgReasonFeedback.classList.remove('d-none');
+            }
+
+            function buildCivilWallStatusField(rowNumber) {
+                const scopeTilesHtml = CIVIL_RISER_ROOM_SCOPES
+                    .map((scope) => {
+                        const scopeKey = String(scope.key || '').trim().toUpperCase();
+                        return `<button type="button" class="civil-wall-status-tile empty" data-row-number="${rowNumber}" data-civil-riser-room="${scopeKey}">${escapeHtml(scope.label)}</button>`;
+                    })
+                    .join('');
+
+                const scopeStatusFieldsHtml = CIVIL_RISER_ROOM_SCOPES
+                    .map((scope) => {
+                        const scopeKey = String(scope.key || '').trim().toUpperCase();
+                        return `
+                            <input type="hidden" name="checkStatus_${rowNumber}_${scopeKey}" value="">
+                            <input type="hidden" name="checkRemark_${rowNumber}_ng_${scopeKey}" value="">
+                        `;
+                    })
+                    .join('');
+
+                return `
+                    <div class="civil-wall-status-wrap" data-row-number="${rowNumber}">
+                        <div class="civil-wall-status-grid">${scopeTilesHtml}</div>
+                        <input type="hidden" name="checkStatus_${rowNumber}" value="">
+                        ${scopeStatusFieldsHtml}
+                    </div>
+                `;
+            }
+
+            function buildFfWetRiser2StatusField(rowNumber) {
+                const scopeTilesHtml = FF_WET_RISER2_SCOPE_ITEMS
+                    .map((scope) => {
+                        const scopeKey = String(scope.key || '').trim().toUpperCase();
+                        return `<button type="button" class="civil-wall-status-tile empty" data-row-number="${rowNumber}" data-ff-wet2-scope="${scopeKey}">${escapeHtml(scope.label)}</button>`;
+                    })
+                    .join('');
+
+                const scopeStatusFieldsHtml = FF_WET_RISER2_SCOPE_ITEMS
+                    .map((scope) => {
+                        const scopeKey = String(scope.key || '').trim().toUpperCase();
+                        return `<input type="hidden" name="checkStatus_${rowNumber}_${scopeKey}" value="">`;
+                    })
+                    .join('');
+
+                return `
+                    <div class="ff-wet2-status-wrap" data-row-number="${rowNumber}">
+                        <div class="ff-wet2-status-grid">${scopeTilesHtml}</div>
+                        <input type="hidden" name="checkStatus_${rowNumber}" value="">
+                        ${scopeStatusFieldsHtml}
+                    </div>
+                `;
+            }
+
+            function buildStatusField(rowNumber, statusOptions, item, template) {
+                if (isCivilRiserLeakingTemplate(template)) {
+                    return buildCivilWallStatusField(rowNumber);
+                }
+
+                if (isFfWetRiser2Template(template)) {
+                    return buildFfWetRiser2StatusField(rowNumber);
+                }
+
+                const normalizedItem = String(item || '').trim().toLowerCase();
+                const referenceNo = String(template?.referenceNo || '');
+                const hasAutoManualSelector = referenceNo === 'BC/MAINT/WP/1' || referenceNo === 'BC/MAINT/PWP/1';
+                const isSelectorSwitch = normalizedItem === 'selector switch';
+
+                if (hasAutoManualSelector && isSelectorSwitch) {
+                    return `
+                        <div class="status-icon-group" role="radiogroup" aria-label="Select selector mode for row ${rowNumber}">
+                            <div class="status-icon-option">
+                                <input class="btn-check" type="radio" name="checkStatus_${rowNumber}" id="checkStatus_${rowNumber}_auto" value="AUTO" autocomplete="off" required>
+                                <label class="status-icon-btn status-auto" for="checkStatus_${rowNumber}_auto" title="Auto">
+                                    <i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
+                                    <span>Auto</span>
+                                </label>
+                            </div>
+
+                            <div class="status-icon-option">
+                                <input class="btn-check" type="radio" name="checkStatus_${rowNumber}" id="checkStatus_${rowNumber}_manual" value="MANUAL" autocomplete="off">
+                                <label class="status-icon-btn status-manual" for="checkStatus_${rowNumber}_manual" title="Manual">
+                                    <i class="bi bi-hand-index-thumb-fill" aria-hidden="true"></i>
+                                    <span>Manual</span>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const normalizedOptions = statusOptions
+                    .map((entry) => String(entry || '').trim().toUpperCase());
+                const isOkNgPair = normalizedOptions.length === 2
+                    && normalizedOptions.includes('OK')
+                    && normalizedOptions.includes('NG');
+
+                if (!isOkNgPair) {
+                    return `
+                        <select class="form-select form-select-sm" name="checkStatus_${rowNumber}" required>
+                            ${buildStatusOptions(statusOptions)}
+                        </select>
+                    `;
+                }
+
+                return `
+                    <div class="status-icon-group" role="radiogroup" aria-label="Select status for row ${rowNumber}">
+                        <div class="status-icon-option">
+                            <input class="btn-check" type="radio" name="checkStatus_${rowNumber}" id="checkStatus_${rowNumber}_ok" value="OK" autocomplete="off" required>
+                                <label class="status-icon-btn status-ok" for="checkStatus_${rowNumber}_ok" title="OK" data-status-resettable="true">
+                                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                                <span>OK</span>
+                            </label>
+                        </div>
+
+                        <div class="status-icon-option">
+                            <input class="btn-check" type="radio" name="checkStatus_${rowNumber}" id="checkStatus_${rowNumber}_ng" value="NG" autocomplete="off">
+                                <label class="status-icon-btn status-ng" for="checkStatus_${rowNumber}_ng" title="NG" data-status-resettable="true">
+                                <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
+                                <span>NG</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function formatChecklistItemCell(item, template) {
+                const itemText = String(item || '').trim();
+                const isCapacitorBankTemplate = template?.referenceNo === 'BC/MAINT/CB/1';
+
+                if (!isCapacitorBankTemplate) {
+                    return escapeHtml(itemText);
+                }
+
+                const stepMccbMatch = itemText.match(/^(Step\s+\d+\s*\([^)]*\))\s*(\(MCCB\s*:\s*[^)]*\))$/i);
+                if (!stepMccbMatch) {
+                    return escapeHtml(itemText);
+                }
+
+                return `
+                    <div class="step-item-wrap">
+                        <div class="step-main">${escapeHtml(stepMccbMatch[1])}</div>
+                        <div class="step-sub">${escapeHtml(stepMccbMatch[2])}</div>
+                    </div>
+                `;
+            }
+
+            function buildRemarkField(rowNumber, item, template) {
+                if (isCivilRiserLeakingTemplate(template) || isFfWetRiser2Template(template)) {
+                    return '';
+                }
+
+                const normalizedItem = String(item || '').trim().toLowerCase();
+                const isWaterRiserTemplate = template?.referenceNo === 'BC/MAINT/WAT/1';
+                const isWaterRiserTestingItem = isWaterRiserTemplate
+                    && ['jockey pump', 'duty pump', 'standby pump'].includes(normalizedItem);
+                const isVoltageOnePhase = normalizedItem.startsWith('voltage (1-phase');
+                const isVoltageThreePhase = normalizedItem.startsWith('voltage (3-phase');
+                const isCurrentReading = normalizedItem.startsWith('current');
+                const isRunningAmp = normalizedItem.startsWith('running amp');
+                const isSwitchRoomTemplate = template?.referenceNo === 'BC/MAINT/BS/22/1';
+                const isStandbyGensetTemplate = template?.referenceNo === 'BC/MAINT/GS/1';
+                const isGensetVoltageFrequency = isStandbyGensetTemplate
+                    && normalizedItem.includes('voltage and frequency');
+                const isAmfBatteryCharger = isStandbyGensetTemplate
+                    && normalizedItem.includes('amf switchboard and battery charger');
+                const isRpmReading = isStandbyGensetTemplate && normalizedItem === 'rpm';
+                const isOilPressureReading = isStandbyGensetTemplate && normalizedItem === 'oil pressure';
+                const isWaterTempReading = isStandbyGensetTemplate && normalizedItem === 'water temperature';
+                const isCapacitorBankTemplate = template?.referenceNo === 'BC/MAINT/CB/1';
+                const isCapacitorStepReading = isCapacitorBankTemplate && normalizedItem.startsWith('step ');
+                const needsExpiryDateRemark = isSwitchRoomTemplate
+                    && (normalizedItem === 'fire extinguisher'
+                    || normalizedItem === 'ocr / efr');
+
+                if (isWaterRiserTestingItem) {
+                    return `
+                        <div class="water-riser-testing-grid">
+                            <div></div>
+                            <div class="water-riser-testing-head">Normal</div>
+                            <div class="water-riser-testing-head">Test</div>
+
+                            <div class="water-riser-testing-key">Cut-In</div>
+                            <input type="text" class="form-control form-control-sm water-riser-testing-value" id="checkRemark_${rowNumber}_normalCutIn" name="checkRemark_${rowNumber}_normalCutIn" placeholder="Read value">
+                            <input type="text" class="form-control form-control-sm water-riser-testing-value" id="checkRemark_${rowNumber}_testCutIn" name="checkRemark_${rowNumber}_testCutIn" placeholder="Read value">
+
+                            <div class="water-riser-testing-key">Cut-Out</div>
+                            <input type="text" class="form-control form-control-sm water-riser-testing-value" id="checkRemark_${rowNumber}_normalCutOut" name="checkRemark_${rowNumber}_normalCutOut" placeholder="Read value">
+                            <input type="text" class="form-control form-control-sm water-riser-testing-value" id="checkRemark_${rowNumber}_testCutOut" name="checkRemark_${rowNumber}_testCutOut" placeholder="Read value">
+                        </div>
+                    `;
+                }
+
+                if (isCapacitorStepReading) {
+                    return `
+                        <div class="phase-reading-grid">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">R</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_r" placeholder="Phase R">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">Y</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_y" placeholder="Phase Y">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">B</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_b" placeholder="Phase B">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (isGensetVoltageFrequency) {
+                    return `
+                        <div class="phase-reading-grid">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">V</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_volt" placeholder="Voltage (415V)">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">Hz</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_freq" placeholder="Frequency (50 Hz)">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (isAmfBatteryCharger) {
+                    return `
+                        <div class="phase-reading-grid">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">V</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_amf_v" placeholder="Voltage">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">A</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_amf_a" placeholder="Amps">
+                            </div>
+                            <select class="form-select form-select-sm" name="checkRemark_${rowNumber}_chargeMode" aria-label="Charge mode">
+                                <option value="" selected disabled>Charge mode</option>
+                                <option value="AUTO_CHARGE">Auto charge</option>
+                                <option value="BOOST">Boost</option>
+                            </select>
+                        </div>
+                    `;
+                }
+
+                if (isRpmReading || isOilPressureReading || isWaterTempReading) {
+                    const placeholder = isRpmReading
+                        ? 'RPM reading'
+                        : (isOilPressureReading ? 'Oil pressure reading' : 'Water temperature reading');
+                    return `<input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}" placeholder="${placeholder}">`;
+                }
+
+                if (!isVoltageOnePhase && !isVoltageThreePhase && !isCurrentReading && !isRunningAmp) {
+                    const defaultPlaceholder = needsExpiryDateRemark
+                        ? 'Expired Date :'
+                        : 'Item remarks (optional)';
+                    return `<input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}" placeholder="${defaultPlaceholder}">`;
+                }
+
+                if (isCurrentReading || isRunningAmp) {
+                    return `
+                        <div class="phase-reading-grid">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">R</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_r" placeholder="Reading">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">Y</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_y" placeholder="Reading">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">B</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_b" placeholder="Reading">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (isVoltageThreePhase) {
+                    return `
+                        <div class="phase-reading-grid">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">R-Y</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_ry" placeholder="Reading">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">Y-B</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_yb" placeholder="Reading">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text phase-reading-label">B-R</span>
+                                <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_br" placeholder="Reading">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="phase-reading-grid">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text phase-reading-label">R-N</span>
+                            <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_rn" placeholder="Reading">
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text phase-reading-label">Y-N</span>
+                            <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_yn" placeholder="Reading">
+                        </div>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text phase-reading-label">B-N</span>
+                            <input type="text" class="form-control form-control-sm" name="checkRemark_${rowNumber}_bn" placeholder="Reading">
+                        </div>
+                    </div>
+                `;
+            }
+
+            function renderChecklistRows(template) {
+                let bilCounter = 1;
+
+                const rows = template.groups.map((group) => {
+                    const groupHeader = `
+                        <tr class="checklist-group-row">
+                            <td colspan="4">${escapeHtml(group.title)}</td>
+                        </tr>
+                    `;
+
+                    const itemRows = group.items.map((item) => {
+                        const rowNumber = bilCounter;
+                        bilCounter += 1;
+                        const normalizedItem = String(item || '').trim().toLowerCase();
+                        const isWaterRiserTestingGroup = template?.referenceNo === 'BC/MAINT/WAT/1'
+                            && String(group?.title || '').toLowerCase().includes('testing');
+
+                        if (isCivilRiserLeakingTemplate(template) || isFfWetRiser2Template(template)) {
+                            return `
+                                <tr>
+                                    <td class="col-bil">${rowNumber}</td>
+                                    <td>${formatChecklistItemCell(item, template)}</td>
+                                    <td colspan="2" class="civil-riser-status-span">
+                                        ${buildStatusField(rowNumber, template.statusOptions, item, template)}
+                                    </td>
+                                </tr>
+                            `;
+                        }
+
+                        if (isWaterRiserTestingGroup) {
+                            return `
+                                <tr>
+                                    <td class="col-bil">${rowNumber}</td>
+                                    <td>${formatChecklistItemCell(item, template)}</td>
+                                    <td colspan="2">
+                                        ${buildRemarkField(rowNumber, item, template)}
+                                    </td>
+                                </tr>
+                            `;
+                        }
+
+                        const isStandbyExpandedRemarkRow = template?.referenceNo === 'BC/MAINT/GS/1'
+                            && [13, 14, 15].includes(rowNumber);
+                        const isCapacitorExpandedRemarkRow = template?.referenceNo === 'BC/MAINT/CB/1'
+                            && normalizedItem.startsWith('step ');
+
+                        if (isStandbyExpandedRemarkRow || isCapacitorExpandedRemarkRow) {
+                            return `
+                                <tr>
+                                    <td class="col-bil">${rowNumber}</td>
+                                    <td>${formatChecklistItemCell(item, template)}</td>
+                                    <td colspan="2">
+                                        ${buildRemarkField(rowNumber, item, template)}
+                                    </td>
+                                </tr>
+                            `;
+                        }
+
+                        return `
+                            <tr>
+                                <td class="col-bil">${rowNumber}</td>
+                                <td>${formatChecklistItemCell(item, template)}</td>
+                                <td>
+                                    ${buildStatusField(rowNumber, template.statusOptions, item, template)}
+                                </td>
+                                <td>
+                                    ${buildRemarkField(rowNumber, item, template)}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    return groupHeader + itemRows;
+                }).join('');
+
+                refs.checklistBody.innerHTML = rows;
+                syncCivilWallRowsStatusSummary();
+                syncFfWetRiser2RowsStatusSummary();
+
+                if (isCivilRiserLeakingTemplate(template)) {
+                    refs.statusLegend.innerHTML = [
+                        '<span class="legend-pill">Green tile = OK</span>',
+                        '<span class="legend-pill">Pink tile = NG (code: P/T/B/LS)</span>',
+                        '<span class="legend-pill">White tile = Reset / Normal</span>'
+                    ].join('');
+                    return;
+                }
+
+                if (isFfWetRiser2Template(template)) {
+                    refs.statusLegend.innerHTML = [
+                        '<span class="legend-pill">Green tile = Good</span>',
+                        '<span class="legend-pill">Pink tile = Damaged / Lost</span>',
+                        '<span class="legend-pill">White tile = Reset / Normal</span>'
+                    ].join('');
+                    return;
+                }
+
+                refs.statusLegend.innerHTML = template.statusOptions
+                    .map((entry) => `<span class="legend-pill">${escapeHtml(entry)}</span>`)
+                    .join('');
+            }
+
+            function resolveTemplate(templateKey) {
+                const normalizedTemplateKey = String(templateKey || '').trim();
+                if (TEMPLATE_CONFIG[normalizedTemplateKey]) {
+                    return {
+                        key: normalizedTemplateKey,
+                        template: TEMPLATE_CONFIG[normalizedTemplateKey]
+                    };
+                }
+
+                return {
+                    key: 'bilikSuis',
+                    template: TEMPLATE_CONFIG.bilikSuis
+                };
+            }
+
+            function getTemplateCategories() {
+                return [...new Set(Object.values(TEMPLATE_CONFIG).map((template) => String(template?.category || '').trim()).filter(Boolean))];
+            }
+
+            function buildCategoryOptions(categories) {
+                return categories
+                    .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+                    .join('');
+            }
+
+            function filterTemplateOptionsByCategory(category, preferredTemplateKey = '') {
+                if (!refs.templateType) {
+                    return '';
+                }
+
+                const normalizedCategory = String(category || '').trim();
+                const normalizedPreferredTemplateKey = String(preferredTemplateKey || '').trim();
+                let firstMatchedTemplateKey = '';
+
+                Array.from(refs.templateType.options).forEach((option) => {
+                    const optionTemplate = TEMPLATE_CONFIG[String(option.value || '').trim()];
+                    const isMatched = !!optionTemplate && optionTemplate.category === normalizedCategory;
+
+                    option.hidden = !isMatched;
+                    option.disabled = !isMatched;
+
+                    if (isMatched && !firstMatchedTemplateKey) {
+                        firstMatchedTemplateKey = option.value;
+                    }
+                });
+
+                const canKeepPreferredTemplate = !!TEMPLATE_CONFIG[normalizedPreferredTemplateKey]
+                    && TEMPLATE_CONFIG[normalizedPreferredTemplateKey].category === normalizedCategory;
+                const selectedTemplateKey = canKeepPreferredTemplate ? normalizedPreferredTemplateKey : firstMatchedTemplateKey;
+
+                if (selectedTemplateKey) {
+                    refs.templateType.value = selectedTemplateKey;
+                }
+
+                return selectedTemplateKey;
+            }
+
+            function initializeCategoryAndTemplateFilters() {
+                const categories = getTemplateCategories();
+                if (refs.categoryField && categories.length > 0) {
+                    refs.categoryField.innerHTML = buildCategoryOptions(categories);
+                }
+
+                const initialTemplate = resolveTemplate(refs.templateType?.value || 'bilikSuis');
+                const initialCategory = initialTemplate.template.category || categories[0] || '';
+
+                if (refs.categoryField && initialCategory) {
+                    refs.categoryField.value = initialCategory;
+                }
+
+                const filteredTemplateKey = filterTemplateOptionsByCategory(initialCategory, initialTemplate.key);
+                return filteredTemplateKey || initialTemplate.key;
+            }
+
+            function renderStep2ScopeNote(template) {
+                if (!refs.step2ScopeNote) {
+                    return;
+                }
+
+                const noteText = String(template?.step2ScopeNote || '').trim();
+                if (!noteText) {
+                    refs.step2ScopeNote.textContent = '';
+                    refs.step2ScopeNote.classList.add('d-none');
+                    return;
+                }
+
+                refs.step2ScopeNote.textContent = noteText;
+                refs.step2ScopeNote.classList.remove('d-none');
+            }
+
+            function applyTemplate(templateKey) {
+                const resolvedTemplate = resolveTemplate(templateKey);
+                const resolvedTemplateKey = resolvedTemplate.key;
+                const template = resolvedTemplate.template;
+
+                if (refs.templateType && refs.templateType.value !== resolvedTemplateKey) {
+                    refs.templateType.value = resolvedTemplateKey;
+                }
+
+                if (refs.categoryField) {
+                    refs.categoryField.value = template.category;
+                }
+
+                refs.referenceNo.value = template.referenceNo;
+                refs.frequencyField.value = template.frequency;
+                refs.locationLabel.textContent = template.locationLabel;
+                refs.locationSelect.innerHTML = buildLocationOptions(template.locations);
+                refs.templateDescription.textContent = template.description;
+
+                renderStep2ScopeNote(template);
+                renderChecklistRows(template);
+                renderSubmissionTrack(resolvedTemplateKey, template, { forceCollapse: true });
+                renderAutoRemarkSummary();
+            }
+
+            function initDefaultDates() {
+                const now = new Date();
+                const dd = String(now.getDate()).padStart(2, '0');
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+
+                refs.inspectionDate.value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            refs.inspectionDate?.addEventListener('change', () => {
+                const templateKey = refs.templateType?.value || 'bilikSuis';
+                const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
+                renderSubmissionTrack(templateKey, template);
+                renderCopySourceOptions();
+                restoreSubmittedDataForCurrentContext();
+            });
+
+            refs.categoryField?.addEventListener('change', (event) => {
+                const selectedCategory = String(event.target?.value || '').trim();
+                const currentTemplateKey = String(refs.templateType?.value || '').trim();
+                const nextTemplateKey = filterTemplateOptionsByCategory(selectedCategory, currentTemplateKey);
+
+                if (!nextTemplateKey) {
+                    return;
+                }
+
+                applyTemplate(nextTemplateKey);
+                renderCopySourceOptions();
+                restoreSubmittedDataForCurrentContext();
+            });
+
+            refs.templateType?.addEventListener('change', (event) => {
+                const selectedTemplate = TEMPLATE_CONFIG[String(event.target?.value || '').trim()];
+                if (selectedTemplate?.category && refs.categoryField?.value !== selectedTemplate.category) {
+                    refs.categoryField.value = selectedTemplate.category;
+                    filterTemplateOptionsByCategory(selectedTemplate.category, event.target.value);
+                }
+
+                applyTemplate(event.target.value);
+                renderCopySourceOptions();
+                restoreSubmittedDataForCurrentContext();
+            });
+
+            refs.locationSelect?.addEventListener('change', () => {
+                const templateKey = refs.templateType?.value || 'bilikSuis';
+                const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
+                renderSubmissionTrack(templateKey, template);
+                renderCopySourceOptions();
+                restoreSubmittedDataForCurrentContext();
+            });
+
+            refs.copyFromLocationSelect?.addEventListener('change', () => {
+                const hasSourceSelection = String(refs.copyFromLocationSelect?.value || '').trim().length > 0;
+                if (refs.copyFromLocationBtn) {
+                    refs.copyFromLocationBtn.disabled = !hasSourceSelection;
+                }
+            });
+
+            refs.copyFromLocationBtn?.addEventListener('click', () => {
+                copySubmittedDataToCurrentLocation();
+            });
+
+            refs.notesBulletBtn?.addEventListener('click', () => {
+                applyNoteListFormatting('bullet');
+            });
+
+            refs.notesNumberBtn?.addEventListener('click', () => {
+                applyNoteListFormatting('number');
+            });
+
+            refs.technicianNotes?.addEventListener('focus', () => {
+                ensureTechnicianNotesAutoBulletSeed(true);
+            });
+
+            refs.technicianNotes?.addEventListener('keydown', (event) => {
+                handleTechnicianNotesAutoListEnter(event);
+            });
+
+            function handleCivilWallStatusInputChange(tileButton) {
+                const rowNumber = String(tileButton?.dataset?.rowNumber || '').trim();
+                const scopeKey = String(tileButton?.dataset?.civilRiserRoom || '').trim().toUpperCase();
+                if (!rowNumber || !scopeKey) {
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                const currentStatus = getCivilWallBlockStatusValue(rowNumber, scopeKey);
+
+                if (currentStatus === 'NG') {
+                    setCivilWallBlockStatusValue(rowNumber, scopeKey, '');
+                    setCivilWallBlockReasonCodes(rowNumber, scopeKey, []);
+                    updateCivilWallRowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                if (currentStatus !== 'OK') {
+                    setCivilWallBlockStatusValue(rowNumber, scopeKey, 'OK');
+                    setCivilWallBlockReasonCodes(rowNumber, scopeKey, []);
+                    updateCivilWallRowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                const existingCodes = getCivilWallBlockReasonCodes(rowNumber, scopeKey);
+                civilWallNgReasonState.rowNumber = rowNumber;
+                civilWallNgReasonState.scopeKey = scopeKey;
+                civilWallNgReasonState.saved = false;
+
+                if (refs.civilWallNgReasonTitle) {
+                    refs.civilWallNgReasonTitle.textContent = `Level ${rowNumber} - ${getCivilRiserRoomLabel(scopeKey)} (NG)`;
+                }
+
+                const codeCheckboxes = getCivilWallNgReasonCheckboxes();
+                codeCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = existingCodes.includes(String(checkbox.value || '').trim().toUpperCase());
+                });
+                clearCivilWallReasonFeedback();
+
+                if (!civilWallNgReasonModal) {
+                    const fallbackInput = window.prompt(
+                        `Enter NG code(s) for ${getCivilRiserRoomLabel(scopeKey)} (P, T, B, LS). Separate with commas.`,
+                        existingCodes.join(',')
+                    );
+
+                    if (fallbackInput === null) {
+                        updateCivilWallRowStatusSummary(rowNumber);
+                        validateNgRemarkRequirements();
+                        renderAutoRemarkSummary();
+                        return;
+                    }
+
+                    const selectedCodes = String(fallbackInput || '')
+                        .split(/[\s,\/|]+/)
+                        .map((entry) => String(entry || '').trim().toUpperCase())
+                        .filter((entry) => CIVIL_NG_REASON_CODES.includes(entry));
+
+                    if (selectedCodes.length === 0) {
+                        updateCivilWallRowStatusSummary(rowNumber);
+                        validateNgRemarkRequirements();
+                        renderAutoRemarkSummary();
+                        return;
+                    }
+
+                    setCivilWallBlockStatusValue(rowNumber, scopeKey, 'NG');
+                    setCivilWallBlockReasonCodes(rowNumber, scopeKey, selectedCodes);
+                    updateCivilWallRowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                civilWallNgReasonModal.show();
+            }
+
+            function handleFfWetRiser2StatusInputChange(tileButton) {
+                const rowNumber = String(tileButton?.dataset?.rowNumber || '').trim();
+                const scopeKey = String(tileButton?.dataset?.ffWet2Scope || '').trim().toUpperCase();
+                if (!rowNumber || !scopeKey) {
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                const currentStatus = getCivilWallBlockStatusValue(rowNumber, scopeKey);
+
+                if (currentStatus === 'NG') {
+                    setCivilWallBlockStatusValue(rowNumber, scopeKey, '');
+                    updateFfWetRiser2RowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                if (currentStatus !== 'OK') {
+                    setCivilWallBlockStatusValue(rowNumber, scopeKey, 'OK');
+                    updateFfWetRiser2RowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                    return;
+                }
+
+                setCivilWallBlockStatusValue(rowNumber, scopeKey, 'NG');
+                updateFfWetRiser2RowStatusSummary(rowNumber);
+                validateNgRemarkRequirements();
+                renderAutoRemarkSummary();
+            }
+
+            refs.civilWallNgReasonSaveBtn?.addEventListener('click', () => {
+                const rowNumber = String(civilWallNgReasonState.rowNumber || '').trim();
+                const scopeKey = String(civilWallNgReasonState.scopeKey || '').trim().toUpperCase();
+                if (!rowNumber || !scopeKey) {
+                    civilWallNgReasonModal?.hide();
+                    return;
+                }
+
+                const selectedCodes = getCivilWallNgReasonCheckboxes()
+                    .filter((checkbox) => checkbox.checked)
+                    .map((checkbox) => String(checkbox.value || '').trim().toUpperCase())
+                    .filter((entry) => CIVIL_NG_REASON_CODES.includes(entry));
+
+                if (selectedCodes.length === 0) {
+                    showCivilWallReasonFeedback('Please select at least one code.');
+                    return;
+                }
+
+                setCivilWallBlockStatusValue(rowNumber, scopeKey, 'NG');
+                setCivilWallBlockReasonCodes(rowNumber, scopeKey, selectedCodes);
+                updateCivilWallRowStatusSummary(rowNumber);
+                civilWallNgReasonState.saved = true;
+                clearCivilWallReasonFeedback();
+                civilWallNgReasonModal?.hide();
+                validateNgRemarkRequirements();
+                renderAutoRemarkSummary();
+            });
+
+            refs.civilWallNgReasonModal?.addEventListener('hidden.bs.modal', () => {
+                const rowNumber = String(civilWallNgReasonState.rowNumber || '').trim();
+                const scopeKey = String(civilWallNgReasonState.scopeKey || '').trim().toUpperCase();
+                const wasSaved = civilWallNgReasonState.saved === true;
+
+                if (rowNumber && scopeKey && !wasSaved) {
+                    updateCivilWallRowStatusSummary(rowNumber);
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                }
+
+                civilWallNgReasonState.rowNumber = '';
+                civilWallNgReasonState.scopeKey = '';
+                civilWallNgReasonState.saved = false;
+                getCivilWallNgReasonCheckboxes().forEach((checkbox) => {
+                    checkbox.checked = false;
+                });
+                clearCivilWallReasonFeedback();
+            });
+
+            function shouldRefreshAutoSummary(targetName) {
+                const normalizedName = String(targetName || '');
+                return normalizedName.startsWith('checkRemark_') || normalizedName.startsWith('checkStatus_');
+            }
+
+            function handleResettableStatusClick(event) {
+                const statusButton = event.target.closest('label.status-icon-btn[data-status-resettable="true"]');
+                if (!statusButton) {
+                    return false;
+                }
+
+                const inputId = String(statusButton.getAttribute('for') || '').trim();
+                if (!inputId) {
+                    return false;
+                }
+
+                const statusInput = refs.form?.querySelector(`#${inputId}`);
+                if (!statusInput || statusInput.type !== 'radio' || !statusInput.checked) {
+                    return false;
+                }
+
+                event.preventDefault();
+                statusInput.checked = false;
+                statusInput.dispatchEvent(new Event('input', { bubbles: true }));
+                statusInput.dispatchEvent(new Event('change', { bubbles: true }));
+                return true;
+            }
+
+            refs.checklistBody?.addEventListener('click', (event) => {
+                if (handleResettableStatusClick(event)) {
+                    return;
+                }
+
+                const civilRiserTile = event.target.closest('button[data-civil-riser-room]');
+                if (civilRiserTile) {
+                    handleCivilWallStatusInputChange(civilRiserTile);
+                    return;
+                }
+
+                const ffWetRiser2Tile = event.target.closest('button[data-ff-wet2-scope]');
+                if (!ffWetRiser2Tile) {
+                    return;
+                }
+
+                handleFfWetRiser2StatusInputChange(ffWetRiser2Tile);
+            });
+
+            refs.checklistBody?.addEventListener('input', (event) => {
+                if (shouldRefreshAutoSummary(event.target?.name)) {
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                }
+            });
+
+            refs.checklistBody?.addEventListener('change', (event) => {
+                if (shouldRefreshAutoSummary(event.target?.name)) {
+                    validateNgRemarkRequirements();
+                    renderAutoRemarkSummary();
+                }
+            });
+
+            refs.pictureUpload?.addEventListener('change', () => {
+                updatePictureInputState();
+            });
+
+            refs.confirmPictureBtn?.addEventListener('click', () => {
+                confirmSelectedPictureEntry();
+            });
+
+            refs.clearPictureBtn?.addEventListener('click', () => {
+                clearUnconfirmedPictureInput();
+            });
+
+            refs.pictureEntryList?.addEventListener('click', (event) => {
+                const previewTarget = event.target.closest('img[data-preview-picture-index]');
+                if (previewTarget) {
+                    const previewIndex = Number(previewTarget.dataset.previewPictureIndex);
+                    if (!Number.isNaN(previewIndex)) {
+                        openConfirmedPictureEntryPreview(previewIndex);
+                    }
+                    return;
+                }
+
+                const removeBtn = event.target.closest('button[data-remove-picture-index]');
+                if (!removeBtn) {
+                    return;
+                }
+
+                const index = Number(removeBtn.dataset.removePictureIndex);
+                if (Number.isNaN(index)) {
+                    return;
+                }
+
+                removeConfirmedPictureEntry(index);
+            });
+
+            refs.pictureViewerModal?.addEventListener('hidden.bs.modal', () => {
+                if (refs.pictureViewerImage) {
+                    refs.pictureViewerImage.removeAttribute('src');
+                    refs.pictureViewerImage.alt = 'Picture preview';
+                }
+            });
+
+            refs.saveDraftBtn?.addEventListener('click', () => {
+                alert('Draft structure based on current checklist is ready. Save draft integration will be implemented in the next phase.');
+            });
+
+            refs.form?.addEventListener('submit', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const ngRemarkValidation = validateNgRemarkRequirements();
+
+                if (!refs.form.checkValidity()) {
+                    refs.form.classList.add('was-validated');
+
+                    if (ngRemarkValidation.missingRows.length > 0) {
+                        alert(`Please fill remarks for NG status at row(s): ${ngRemarkValidation.missingRows.join(', ')}.`);
+                        ngRemarkValidation.firstMissingRemarkField?.focus();
+                        ngRemarkValidation.firstMissingRemarkField?.reportValidity?.();
+                    }
+
+                    return;
+                }
+
+                if ((refs.pictureUpload?.files?.length || 0) > 0) {
+                    alert('Please click "Confirm Picture" so the selected picture is added to the final list before submitting.');
+                    return;
+                }
+
+                const templateKey = refs.templateType?.value || 'bilikSuis';
+                const monthKey = getMonthKeyFromInspectionDate();
+                const location = String(refs.locationSelect?.value || '');
+                const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
+
+                markLocationSubmitted(templateKey, monthKey, location);
+                saveSubmittedFormSnapshot(templateKey, monthKey, location);
+                renderSubmissionTrack(templateKey, template);
+                renderCopySourceOptions();
+
+                clearAllConfirmedPictureEntries();
+                clearUnconfirmedPictureInput();
+
+                alert('The form structure is aligned with the current checklist. Online submission integration will be implemented in the next phase.');
+            });
+
+            initDefaultDates();
+            const initialTemplateKey = initializeCategoryAndTemplateFilters();
+            applyTemplate(initialTemplateKey);
+            renderConfirmedPictureEntries();
+            updatePictureInputState();
+            renderCopySourceOptions();
+            restoreSubmittedDataForCurrentContext();
+        });
+    </script>
+</body>
+</html>
