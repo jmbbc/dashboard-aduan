@@ -13,6 +13,7 @@ Use GitHub Pages for the static frontend, and Google Apps Script as a free backe
    - Sheet/tab names:
      - `Aduan`
      - `Technical`
+     - `PPM`
    - Spreadsheet ID:
      - `1Nlp9_dSTgBisv6fkZKu5SlPgyxXMOMpCxoGWPCgOnUA`
 
@@ -64,6 +65,26 @@ Columns:
 - `ImageURLs` (mapped from `imageAttachments` / `images`)
 - `UpdatedAt` (mapped from `updatedAt`)
 
+### Sheet: `PPM`
+Columns:
+- `id`
+- `templateKey`
+- `category`
+- `referenceNo`
+- `frequency`
+- `location`
+- `monthKey`
+- `inspectionDate`
+- `templateDescription`
+- `technicianName`
+- `verifiedBy`
+- `techDeclaration`
+- `confirmChecklist`
+- `technicianNotes`
+- `checklistFieldValues`
+- `updatedAt`
+- `submittedAt`
+
 ## Apps Script backend
 
 ### Setup
@@ -74,6 +95,8 @@ Columns:
 5. Deploy as Web App
    - Execute as: `Me`
    - Who has access: `Anyone`
+
+> Note: after changing the Apps Script code to support `PPM`, redeploy the web app so the live endpoint uses the latest version. If the live endpoint still returns `Invalid type, expected Aduan or Technical`, it means the deployment is still using the old script.
 
 ### Apps Script code
 
