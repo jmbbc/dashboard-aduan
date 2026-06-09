@@ -82,41 +82,38 @@ function doGet(e) {
 
 function normalizeHeaderName(header) {
   const key = String(header || '').trim().toLowerCase();
+  const normalizedKey = key.replace(/[^a-z0-9]+/g, '');
   const map = {
     'id': 'id',
-    'tajuk aduan': 'title',
+    'idaduan': 'id',
+    'tajukaduan': 'title',
     'tajuk': 'title',
     'judul': 'title',
-    'kategori utama': 'categoryMain',
-    'kategori utama': 'categoryMain',
+    'kategoriutama': 'categoryMain',
     'subkategori': 'categorySub',
-    'sub kategori': 'categorySub',
+    'subkategori': 'categorySub',
     'kategori': 'categorySub',
-    'nama pengadu': 'reporter',
+    'namapengadu': 'reporter',
     'nama': 'reporter',
-    'telefon pengadu': 'phone',
+    'telefonpengadu': 'phone',
     'telefon': 'phone',
-    'unit rumah pengadu': 'unit',
-    'unit rumah': 'unit',
+    'unitrumahpengadu': 'unit',
+    'unitrumah': 'unit',
     'unit': 'unit',
-    'lokasi / unit rumah terlibat': 'relatedUnit',
-    'lokasi unit': 'relatedUnit',
+    'lokasiunitrumahterlibat': 'relatedUnit',
+    'lokasiunit': 'relatedUnit',
     'location': 'location',
     'lokasi': 'location',
     'locasi': 'location',
-    'tarikh terima': 'date',
+    'tarikhterima': 'date',
     'monthkey': 'monthKey',
-    'month key': 'monthKey',
+    'monthkey': 'monthKey',
     'inspectiondate': 'inspectionDate',
-    'inspection date': 'inspectionDate',
+    'templatedescription': 'templateDescription',
     'templatekey': 'templateKey',
-    'template key': 'templateKey',
-    'reference no': 'referenceNo',
-    'reference number': 'referenceNo',
+    'referenceNo': 'referenceNo',
     'referenceno': 'referenceNo',
     'frequency': 'frequency',
-    'template description': 'templateDescription',
-    'templatedescription': 'templateDescription',
     'technicianname': 'technicianName',
     'verifiedby': 'verifiedBy',
     'techdeclaration': 'techDeclaration',
@@ -130,20 +127,16 @@ function normalizeHeaderName(header) {
     'detail': 'details',
     'details': 'details',
     'worklogs': 'workLogs',
-    'work logs': 'workLogs',
-    'work log': 'workLogs',
+    'worklogs': 'workLogs',
+    'worklog': 'workLogs',
     'log': 'workLogs',
     'imageurls': 'imageUrls',
-    'image urls': 'imageUrls',
-    'image url': 'imageUrls',
+    'imageurls': 'imageUrls',
+    'imageurl': 'imageUrls',
     'images': 'imageUrls',
     'gambar': 'imageUrls',
     'updatedat': 'updatedAt',
-    'updated at': 'updatedAt',
-    'updated': 'updatedAt',
     'resolvedat': 'resolvedAt',
-    'resolved at': 'resolvedAt',
-    'resolved': 'resolvedAt',
     'asset': 'asset',
     'owner': 'owner',
     'due': 'due',
@@ -151,10 +144,10 @@ function normalizeHeaderName(header) {
     'notes': 'notes'
   };
 
-  if (map[key]) {
-    return map[key];
+  if (map[normalizedKey]) {
+    return map[normalizedKey];
   }
-  return key.replace(/\s+/g, '');
+  return normalizedKey;
 }
 
 function isHeaderRowActuallyData(type, headers) {
