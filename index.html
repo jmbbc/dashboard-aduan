@@ -2452,7 +2452,8 @@ if (!document.hidden) {
                     return;
                 }
 
-                const response = await fetch(REMOTE_BACKEND_URL, {
+                const url = `${REMOTE_BACKEND_URL}?action=upsert`;
+                const response = await fetch(url, {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
@@ -2482,6 +2483,34 @@ if (!document.hidden) {
                 complaints = store.removeComplaint(id);
                 addActivity(`Aduan ${id} dipadam`);
                 renderAll();
+                deleteComplaintFromBackend(id).catch((error) => {
+                    console.warn('Backend delete failed:', error);
+                });
+            }
+
+            async function deleteComplaintFromBackend(id) {
+                if (!REMOTE_BACKEND_URL) {
+                    return;
+                }
+
+                const response = await fetch(`${REMOTE_BACKEND_URL}?action=delete`, {
+                    method: 'POST',
+                    body: JSON.stringify({ type: 'Aduan', id })
+                });
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text || '{}');
+                } catch (err) {
+                    throw new Error(`Backend response was not valid JSON (${response.status}): ${text}`);
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || `Backend delete failed (${response.status}) ${text}`);
+                }
+
+                return result;
             }
 
             function downloadReport(rows) {

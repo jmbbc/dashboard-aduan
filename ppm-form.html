@@ -906,7 +906,7 @@
                         <label class="form-check-label" for="confirmChecklist">I confirm all checklist items were filled based on actual inspection.</label>
                         <div class="invalid-feedback">Please check the confirmation box.</div>
                     </div>
-                    <p class="form-text mt-2 mb-0">Note: This form structure is not yet connected to backend online submission.</p>
+                    <p class="form-text mt-2 mb-0">This form now syncs submissions to the remote backend as PPM records.</p>
                 </div>
             </section>
 
@@ -971,6 +971,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="backend-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const TEMPLATE_CONFIG = {
@@ -2336,6 +2337,156 @@
                 };
 
                 writeSubmissionFormDataStore(store);
+            }
+
+            async function fetchBackendData(type) {
+                if (!REMOTE_BACKEND_URL) {
+                    return null;
+                }
+
+                const url = `${REMOTE_BACKEND_URL}?action=read&type=${encodeURIComponent(type)}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                });
+
+                const text = await response.text();
+                let payload;
+                try {
+                    payload = JSON.parse(text || 'null');
+                } catch (err) {
+                    throw new Error(`Backend read returned invalid JSON (${response.status}): ${text}`);
+                }
+
+                if (Array.isArray(payload)) {
+                    return payload;
+                }
+
+                if (!payload || payload.success === false) {
+                    throw new Error(payload?.error || `Backend read failed (${response.status})`);
+                }
+
+                return payload.rows || payload.data || [];
+            }
+
+            function parseChecklistFieldValues(rawValue) {
+                if (!rawValue) {
+                    return {};
+                }
+                if (typeof rawValue === 'object') {
+                    return rawValue;
+                }
+                try {
+                    return JSON.parse(String(rawValue));
+                } catch (error) {
+                    return {};
+                }
+            }
+
+            function buildPPMSubmissionId(templateKey, monthKey, location) {
+                const normalizedParts = [
+                    String(templateKey || '').trim(),
+                    String(monthKey || '').trim(),
+                    String(location || '').trim()
+                ].map((part) => part.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '').toUpperCase());
+                return `PPM-${normalizedParts.filter(Boolean).join('-')}`;
+            }
+
+            function buildPPMPayload(templateKey, monthKey, location) {
+                return {
+                    id: buildPPMSubmissionId(templateKey, monthKey, location),
+                    type: 'PPM',
+                    templateKey: String(templateKey || ''),
+                    category: String(refs.categoryField?.value || ''),
+                    referenceNo: String(refs.referenceNo?.value || ''),
+                    frequency: String(refs.frequencyField?.value || ''),
+                    location: String(location || ''),
+                    monthKey: String(monthKey || ''),
+                    inspectionDate: String(refs.inspectionDate?.value || ''),
+                    templateDescription: String(refs.templateDescription?.value || ''),
+                    technicianName: String(refs.technicianName?.value || ''),
+                    verifiedBy: String(refs.verifiedBy?.value || ''),
+                    techDeclaration: String(refs.techDeclaration?.value || ''),
+                    confirmChecklist: Boolean(refs.confirmChecklist?.checked),
+                    technicianNotes: String(refs.technicianNotes?.value || ''),
+                    checklistFieldValues: collectChecklistFieldValues(),
+                    updatedAt: new Date().toISOString(),
+                    submittedAt: new Date().toISOString()
+                };
+            }
+
+            async function submitPPMToBackend(payload) {
+                if (!REMOTE_BACKEND_URL) {
+                    return;
+                }
+
+                const url = `${REMOTE_BACKEND_URL}?action=upsert`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text || '{}');
+                } catch (err) {
+                    throw new Error(`Backend response was not valid JSON (${response.status}): ${text}`);
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || `Backend submission failed (${response.status}) ${text}`);
+                }
+
+                return result;
+            }
+
+            function mergePPMRowsToLocalStore(rows) {
+                if (!Array.isArray(rows) || !rows.length) {
+                    return;
+                }
+
+                const store = readSubmissionFormDataStore();
+                rows.forEach((row) => {
+                    const templateKey = String(row.templateKey || 'bilikSuis').trim() || 'bilikSuis';
+                    const monthKey = String(row.monthKey || '').trim();
+                    const location = String(row.location || '').trim();
+                    if (!monthKey || !location) {
+                        return;
+                    }
+
+                    const snapshot = {
+                        inspectionDate: String(row.inspectionDate || ''),
+                        technicianName: String(row.technicianName || ''),
+                        verifiedBy: String(row.verifiedBy || ''),
+                        techDeclaration: String(row.techDeclaration || ''),
+                        confirmChecklist: String(row.confirmChecklist || '').toLowerCase() === 'true' || row.confirmChecklist === true,
+                        technicianNotes: String(row.technicianNotes || ''),
+                        checklistFieldValues: parseChecklistFieldValues(row.checklistFieldValues)
+                    };
+
+                    store[templateKey] = store[templateKey] || {};
+                    store[templateKey][monthKey] = store[templateKey][monthKey] || {};
+                    store[templateKey][monthKey][location] = {
+                        savedAt: String(row.submittedAt || row.updatedAt || new Date().toISOString()),
+                        snapshot
+                    };
+                });
+
+                writeSubmissionFormDataStore(store);
+            }
+
+            async function refreshPPMFromBackend() {
+                try {
+                    const rows = await fetchBackendData('PPM');
+                    if (Array.isArray(rows) && rows.length) {
+                        mergePPMRowsToLocalStore(rows);
+                    }
+                } catch (error) {
+                    console.warn('PPM backend refresh failed:', error);
+                }
             }
 
             function getSubmittedFormSnapshot(templateKey, monthKey, location) {
@@ -3796,13 +3947,16 @@
 
                 markLocationSubmitted(templateKey, monthKey, location);
                 saveSubmittedFormSnapshot(templateKey, monthKey, location);
+                submitPPMToBackend(buildPPMPayload(templateKey, monthKey, location)).catch((error) => {
+                    console.warn('PPM backend sync failed:', error);
+                });
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
 
                 clearAllConfirmedPictureEntries();
                 clearUnconfirmedPictureInput();
 
-                alert('The form structure is aligned with the current checklist. Online submission integration will be implemented in the next phase.');
+                alert('Submission saved locally and sync queued to backend.');
             });
 
             initDefaultDates();
@@ -3810,8 +3964,10 @@
             applyTemplate(initialTemplateKey);
             renderConfirmedPictureEntries();
             updatePictureInputState();
-            renderCopySourceOptions();
-            restoreSubmittedDataForCurrentContext();
+            refreshPPMFromBackend().finally(() => {
+                renderCopySourceOptions();
+                restoreSubmittedDataForCurrentContext();
+            });
         });
     </script>
 </body>

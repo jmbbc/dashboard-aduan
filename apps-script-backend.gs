@@ -4,9 +4,10 @@ const DRIVE_FOLDER_ID = '1KjQCovBn3HKMmNidHr8bzegZsyVDFrBd';
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents || '{}');
-    const type = String(payload.type || '').trim();
-    if (!type || !['Aduan', 'Technical'].includes(type)) {
-      return jsonResponse({ success: false, error: 'Invalid type, expected Aduan or Technical' }, 400);
+    const type = String(e.parameter.type || payload.type || '').trim();
+    const action = String(e.parameter.action || payload.action || 'upsert').trim().toLowerCase();
+    if (!type || !['Aduan', 'Technical', 'PPM'].includes(type)) {
+      return jsonResponse({ success: false, error: 'Invalid type, expected Aduan, Technical, or PPM' }, 400);
     }
 
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(type);
@@ -14,9 +15,18 @@ function doPost(e) {
       return jsonResponse({ success: false, error: `Sheet ${type} not found` }, 400);
     }
 
+    if (action === 'delete') {
+      const id = String(payload.id || '').trim();
+      if (!id) {
+        return jsonResponse({ success: false, error: 'Missing id for delete action' }, 400);
+      }
+      const deleted = deleteRowById(sheet, type, id);
+      return jsonResponse({ success: deleted, deleted });
+    }
+
     const row = buildRow(type, payload);
-    sheet.appendRow(row.values);
-    return jsonResponse({ success: true, row: row.object });
+    const result = upsertRowById(sheet, type, row, String(payload.id || '').trim());
+    return jsonResponse({ success: true, row: row.object, result });
   } catch (err) {
     return jsonResponse({ success: false, error: err.message }, 500);
   }
@@ -29,8 +39,8 @@ function doGet(e) {
     if (action !== 'read') {
       return jsonResponse({ success: false, error: 'Unsupported action. Use action=read' }, 400);
     }
-    if (!type || !['Aduan', 'Technical'].includes(type)) {
-      return jsonResponse({ success: false, error: 'Invalid type, expected Aduan or Technical' }, 400);
+    if (!type || !['Aduan', 'Technical', 'PPM'].includes(type)) {
+      return jsonResponse({ success: false, error: 'Invalid type, expected Aduan, Technical, or PPM' }, 400);
     }
 
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(type);
@@ -39,23 +49,177 @@ function doGet(e) {
     }
 
     const rows = sheet.getDataRange().getValues();
-    if (rows.length <= 1) {
+    if (!rows.length) {
       return jsonResponse({ success: true, rows: [] });
     }
 
-    const headers = rows.shift();
-    const items = rows.map((row) => {
-      const obj = {};
-      row.forEach((value, index) => {
-        obj[headers[index]] = value;
-      });
-      return obj;
-    });
+    const rawHeaders = rows[0].map((cell) => String(cell || '').trim());
+    let headerKeys = rawHeaders.map(normalizeHeaderName);
+    let dataRows = rows.slice(1);
 
+    if (isHeaderRowActuallyData(type, rawHeaders) || dataRows.length === 0) {
+      headerKeys = getDefaultHeadersForType(type);
+      dataRows = rows;
+    }
+
+    const items = dataRows.map((row) => buildRowObject(headerKeys, row, type));
     return jsonResponse({ success: true, rows: items });
   } catch (err) {
     return jsonResponse({ success: false, error: err.message }, 500);
   }
+}
+
+function normalizeHeaderName(header) {
+  const key = String(header || '').trim().toLowerCase();
+  const map = {
+    'id': 'id',
+    'tajuk aduan': 'title',
+    'tajuk': 'title',
+    'judul': 'title',
+    'kategori utama': 'categoryMain',
+    'kategori utama': 'categoryMain',
+    'subkategori': 'categorySub',
+    'sub kategori': 'categorySub',
+    'kategori': 'categorySub',
+    'nama pengadu': 'reporter',
+    'nama': 'reporter',
+    'telefon pengadu': 'phone',
+    'telefon': 'phone',
+    'unit rumah pengadu': 'unit',
+    'unit rumah': 'unit',
+    'unit': 'unit',
+    'lokasi / unit rumah terlibat': 'relatedUnit',
+    'lokasi unit': 'relatedUnit',
+    'location': 'location',
+    'lokasi': 'location',
+    'locasi': 'location',
+    'tarikh terima': 'date',
+    'monthkey': 'monthKey',
+    'month key': 'monthKey',
+    'inspectiondate': 'inspectionDate',
+    'inspection date': 'inspectionDate',
+    'templatekey': 'templateKey',
+    'template key': 'templateKey',
+    'reference no': 'referenceNo',
+    'reference number': 'referenceNo',
+    'referenceno': 'referenceNo',
+    'frequency': 'frequency',
+    'template description': 'templateDescription',
+    'templatedescription': 'templateDescription',
+    'technicianname': 'technicianName',
+    'verifiedby': 'verifiedBy',
+    'techdeclaration': 'techDeclaration',
+    'confirmchecklist': 'confirmChecklist',
+    'techniciannotes': 'technicianNotes',
+    'checklistfieldvalues': 'checklistFieldValues',
+    'tarikh': 'date',
+    'date': 'date',
+    'status': 'status',
+    'butiran': 'details',
+    'detail': 'details',
+    'details': 'details',
+    'worklogs': 'workLogs',
+    'work logs': 'workLogs',
+    'work log': 'workLogs',
+    'log': 'workLogs',
+    'imageurls': 'imageUrls',
+    'image urls': 'imageUrls',
+    'image url': 'imageUrls',
+    'images': 'imageUrls',
+    'gambar': 'imageUrls',
+    'updatedat': 'updatedAt',
+    'updated at': 'updatedAt',
+    'updated': 'updatedAt',
+    'resolvedat': 'resolvedAt',
+    'resolved at': 'resolvedAt',
+    'resolved': 'resolvedAt',
+    'asset': 'asset',
+    'owner': 'owner',
+    'due': 'due',
+    'priority': 'priority',
+    'notes': 'notes'
+  };
+
+  if (map[key]) {
+    return map[key];
+  }
+  return key.replace(/\s+/g, '');
+}
+
+function isHeaderRowActuallyData(type, headers) {
+  if (!headers || !headers.length) return false;
+  const firstCell = String(headers[0] || '').trim();
+  return /^(ADU|TECH)-\d+/i.test(firstCell);
+}
+
+function getDefaultHeadersForType(type) {
+  if (type === 'Aduan') {
+    return ['id', 'title', 'categoryMain', 'categorySub', 'reporter', 'phone', 'unit', 'relatedUnit', 'date', 'status', 'details', 'workLogs', 'imageUrls', 'updatedAt', 'resolvedAt'];
+  }
+  if (type === 'Technical') {
+    return ['id', 'title', 'type', 'asset', 'owner', 'due', 'priority', 'status', 'notes', 'workLogs', 'imageUrls', 'updatedAt'];
+  }
+  return ['id', 'templateKey', 'category', 'referenceNo', 'frequency', 'location', 'monthKey', 'inspectionDate', 'templateDescription', 'technicianName', 'verifiedBy', 'techDeclaration', 'confirmChecklist', 'technicianNotes', 'checklistFieldValues', 'updatedAt', 'submittedAt'];
+}
+
+function buildRowObject(headerKeys, row, type) {
+  const headers = headerKeys.map((header, index) => header || getDefaultHeadersForType(type)[index] || `col${index}`);
+  const obj = {};
+  headers.forEach((key, index) => {
+    obj[key] = row[index];
+  });
+  return obj;
+}
+
+function getEffectiveHeaderKeys(rows, type) {
+  if (!Array.isArray(rows) || !rows.length) {
+    return { headerKeys: getDefaultHeadersForType(type), dataRowStart: 1 };
+  }
+
+  const rawHeaders = rows[0].map((cell) => String(cell || '').trim());
+  const headerKeys = rawHeaders.map(normalizeHeaderName);
+  const hasHeaderRow = !isHeaderRowActuallyData(type, rawHeaders);
+
+  return {
+    headerKeys: hasHeaderRow ? headerKeys : getDefaultHeadersForType(type),
+    dataRowStart: hasHeaderRow ? 2 : 1
+  };
+}
+
+function findRowIndexById(rows, headerKeys, type, id) {
+  const idIndex = headerKeys.findIndex((header) => header === 'id');
+  if (idIndex === -1) return -1;
+
+  const normalizedId = String(id || '').trim();
+  return rows.findIndex((row) => String(row[idIndex] || '').trim() === normalizedId);
+}
+
+function upsertRowById(sheet, type, row, id) {
+  const rows = sheet.getDataRange().getValues();
+  const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
+  const rowIndex = findRowIndexById(rows.slice(dataRowStart - 1), headerKeys, type, id);
+
+  if (rowIndex >= 0) {
+    const targetRow = dataRowStart + rowIndex;
+    sheet.getRange(targetRow, 1, 1, row.values.length).setValues([row.values]);
+    return { updated: true, rowIndex: targetRow };
+  }
+
+  sheet.appendRow(row.values);
+  return { appended: true };
+}
+
+function deleteRowById(sheet, type, id) {
+  const rows = sheet.getDataRange().getValues();
+  const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
+  const rowIndex = findRowIndexById(rows.slice(dataRowStart - 1), headerKeys, type, id);
+  if (rowIndex === -1) {
+    return false;
+  }
+
+  const targetRow = dataRowStart + rowIndex;
+  sheet.deleteRow(targetRow);
+  return true;
 }
 
 function buildRow(type, data) {
@@ -134,6 +298,60 @@ function buildRow(type, data) {
         workLogs,
         imageUrls,
         updatedAt: now
+      }
+    };
+  }
+
+  if (type === 'PPM') {
+    let checklistFieldValues = {};
+    try {
+      if (typeof data.checklistFieldValues === 'string') {
+        checklistFieldValues = JSON.parse(data.checklistFieldValues || '{}');
+      } else if (typeof data.checklistFieldValues === 'object' && data.checklistFieldValues !== null) {
+        checklistFieldValues = data.checklistFieldValues;
+      }
+    } catch (error) {
+      checklistFieldValues = {};
+    }
+
+    return {
+      values: [
+        id,
+        data.templateKey || '',
+        data.category || '',
+        data.referenceNo || '',
+        data.frequency || '',
+        data.location || '',
+        data.monthKey || '',
+        data.inspectionDate || '',
+        data.templateDescription || '',
+        data.technicianName || '',
+        data.verifiedBy || '',
+        data.techDeclaration || '',
+        data.confirmChecklist ? 'TRUE' : 'FALSE',
+        data.technicianNotes || '',
+        JSON.stringify(checklistFieldValues),
+        data.updatedAt || now,
+        data.submittedAt || now
+      ],
+      object: {
+        id,
+        templateKey: data.templateKey || '',
+        category: data.category || '',
+        referenceNo: data.referenceNo || '',
+        frequency: data.frequency || '',
+        location: data.location || '',
+        monthKey: data.monthKey || '',
+        inspectionDate: data.inspectionDate || '',
+        templateDescription: data.templateDescription || '',
+        technicianName: data.technicianName || '',
+        verifiedBy: data.verifiedBy || '',
+        techDeclaration: data.techDeclaration || '',
+        confirmChecklist: Boolean(data.confirmChecklist),
+        technicianNotes: data.technicianNotes || '',
+        checklistFieldValues,
+        updatedAt: data.updatedAt || now,
+        submittedAt: data.submittedAt || now
       }
     };
   }

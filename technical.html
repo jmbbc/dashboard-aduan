@@ -1592,7 +1592,8 @@
                     return;
                 }
 
-                const response = await fetch(REMOTE_BACKEND_URL, {
+                const url = `${REMOTE_BACKEND_URL}?action=upsert`;
+                const response = await fetch(url, {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
@@ -1617,6 +1618,34 @@
                 techItems = techItems.filter(t => t.id !== id);
                 saveTech();
                 renderAll();
+                deleteTechFromBackend(id).catch((error) => {
+                    console.warn('Backend delete failed:', error);
+                });
+            }
+
+            async function deleteTechFromBackend(id) {
+                if (!REMOTE_BACKEND_URL) {
+                    return;
+                }
+
+                const response = await fetch(`${REMOTE_BACKEND_URL}?action=delete`, {
+                    method: 'POST',
+                    body: JSON.stringify({ type: 'Technical', id })
+                });
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text || '{}');
+                } catch (err) {
+                    throw new Error(`Backend response was not valid JSON (${response.status}): ${text}`);
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || `Backend delete failed (${response.status}) ${text}`);
+                }
+
+                return result;
             }
 
             function openTechView(id) {

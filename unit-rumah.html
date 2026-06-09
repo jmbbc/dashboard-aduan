@@ -505,6 +505,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="dashboard-store.js"></script>
+    <script src="backend-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const store = window.DashboardStore;
@@ -559,6 +560,7 @@
                 initCharts();
                 bindEvents();
                 refreshData();
+                refreshComplaintsFromBackend();
             }
 
             function bindEvents() {
@@ -623,6 +625,50 @@
             function refreshData() {
                 complaints = store.loadComplaints();
                 renderAll();
+            }
+
+            async function fetchBackendData(type) {
+                if (!REMOTE_BACKEND_URL) {
+                    return null;
+                }
+
+                const url = `${REMOTE_BACKEND_URL}?action=read&type=${encodeURIComponent(type)}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                });
+
+                const text = await response.text();
+                let payload;
+                try {
+                    payload = JSON.parse(text || 'null');
+                } catch (err) {
+                    throw new Error(`Backend read returned invalid JSON (${response.status}): ${text}`);
+                }
+
+                if (Array.isArray(payload)) {
+                    return payload;
+                }
+
+                if (!payload || payload.success === false) {
+                    throw new Error(payload?.error || `Backend read failed (${response.status})`);
+                }
+
+                return payload.rows || payload.data || [];
+            }
+
+            async function refreshComplaintsFromBackend() {
+                try {
+                    const rows = await fetchBackendData('Aduan');
+                    if (Array.isArray(rows) && rows.length) {
+                        complaints = store.saveComplaints(rows);
+                        renderAll();
+                    }
+                } catch (error) {
+                    console.warn('Backend refresh failed:', error);
+                }
             }
 
             function renderAll() {

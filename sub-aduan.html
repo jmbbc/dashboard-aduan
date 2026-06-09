@@ -324,6 +324,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="dashboard-store.js"></script>
+    <script src="backend-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const store = window.DashboardStore;
@@ -392,6 +393,7 @@
                 renderUnitOptions();
                 bindEvents();
                 refreshData();
+                refreshComplaintsFromBackend();
             }
 
             function renderUnitOptions() {
@@ -1149,6 +1151,9 @@
                     store.saveComplaints(complaints);
                     renderTable();
                     renderCategoryFilters();
+                    submitComplaintToBackend(complaints[idx]).catch((error) => {
+                        console.warn('Backend sync failed:', error);
+                    });
                 }
 
                 if (shouldReturnToView) {
@@ -1171,6 +1176,105 @@
                 complaints = store.removeComplaint(id);
                 renderTable();
                 renderCategoryFilters();
+                deleteComplaintFromBackend(id).catch((error) => {
+                    console.warn('Backend delete failed:', error);
+                });
+            }
+
+            async function fetchBackendData(type) {
+                if (!REMOTE_BACKEND_URL) {
+                    return null;
+                }
+
+                const url = `${REMOTE_BACKEND_URL}?action=read&type=${encodeURIComponent(type)}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                });
+
+                const text = await response.text();
+                let payload;
+                try {
+                    payload = JSON.parse(text || 'null');
+                } catch (err) {
+                    throw new Error(`Backend read returned invalid JSON (${response.status}): ${text}`);
+                }
+
+                if (Array.isArray(payload)) {
+                    return payload;
+                }
+
+                if (!payload || payload.success === false) {
+                    throw new Error(payload?.error || `Backend read failed (${response.status})`);
+                }
+
+                return payload.rows || payload.data || [];
+            }
+
+            async function refreshComplaintsFromBackend() {
+                try {
+                    const rows = await fetchBackendData('Aduan');
+                    if (Array.isArray(rows) && rows.length) {
+                        complaints = store.saveComplaints(rows);
+                        renderCategoryFilters();
+                        renderTable();
+                    }
+                } catch (error) {
+                    console.warn('Backend refresh failed:', error);
+                }
+            }
+
+            async function submitComplaintToBackend(payload) {
+                if (!REMOTE_BACKEND_URL) {
+                    return;
+                }
+
+                const url = `${REMOTE_BACKEND_URL}?action=upsert`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ ...payload, type: 'Aduan' })
+                });
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text || '{}');
+                } catch (err) {
+                    throw new Error(`Backend response was not valid JSON (${response.status}): ${text}`);
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || `Backend submission failed (${response.status}) ${text}`);
+                }
+
+                return result;
+            }
+
+            async function deleteComplaintFromBackend(id) {
+                if (!REMOTE_BACKEND_URL) {
+                    return;
+                }
+
+                const response = await fetch(`${REMOTE_BACKEND_URL}?action=delete`, {
+                    method: 'POST',
+                    body: JSON.stringify({ type: 'Aduan', id })
+                });
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text || '{}');
+                } catch (err) {
+                    throw new Error(`Backend response was not valid JSON (${response.status}): ${text}`);
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || `Backend delete failed (${response.status}) ${text}`);
+                }
+
+                return result;
             }
         });
     </script>
