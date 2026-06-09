@@ -54,10 +54,17 @@ function doGet(e) {
     }
 
     const rawHeaders = rows[0].map((cell) => String(cell || '').trim());
-    let headerKeys = rawHeaders.map(normalizeHeaderName);
-    let dataRows = rows.slice(1);
+    const normalizedHeaderKeys = rawHeaders.map(normalizeHeaderName);
+    const hasIdHeader = normalizedHeaderKeys.includes('id');
+    const isFirstRowData = isHeaderRowActuallyData(type, rawHeaders);
 
-    if (isHeaderRowActuallyData(type, rawHeaders) || dataRows.length === 0) {
+    let headerKeys;
+    let dataRows;
+
+    if (hasIdHeader && !isFirstRowData) {
+      headerKeys = normalizedHeaderKeys;
+      dataRows = rows.slice(1);
+    } else {
       headerKeys = getDefaultHeadersForType(type);
       dataRows = rows;
     }
@@ -149,7 +156,7 @@ function normalizeHeaderName(header) {
 function isHeaderRowActuallyData(type, headers) {
   if (!headers || !headers.length) return false;
   const firstCell = String(headers[0] || '').trim();
-  return /^(ADU|TECH)-\d+/i.test(firstCell);
+  return /^(ADU|TECH|PPM)-\d+/i.test(firstCell);
 }
 
 function getDefaultHeadersForType(type) {
