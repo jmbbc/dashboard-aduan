@@ -201,9 +201,36 @@ function findRowIndexesById(rows, headerKeys, type, id) {
     .map(({ index }) => index);
 }
 
+function sanitizeSheetRowIds(sheet, headerKeys, dataRowStart) {
+  const idIndex = headerKeys.findIndex((header) => header === 'id');
+  if (idIndex === -1) return;
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow < dataRowStart) return;
+
+  const range = sheet.getRange(dataRowStart, idIndex + 1, lastRow - dataRowStart + 1, 1);
+  const values = range.getValues();
+  let changed = false;
+
+  const normalized = values.map((row) => {
+    const current = String(row[0] || '');
+    const cleaned = normalizeIdValue(current);
+    if (current !== cleaned) {
+      changed = true;
+    }
+    return [cleaned];
+  });
+
+  if (changed) {
+    range.setValues(normalized);
+  }
+}
+
 function upsertRowById(sheet, type, row, id) {
-  const rows = sheet.getDataRange().getValues();
+  let rows = sheet.getDataRange().getValues();
   const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
+  sanitizeSheetRowIds(sheet, headerKeys, dataRowStart);
+  rows = sheet.getDataRange().getValues();
   const rowIndexes = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, type, id);
 
   if (rowIndexes.length > 0) {
@@ -224,8 +251,10 @@ function upsertRowById(sheet, type, row, id) {
 }
 
 function deleteRowById(sheet, type, id) {
-  const rows = sheet.getDataRange().getValues();
+  let rows = sheet.getDataRange().getValues();
   const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
+  sanitizeSheetRowIds(sheet, headerKeys, dataRowStart);
+  rows = sheet.getDataRange().getValues();
   const rowIndexes = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, type, id);
   if (!rowIndexes.length) {
     return false;
