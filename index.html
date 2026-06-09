@@ -2477,15 +2477,19 @@ if (!document.hidden) {
                 openFormModal('view', id);
             }
 
-            function handleDelete(id) {
+            async function handleDelete(id) {
                 const confirmDelete = window.confirm('Padam aduan ini? Tindakan tidak boleh diundur.');
                 if (!confirmDelete) return;
                 complaints = store.removeComplaint(id);
                 addActivity(`Aduan ${id} dipadam`);
                 renderAll();
-                deleteComplaintFromBackend(id).catch((error) => {
+
+                try {
+                    await deleteComplaintFromBackend(id);
+                    await refreshComplaintsFromBackend();
+                } catch (error) {
                     console.warn('Backend delete failed:', error);
-                });
+                }
             }
 
             async function deleteComplaintFromBackend(id) {

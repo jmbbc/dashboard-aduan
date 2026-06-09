@@ -1171,14 +1171,18 @@
                 returnToViewAfterSave = false;
             }
 
-            function handleDelete(id) {
+            async function handleDelete(id) {
                 if (!confirm('Padam aduan ini?')) return;
                 complaints = store.removeComplaint(id);
                 renderTable();
                 renderCategoryFilters();
-                deleteComplaintFromBackend(id).catch((error) => {
+
+                try {
+                    await deleteComplaintFromBackend(id);
+                    await refreshComplaintsFromBackend();
+                } catch (error) {
                     console.warn('Backend delete failed:', error);
-                });
+                }
             }
 
             async function fetchBackendData(type) {
