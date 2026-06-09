@@ -2454,6 +2454,9 @@ if (!document.hidden) {
 
                 const response = await fetch(REMOTE_BACKEND_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(payload)
                 });
 
