@@ -173,14 +173,17 @@ function generateId(type) {
 
 function jsonResponse(payload, statusCode) {
   const response = ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
-  if (typeof statusCode === 'number' && response.setHeader) {
+  if (response.setHeader) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (typeof statusCode === 'number' && response.setResponseCode) {
+    response.setResponseCode(statusCode);
   }
   return response;
 }
 
 function doOptions() {
-  return jsonResponse({ success: true });
+  return jsonResponse({ success: true }, 200);
 }
