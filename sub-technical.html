@@ -457,14 +457,18 @@
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('techViewModalInline')).show();
             }
 
-            function handleDelete(id) {
+            async function handleDelete(id) {
                 if (!confirm('Padam rekod teknikal ini?')) return;
                 techItems = store.removeTechnical(id);
                 renderTable();
                 renderTypeFilters();
-                deleteTechFromBackend(id).catch((error) => {
+
+                try {
+                    await deleteTechFromBackend(id);
+                    await refreshTechFromBackend();
+                } catch (error) {
                     console.warn('Backend delete failed:', error);
-                });
+                }
             }
 
             async function fetchBackendData(type) {
