@@ -544,8 +544,13 @@
         };
     }
 
+    function normalizeIdValue(value, fallback) {
+        const normalized = String(value || '').trim().replace(/^#+/, '');
+        return normalized || String(fallback || '').trim();
+    }
+
     function normalizeComplaint(item, index) {
-        const id = String(item.id || `ADU-${index + 1}`);
+        const id = normalizeIdValue(item.id, `ADU-${index + 1}`);
         const rawUnit = String(item.unit || '');
         const canonicalUnit = normalizeUnitForMockup(rawUnit, index, id);
         const complaintDate = normalizeDateOnly(item.date, new Date().toISOString().slice(0, 10));
@@ -579,7 +584,7 @@
         const workLogs = normalizeWorkLogs(item.workLogs, dueDate, rawNotes);
         const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
         return {
-            id: String(item.id || `TECH-${index + 1}`),
+            id: normalizeIdValue(item.id, `TECH-${index + 1}`),
             title: String(item.title || '-'),
             type: String(item.type || '-'),
             asset: String(item.asset || '-'),

@@ -1,6 +1,10 @@
 const SPREADSHEET_ID = '1Nlp9_dSTgBisv6fkZKu5SlPgyxXMOMpCxoGWPCgOnUA';
 const DRIVE_FOLDER_ID = '1KjQCovBn3HKMmNidHr8bzegZsyVDFrBd';
 
+function normalizeIdValue(id) {
+  return String(id || '').trim().replace(/^#+/, '');
+}
+
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents || '{}');
@@ -16,7 +20,7 @@ function doPost(e) {
     }
 
     if (action === 'delete') {
-      const id = String(payload.id || '').trim();
+      const id = normalizeIdValue(payload.id || '');
       if (!id) {
         return jsonResponse({ success: false, error: 'Missing id for delete action' }, 400);
       }
@@ -25,7 +29,7 @@ function doPost(e) {
     }
 
     const row = buildRow(type, payload);
-    const result = upsertRowById(sheet, type, row, String(payload.id || '').trim());
+    const result = upsertRowById(sheet, type, row, normalizeIdValue(payload.id || ''));
     return jsonResponse({ success: true, row: row.object, result });
   } catch (err) {
     return jsonResponse({ success: false, error: err.message }, 500);
@@ -197,10 +201,10 @@ function findRowIndexesById(rows, headerKeys, type, id) {
   const idIndex = headerKeys.findIndex((header) => header === 'id');
   if (idIndex === -1) return [];
 
-  const normalizedId = String(id || '').trim();
+  const normalizedId = normalizeIdValue(id);
   return rows
     .map((row, index) => ({ row, index }))
-    .filter(({ row }) => String(row[idIndex] || '').trim() === normalizedId)
+    .filter(({ row }) => normalizeIdValue(String(row[idIndex] || '')) === normalizedId)
     .map(({ index }) => index);
 }
 
@@ -244,7 +248,7 @@ function deleteRowById(sheet, type, id) {
 
 function buildRow(type, data) {
   const now = new Date().toISOString();
-  const id = String(data.id || generateId(type));
+  const id = normalizeIdValue(data.id || generateId(type));
   const imageUrls = uploadImages(data.images || []);
   const workLogs = Array.isArray(data.workLogs)
     ? data.workLogs.map((log) => `${log.date || ''} | ${log.note || ''}`).join('\n')
