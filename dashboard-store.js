@@ -2,14 +2,17 @@
     const STORAGE_KEYS = {
         complaints: 'aduanDashboardData',
         technical: 'aduanDashboardTechnical',
-        activity: 'aduanDashboardActivity'
+        activity: 'aduanDashboardActivity',
+        complaintCategories: 'aduanDashboardCategories'
     };
 
     const DEFAULT_COMPLAINTS = [
         {
             id: 'ADU-001',
             title: 'Masalah sistem pembayaran tidak berfungsi',
-            category: 'Teknikal',
+            categoryMain: 'Elektrikal & M&E',
+            categorySub: 'MSB dan Bilik Genset',
+            category: 'MSB dan Bilik Genset',
             reporter: 'Ahmad Ali',
             phone: '012-3456789',
             unit: 'B1-12-3',
@@ -21,7 +24,9 @@
         {
             id: 'ADU-002',
             title: 'Perkhidmatan pelanggan lambat bertindak',
-            category: 'Perkhidmatan',
+            categoryMain: 'Air, Paip & Saliran',
+            categorySub: 'Air perlahan',
+            category: 'Air perlahan',
             reporter: 'Siti Nurhaliza',
             phone: '013-1112233',
             unit: 'A-3-8',
@@ -33,7 +38,9 @@
         {
             id: 'ADU-003',
             title: 'Kualiti produk tidak memuaskan',
-            category: 'Produk',
+            categoryMain: 'Elektrikal & M&E',
+            categorySub: 'Lif',
+            category: 'Lif',
             reporter: 'Mohd Razak',
             phone: '017-2233445',
             unit: 'B2-7-5',
@@ -45,7 +52,9 @@
         {
             id: 'ADU-004',
             title: 'Permintaan maklumat tambahan',
-            category: 'Pertanyaan',
+            categoryMain: 'Keselamatan & Akses',
+            categorySub: 'CCTV',
+            category: 'CCTV',
             reporter: 'Fatimah Zahra',
             phone: '016-9090909',
             unit: 'B3-5-2',
@@ -58,7 +67,9 @@
         {
             id: 'ADU-005',
             title: 'Aplikasi mudah alih sering tergendala',
-            category: 'Teknikal',
+            categoryMain: 'Air, Paip & Saliran',
+            categorySub: 'Kebocoran',
+            category: 'Kebocoran',
             reporter: 'Lim Wei Jian',
             phone: '012-8882233',
             unit: 'B1-10-1',
@@ -70,7 +81,9 @@
         {
             id: 'ADU-006',
             title: 'Penghantaran barang lewat',
-            category: 'Logistik',
+            categoryMain: 'Keselamatan & Akses',
+            categorySub: 'Palang Keselamatan',
+            category: 'Palang Keselamatan',
             reporter: 'Kumar Selvam',
             phone: '019-5556789',
             unit: 'B2-2-6',
@@ -81,6 +94,50 @@
             updatedAt: '2025-12-30T10:15:00Z'
         }
     ];
+
+    const DEFAULT_COMPLAINT_CATEGORY_TREE = {
+        'Elektrikal & M&E': [
+            'Kerosakan lampu (lampu jalan / koridor)',
+            'Lif',
+            'Bilik riser dan M&E',
+            'MSB dan Bilik Genset'
+        ],
+        'Air, Paip & Saliran': [
+            'Air perlahan',
+            'Kebocoran',
+            'Tangki Air',
+            'Saluran paip (gutter)',
+            'Kebocoran Petak parkir',
+            'Pam domestik dan tekanan'
+        ],
+        'Keselamatan & Akses': [
+            'CCTV',
+            'Palang Keselamatan'
+        ],
+        'Sistem Kebakaran': [
+            'Sistem Kebakaran'
+        ],
+        'Struktur & Bangunan': [
+            'Bumbung',
+            'Homestay & Asrama'
+        ],
+        'Fasiliti Komuniti': [
+            'Taman Permainan & Badminton',
+            'Car Wash',
+            'Kolam',
+            'Gim',
+            'Surau'
+        ],
+        'Landskap & Persekitaran': [
+            'Pokok Liar',
+            'Kebun',
+            'Landskap'
+        ]
+    };
+
+    const DEFAULT_COMPLAINT_CATEGORIES = Object.values(DEFAULT_COMPLAINT_CATEGORY_TREE)
+        .flat()
+        .slice();
 
     const DEFAULT_TECHNICAL = [
         {
@@ -158,7 +215,8 @@
         ...buildUnitRange('B2', 1, 15, 1, 12),
         ...buildSingleLevelRange('B2', 'G', 1, 12),
         ...buildUnitRange('B3', 1, 17, 1, 12),
-        ...buildSingleLevelRange('B3', 'G', 1, 12)
+        ...buildSingleLevelRange('B3', 'G', 1, 12),
+        'Pihak Pengurusan'
     ];
 
     function normalizeUnitCode(value) {
@@ -268,6 +326,127 @@
         return fallback;
     }
 
+    function normalizeCategoryName(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function buildUniqueCategoryList(...sources) {
+        const list = [];
+        const seen = new Set();
+
+        sources.forEach((source) => {
+            const rows = Array.isArray(source) ? source : [];
+            rows.forEach((entry) => {
+                const category = normalizeCategoryName(entry);
+                if (!category) {
+                    return;
+                }
+
+                const key = category.toLocaleLowerCase('ms');
+                if (seen.has(key)) {
+                    return;
+                }
+
+                seen.add(key);
+                list.push(category);
+            });
+        });
+
+        return list;
+    }
+
+    function normalizeCategoryTree(value) {
+        const source = value && typeof value === 'object' && !Array.isArray(value)
+            ? value
+            : {};
+        const normalizedTree = {};
+
+        Object.entries(source).forEach(([rawMainCategory, rawSubCategories]) => {
+            const mainCategory = normalizeCategoryName(rawMainCategory);
+            if (!mainCategory) {
+                return;
+            }
+
+            normalizedTree[mainCategory] = buildUniqueCategoryList(rawSubCategories);
+        });
+
+        return normalizedTree;
+    }
+
+    function mergeCategoryTrees(...trees) {
+        const mergedTree = {};
+
+        trees.forEach((tree) => {
+            const normalizedTree = normalizeCategoryTree(tree);
+            Object.entries(normalizedTree).forEach(([mainCategory, subCategories]) => {
+                mergedTree[mainCategory] = buildUniqueCategoryList(mergedTree[mainCategory], subCategories);
+            });
+        });
+
+        return mergedTree;
+    }
+
+    function flattenCategoryTree(tree) {
+        const normalizedTree = normalizeCategoryTree(tree);
+        const rows = [];
+
+        Object.entries(normalizedTree).forEach(([mainCategory, subCategories]) => {
+            subCategories.forEach((subCategory) => {
+                rows.push({
+                    mainCategory,
+                    subCategory
+                });
+            });
+        });
+
+        return rows;
+    }
+
+    function findMainCategoryForSubCategory(subCategory, categoryTree) {
+        const normalizedSubCategory = normalizeCategoryName(subCategory);
+        if (!normalizedSubCategory) {
+            return '';
+        }
+
+        const normalizedTree = normalizeCategoryTree(categoryTree);
+        const matchedEntry = Object.entries(normalizedTree).find(([, subCategories]) => (
+            subCategories.some(
+                (entry) => entry.toLocaleLowerCase('ms') === normalizedSubCategory.toLocaleLowerCase('ms')
+            )
+        ));
+
+        return matchedEntry ? matchedEntry[0] : '';
+    }
+
+    function getMainCategoryMatch(categoryTree, candidateMainCategory) {
+        const normalizedCandidate = normalizeCategoryName(candidateMainCategory);
+        if (!normalizedCandidate) {
+            return '';
+        }
+
+        const normalizedTree = normalizeCategoryTree(categoryTree);
+        const matchedMainCategory = Object.keys(normalizedTree).find(
+            (entry) => entry.toLocaleLowerCase('ms') === normalizedCandidate.toLocaleLowerCase('ms')
+        );
+
+        return matchedMainCategory || '';
+    }
+
+    function getSubCategoryMatch(categoryTree, mainCategory, candidateSubCategory) {
+        const normalizedCandidate = normalizeCategoryName(candidateSubCategory);
+        if (!normalizedCandidate) {
+            return '';
+        }
+
+        const normalizedTree = normalizeCategoryTree(categoryTree);
+        const subCategories = normalizedTree[mainCategory] || [];
+        const matchedSubCategory = subCategories.find(
+            (entry) => entry.toLocaleLowerCase('ms') === normalizedCandidate.toLocaleLowerCase('ms')
+        );
+
+        return matchedSubCategory || '';
+    }
+
     function normalizeWorkLogs(rows, fallbackDate, fallbackDetails) {
         const source = Array.isArray(rows) ? rows : [];
         const logs = source
@@ -330,6 +509,41 @@
             .slice(0, 6);
     }
 
+    function resolveComplaintCategoryPair(item) {
+        const categoryTree = loadComplaintCategoryTree();
+
+        const rawMainCategory = normalizeCategoryName(
+            item.categoryMain
+            || item.mainCategory
+            || item.kategoriUtama
+        );
+        const rawSubCategory = normalizeCategoryName(
+            item.categorySub
+            || item.subCategory
+            || item.category
+            || item.kategori
+        );
+
+        let mainCategory = getMainCategoryMatch(categoryTree, rawMainCategory);
+        if (!mainCategory && rawSubCategory) {
+            mainCategory = findMainCategoryForSubCategory(rawSubCategory, categoryTree);
+        }
+
+        if (!mainCategory) {
+            mainCategory = rawMainCategory || 'Lain-lain';
+        }
+
+        let subCategory = getSubCategoryMatch(categoryTree, mainCategory, rawSubCategory);
+        if (!subCategory) {
+            subCategory = rawSubCategory || 'Lain-lain';
+        }
+
+        return {
+            mainCategory,
+            subCategory
+        };
+    }
+
     function normalizeComplaint(item, index) {
         const id = String(item.id || `ADU-${index + 1}`);
         const rawUnit = String(item.unit || '');
@@ -338,10 +552,14 @@
         const rawDetails = String(item.details || '').trim();
         const workLogs = normalizeWorkLogs(item.workLogs, complaintDate, rawDetails);
         const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
+        const categoryPair = resolveComplaintCategoryPair(item || {});
+
         return {
             id,
             title: String(item.title || '-'),
-            category: String(item.category || '-'),
+            categoryMain: categoryPair.mainCategory,
+            categorySub: categoryPair.subCategory,
+            category: categoryPair.subCategory,
             reporter: String(item.reporter || '-'),
             phone: String(item.phone || ''),
             unit: canonicalUnit,
@@ -399,6 +617,108 @@
         const payload = (Array.isArray(list) ? list : []).map(normalizeComplaint);
         writeStorage(STORAGE_KEYS.complaints, JSON.stringify(payload));
         return payload;
+    }
+
+    function loadComplaintCategoryTree() {
+        const stored = parseJson(readStorage(STORAGE_KEYS.complaintCategories), null);
+        let storedTree = {};
+
+        if (Array.isArray(stored)) {
+            storedTree = {};
+            buildUniqueCategoryList(stored).forEach((subCategory) => {
+                const mainCategory = findMainCategoryForSubCategory(subCategory, DEFAULT_COMPLAINT_CATEGORY_TREE) || 'Lain-lain';
+                storedTree[mainCategory] = buildUniqueCategoryList(storedTree[mainCategory], [subCategory]);
+            });
+        } else {
+            storedTree = normalizeCategoryTree(stored);
+        }
+
+        return mergeCategoryTrees(DEFAULT_COMPLAINT_CATEGORY_TREE, storedTree);
+    }
+
+    function saveComplaintCategoryTree(tree) {
+        const payload = mergeCategoryTrees(DEFAULT_COMPLAINT_CATEGORY_TREE, tree);
+        writeStorage(STORAGE_KEYS.complaintCategories, JSON.stringify(payload));
+        return payload;
+    }
+
+    function addComplaintMainCategory(value) {
+        const normalizedValue = normalizeCategoryName(value);
+        if (!normalizedValue) {
+            return '';
+        }
+
+        const categoryTree = loadComplaintCategoryTree();
+        const matchedMainCategory = getMainCategoryMatch(categoryTree, normalizedValue);
+        if (matchedMainCategory) {
+            return matchedMainCategory;
+        }
+
+        const nextTree = {
+            ...categoryTree,
+            [normalizedValue]: []
+        };
+
+        saveComplaintCategoryTree(nextTree);
+        return normalizedValue;
+    }
+
+    function addComplaintSubCategory(mainCategory, subCategory) {
+        const normalizedSubCategory = normalizeCategoryName(subCategory);
+        if (!normalizedSubCategory) {
+            return {
+                mainCategory: '',
+                subCategory: ''
+            };
+        }
+
+        const ensuredMainCategory = addComplaintMainCategory(mainCategory || 'Lain-lain') || 'Lain-lain';
+        const categoryTree = loadComplaintCategoryTree();
+        const matchedMainCategory = getMainCategoryMatch(categoryTree, ensuredMainCategory) || ensuredMainCategory;
+        const matchedSubCategory = getSubCategoryMatch(categoryTree, matchedMainCategory, normalizedSubCategory);
+
+        if (matchedSubCategory) {
+            return {
+                mainCategory: matchedMainCategory,
+                subCategory: matchedSubCategory
+            };
+        }
+
+        const nextTree = {
+            ...categoryTree,
+            [matchedMainCategory]: buildUniqueCategoryList(categoryTree[matchedMainCategory], [normalizedSubCategory])
+        };
+
+        saveComplaintCategoryTree(nextTree);
+        return {
+            mainCategory: matchedMainCategory,
+            subCategory: normalizedSubCategory
+        };
+    }
+
+    function loadComplaintCategories() {
+        return flattenCategoryTree(loadComplaintCategoryTree()).map((entry) => entry.subCategory);
+    }
+
+    function saveComplaintCategories(list) {
+        const nextTree = {};
+        buildUniqueCategoryList(list).forEach((subCategory) => {
+            const mainCategory = findMainCategoryForSubCategory(subCategory, DEFAULT_COMPLAINT_CATEGORY_TREE) || 'Lain-lain';
+            nextTree[mainCategory] = buildUniqueCategoryList(nextTree[mainCategory], [subCategory]);
+        });
+
+        const payload = saveComplaintCategoryTree(nextTree);
+        return flattenCategoryTree(payload).map((entry) => entry.subCategory);
+    }
+
+    function addComplaintCategory(value) {
+        const normalizedValue = normalizeCategoryName(value);
+        if (!normalizedValue) {
+            return '';
+        }
+
+        const mainCategory = findMainCategoryForSubCategory(normalizedValue, DEFAULT_COMPLAINT_CATEGORY_TREE) || 'Lain-lain';
+        return addComplaintSubCategory(mainCategory, normalizedValue).subCategory;
     }
 
     function loadTechnical() {
@@ -459,10 +779,19 @@
     global.DashboardStore = {
         STORAGE_KEYS,
         DEFAULT_COMPLAINTS: clone(DEFAULT_COMPLAINTS),
+        DEFAULT_COMPLAINT_CATEGORY_TREE: clone(DEFAULT_COMPLAINT_CATEGORY_TREE),
+        DEFAULT_COMPLAINT_CATEGORIES: clone(DEFAULT_COMPLAINT_CATEGORIES),
         DEFAULT_TECHNICAL: clone(DEFAULT_TECHNICAL),
         UNIT_MASTER_LIST: UNIT_MASTER_LIST.slice(),
         loadComplaints,
         saveComplaints,
+        loadComplaintCategoryTree,
+        saveComplaintCategoryTree,
+        addComplaintMainCategory,
+        addComplaintSubCategory,
+        loadComplaintCategories,
+        saveComplaintCategories,
+        addComplaintCategory,
         upsertComplaint,
         removeComplaint,
         loadTechnical,

@@ -360,6 +360,7 @@
 
             const formFields = {
                 title: document.getElementById('editTitle'),
+                categoryMain: document.getElementById('editCategoryMain'),
                 category: document.getElementById('editCategory'),
                 reporter: document.getElementById('editReporter'),
                 phone: document.getElementById('editPhone'),
@@ -380,6 +381,8 @@
             let draftImages = [];
             const MAX_ADUAN_IMAGES = 3;
             const MAX_ADUAN_IMAGE_BYTES = 350 * 1024;
+            const MAIN_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_MAIN_CATEGORY__';
+            const SUB_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_SUB_CATEGORY__';
 
             const aduanModal = refs.aduanModalEl ? new bootstrap.Modal(refs.aduanModalEl) : null;
 
@@ -396,6 +399,212 @@
                 refs.unitOptionsList.innerHTML = unitMasterList
                     .map((unit) => `<option value="${unit}"></option>`)
                     .join('');
+            }
+
+            function normalizeCategoryName(value) {
+                return String(value || '').replace(/\s+/g, ' ').trim();
+            }
+
+            function buildUniqueCategoryList(...sources) {
+                const list = [];
+                const seen = new Set();
+
+                sources.forEach((source) => {
+                    const rows = Array.isArray(source) ? source : [];
+                    rows.forEach((entry) => {
+                        const category = normalizeCategoryName(entry);
+                        if (!category) {
+                            return;
+                        }
+
+                        const key = category.toLocaleLowerCase('ms');
+                        if (seen.has(key)) {
+                            return;
+                        }
+
+                        seen.add(key);
+                        list.push(category);
+                    });
+                });
+
+                return list;
+            }
+
+            function getCategoryTree() {
+                return typeof store.loadComplaintCategoryTree === 'function'
+                    ? store.loadComplaintCategoryTree()
+                    : {};
+            }
+
+            function matchMainCategoryName(categoryTree, candidate) {
+                const normalizedCandidate = normalizeCategoryName(candidate);
+                if (!normalizedCandidate) {
+                    return '';
+                }
+
+                const matchedMainCategory = Object.keys(categoryTree || {}).find(
+                    (entry) => entry.toLocaleLowerCase('ms') === normalizedCandidate.toLocaleLowerCase('ms')
+                );
+
+                return matchedMainCategory || '';
+            }
+
+            function getMainCategoryCatalog() {
+                const categoryTree = getCategoryTree();
+                const fromTree = Object.keys(categoryTree);
+                const fromComplaints = complaints
+                    .map((entry) => normalizeCategoryName(entry.categoryMain))
+                    .filter(Boolean);
+
+                return buildUniqueCategoryList(fromTree, fromComplaints);
+            }
+
+            function getSubCategoryCatalog(mainCategory) {
+                const categoryTree = getCategoryTree();
+                const matchedMainCategory = matchMainCategoryName(categoryTree, mainCategory) || normalizeCategoryName(mainCategory);
+                if (!matchedMainCategory) {
+                    return [];
+                }
+
+                const fromTree = Array.isArray(categoryTree[matchedMainCategory])
+                    ? categoryTree[matchedMainCategory]
+                    : [];
+                const fromComplaints = complaints
+                    .filter(
+                        (entry) => normalizeCategoryName(entry.categoryMain).toLocaleLowerCase('ms')
+                            === matchedMainCategory.toLocaleLowerCase('ms')
+                    )
+                    .map((entry) => normalizeCategoryName(entry.categorySub || entry.category))
+                    .filter(Boolean);
+
+                return buildUniqueCategoryList(fromTree, fromComplaints);
+            }
+
+            function renderMainCategoryOptions(selectedMainCategory = '') {
+                if (!formFields.categoryMain) {
+                    return '';
+                }
+
+                const categoryTree = getCategoryTree();
+                const mainCategories = buildUniqueCategoryList(getMainCategoryCatalog(), [selectedMainCategory]);
+                const normalizedSelected = normalizeCategoryName(selectedMainCategory || formFields.categoryMain.value);
+                const selectedMain = mainCategories.find(
+                    (entry) => entry.toLocaleLowerCase('ms') === normalizedSelected.toLocaleLowerCase('ms')
+                ) || '';
+
+                const options = [
+                    `<option value="" disabled ${selectedMain ? '' : 'selected'}>Pilih kategori utama</option>`,
+                    ...mainCategories.map((entry) => `<option value="${escapeHtml(entry)}">${escapeHtml(entry)}</option>`),
+                    `<option value="${MAIN_CATEGORY_ADD_NEW_VALUE}">+ Tambah kategori utama baharu...</option>`
+                ].join('');
+
+                formFields.categoryMain.innerHTML = options;
+                formFields.categoryMain.value = selectedMain || '';
+                formFields.categoryMain.dataset.prevValue = formFields.categoryMain.value;
+
+                return matchMainCategoryName(categoryTree, selectedMain) || selectedMain;
+            }
+
+            function renderEditSubCategoryOptions(mainCategory = '', selectedSubCategory = '') {
+                if (!formFields.category) {
+                    return '';
+                }
+
+                const categoryTree = getCategoryTree();
+                const matchedMainCategory = matchMainCategoryName(categoryTree, mainCategory) || normalizeCategoryName(mainCategory);
+                if (!matchedMainCategory) {
+                    formFields.category.innerHTML = '<option value="" selected disabled>Pilih kategori utama dahulu</option>';
+                    formFields.category.value = '';
+                    formFields.category.dataset.prevValue = '';
+                    formFields.category.disabled = true;
+                    return '';
+                }
+
+                const subCategories = buildUniqueCategoryList(
+                    getSubCategoryCatalog(matchedMainCategory),
+                    [selectedSubCategory]
+                );
+                const normalizedSelected = normalizeCategoryName(selectedSubCategory || formFields.category.value);
+                const selectedSub = subCategories.find(
+                    (entry) => entry.toLocaleLowerCase('ms') === normalizedSelected.toLocaleLowerCase('ms')
+                ) || '';
+
+                const options = [
+                    `<option value="" disabled ${selectedSub ? '' : 'selected'}>Pilih subkategori</option>`,
+                    ...subCategories.map((entry) => `<option value="${escapeHtml(entry)}">${escapeHtml(entry)}</option>`),
+                    `<option value="${SUB_CATEGORY_ADD_NEW_VALUE}">+ Tambah subkategori baharu...</option>`
+                ].join('');
+
+                formFields.category.disabled = false;
+                formFields.category.innerHTML = options;
+                formFields.category.value = selectedSub || '';
+                formFields.category.dataset.prevValue = formFields.category.value;
+                return selectedSub;
+            }
+
+            function renderEditCategoryFields(mainCategory = '', subCategory = '') {
+                const selectedMainCategory = renderMainCategoryOptions(mainCategory);
+                return renderEditSubCategoryOptions(selectedMainCategory, subCategory);
+            }
+
+            function promptAndAddMainCategory(previousValue = '') {
+                const rawValue = window.prompt('Masukkan nama kategori utama baharu:');
+                if (rawValue === null) {
+                    formFields.categoryMain.value = previousValue;
+                    formFields.categoryMain.dataset.prevValue = previousValue;
+                    renderEditSubCategoryOptions(previousValue, formFields.category.dataset.prevValue || '');
+                    return;
+                }
+
+                const normalizedValue = normalizeCategoryName(rawValue);
+                if (!normalizedValue) {
+                    alert('Nama kategori utama tidak boleh kosong.');
+                    formFields.categoryMain.value = previousValue;
+                    formFields.categoryMain.dataset.prevValue = previousValue;
+                    renderEditSubCategoryOptions(previousValue, formFields.category.dataset.prevValue || '');
+                    return;
+                }
+
+                const finalMainCategory = typeof store.addComplaintMainCategory === 'function'
+                    ? store.addComplaintMainCategory(normalizedValue)
+                    : normalizedValue;
+
+                renderCategoryFilters();
+                renderEditCategoryFields(finalMainCategory, '');
+            }
+
+            function promptAndAddSubCategory(mainCategory, previousValue = '') {
+                const matchedMainCategory = normalizeCategoryName(mainCategory);
+                if (!matchedMainCategory) {
+                    alert('Sila pilih kategori utama terlebih dahulu.');
+                    renderEditSubCategoryOptions('', '');
+                    return;
+                }
+
+                const rawValue = window.prompt(`Masukkan subkategori baharu untuk "${matchedMainCategory}":`);
+                if (rawValue === null) {
+                    formFields.category.value = previousValue;
+                    formFields.category.dataset.prevValue = previousValue;
+                    return;
+                }
+
+                const normalizedValue = normalizeCategoryName(rawValue);
+                if (!normalizedValue) {
+                    alert('Nama subkategori tidak boleh kosong.');
+                    formFields.category.value = previousValue;
+                    formFields.category.dataset.prevValue = previousValue;
+                    return;
+                }
+
+                const addedCategory = typeof store.addComplaintSubCategory === 'function'
+                    ? store.addComplaintSubCategory(matchedMainCategory, normalizedValue)
+                    : { mainCategory: matchedMainCategory, subCategory: normalizedValue };
+
+                const finalMainCategory = normalizeCategoryName(addedCategory.mainCategory || matchedMainCategory);
+                const finalSubCategory = normalizeCategoryName(addedCategory.subCategory || normalizedValue);
+
+                renderCategoryFilters();
+                renderEditCategoryFields(finalMainCategory, finalSubCategory);
             }
 
             function canonicalizeUnitValue(value) {
@@ -456,6 +665,37 @@
 
                 refs.editUnitInput?.addEventListener('blur', () => {
                     validateUnitField(refs.editUnitInput);
+                });
+
+                formFields.categoryMain?.addEventListener('focus', () => {
+                    formFields.categoryMain.dataset.prevValue = normalizeCategoryName(formFields.categoryMain.value);
+                });
+
+                formFields.categoryMain?.addEventListener('change', () => {
+                    if (formFields.categoryMain.value !== MAIN_CATEGORY_ADD_NEW_VALUE) {
+                        const selectedMainCategory = normalizeCategoryName(formFields.categoryMain.value);
+                        formFields.categoryMain.dataset.prevValue = selectedMainCategory;
+                        renderEditSubCategoryOptions(selectedMainCategory, '');
+                        return;
+                    }
+
+                    const previousMainCategory = normalizeCategoryName(formFields.categoryMain.dataset.prevValue || '');
+                    promptAndAddMainCategory(previousMainCategory);
+                });
+
+                formFields.category?.addEventListener('focus', () => {
+                    formFields.category.dataset.prevValue = normalizeCategoryName(formFields.category.value);
+                });
+
+                formFields.category?.addEventListener('change', () => {
+                    if (formFields.category.value !== SUB_CATEGORY_ADD_NEW_VALUE) {
+                        formFields.category.dataset.prevValue = normalizeCategoryName(formFields.category.value);
+                        return;
+                    }
+
+                    const selectedMainCategory = normalizeCategoryName(formFields.categoryMain?.value || '');
+                    const previousSubCategory = normalizeCategoryName(formFields.category.dataset.prevValue || '');
+                    promptAndAddSubCategory(selectedMainCategory, previousSubCategory);
                 });
 
                 refs.aduanForm?.addEventListener('submit', handleSubmit);
@@ -529,12 +769,21 @@
             function refreshData() {
                 complaints = store.loadComplaints();
                 renderCategoryFilters();
+                renderEditCategoryFields(
+                    formFields.categoryMain?.value || '',
+                    formFields.category?.value || ''
+                );
                 renderTable();
             }
 
             function renderCategoryFilters() {
                 if (!refs.filterWrap) return;
-                const categories = ['Semua', ...Array.from(new Set(complaints.map(c => c.category).filter(Boolean)))];
+                const categories = ['Semua', ...getMainCategoryCatalog()];
+
+                if (!categories.includes(currentCategory)) {
+                    currentCategory = 'Semua';
+                }
+
                 refs.filterWrap.innerHTML = categories.map(cat => {
                     const active = cat === currentCategory ? 'active' : '';
                     const pressed = cat === currentCategory ? 'true' : 'false';
@@ -557,9 +806,12 @@
 
             function getFilteredComplaints() {
                 const rows = complaints.filter(c => {
-                    const catMatch = currentCategory === 'Semua' ? true : c.category === currentCategory;
+                    const catMatch = currentCategory === 'Semua'
+                        ? true
+                        : normalizeCategoryName(c.categoryMain) === normalizeCategoryName(currentCategory);
+                    const categoryText = `${c.categoryMain || ''} ${c.categorySub || c.category || ''}`;
                     const searchMatch = searchTerm
-                        ? `${c.id} ${c.title} ${c.category} ${c.reporter} ${c.phone} ${c.unit} ${c.details || ''}`.toLowerCase().includes(searchTerm)
+                        ? `${c.id} ${c.title} ${categoryText} ${c.reporter} ${c.phone} ${c.unit} ${c.details || ''}`.toLowerCase().includes(searchTerm)
                         : true;
                     return catMatch && searchMatch;
                 });
@@ -574,6 +826,17 @@
                 }
 
                 return rows.sort((a, b) => new Date(b.updatedAt || b.date || 0) - new Date(a.updatedAt || a.date || 0));
+            }
+
+            function formatComplaintCategoryLabel(complaint) {
+                const mainCategory = normalizeCategoryName(complaint?.categoryMain || '');
+                const subCategory = normalizeCategoryName(complaint?.categorySub || complaint?.category || '');
+
+                if (mainCategory && subCategory) {
+                    return `${mainCategory} > ${subCategory}`;
+                }
+
+                return subCategory || mainCategory || '-';
             }
 
             function renderTable() {
@@ -596,7 +859,7 @@
                     <tr>
                         <td><strong>#${c.id}</strong></td>
                         <td>${c.title}</td>
-                        <td><span class="badge bg-light text-dark border">${c.category}</span></td>
+                        <td><span class="badge bg-light text-dark border">${escapeHtml(formatComplaintCategoryLabel(c))}</span></td>
                         <td>${c.reporter}</td>
                         <td>${c.phone || '-'}</td>
                         <td>${c.unit || '-'}</td>
@@ -783,7 +1046,9 @@
 
             function populateForm(data) {
                 formFields.title.value = data.title || '';
-                formFields.category.value = data.category || '';
+                renderEditCategoryFields(data.categoryMain || '', data.categorySub || data.category || '');
+                formFields.categoryMain.value = data.categoryMain || formFields.categoryMain.value;
+                formFields.category.value = data.categorySub || data.category || '';
                 formFields.reporter.value = data.reporter || '';
                 formFields.phone.value = data.phone || '';
                 formFields.unit.value = canonicalizeUnitValue(data.unit) || data.unit || '';
@@ -851,10 +1116,18 @@
                 const idx = complaints.findIndex(c => c.id === editingId);
                 if (idx !== -1) {
                     const canonicalUnit = canonicalizeUnitValue(refs.editUnitInput.value) || refs.editUnitInput.value.trim();
+                    const selectedMainCategory = formFields.categoryMain.value === MAIN_CATEGORY_ADD_NEW_VALUE
+                        ? ''
+                        : formFields.categoryMain.value;
+                    const selectedSubCategory = formFields.category.value === SUB_CATEGORY_ADD_NEW_VALUE
+                        ? ''
+                        : formFields.category.value;
                     complaints[idx] = {
                         ...complaints[idx],
                         title: document.getElementById('editTitle').value.trim(),
-                        category: document.getElementById('editCategory').value,
+                        categoryMain: selectedMainCategory,
+                        categorySub: selectedSubCategory,
+                        category: selectedSubCategory,
                         reporter: document.getElementById('editReporter').value.trim(),
                         phone: document.getElementById('editPhone').value.trim(),
                         unit: canonicalUnit,
@@ -916,17 +1189,19 @@
                             <input type="text" class="form-control" id="editTitle" required>
                             <div class="invalid-feedback">Isi tajuk.</div>
                         </div>
-                        <div class="col-md-6 aduan-meta-field">
-                            <label class="form-label" for="editCategory">Kategori</label>
-                            <select class="form-select" id="editCategory" required>
-                                <option value="" disabled>Pilih kategori</option>
-                                <option value="Teknikal">Teknikal</option>
-                                <option value="Perkhidmatan">Perkhidmatan</option>
-                                <option value="Produk">Produk</option>
-                                <option value="Logistik">Logistik</option>
-                                <option value="Pertanyaan">Pertanyaan</option>
+                        <div class="col-md-3 aduan-meta-field">
+                            <label class="form-label" for="editCategoryMain">Kategori Utama</label>
+                            <select class="form-select" id="editCategoryMain" required>
+                                <option value="" disabled>Pilih kategori utama</option>
                             </select>
-                            <div class="invalid-feedback">Pilih kategori.</div>
+                            <div class="invalid-feedback">Pilih kategori utama.</div>
+                        </div>
+                        <div class="col-md-3 aduan-meta-field">
+                            <label class="form-label" for="editCategory">Subkategori</label>
+                            <select class="form-select" id="editCategory" required>
+                                <option value="" disabled>Pilih subkategori</option>
+                            </select>
+                            <div class="invalid-feedback">Pilih subkategori.</div>
                         </div>
                         <div class="col-md-6 aduan-meta-field">
                             <label class="form-label" for="editReporter">Nama Pengadu</label>
