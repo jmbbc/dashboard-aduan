@@ -186,23 +186,33 @@ function getEffectiveHeaderKeys(rows, type) {
   };
 }
 
-function findRowIndexById(rows, headerKeys, type, id) {
+function findRowIndexesById(rows, headerKeys, type, id) {
   const idIndex = headerKeys.findIndex((header) => header === 'id');
-  if (idIndex === -1) return -1;
+  if (idIndex === -1) return [];
 
   const normalizedId = String(id || '').trim();
-  return rows.findIndex((row) => String(row[idIndex] || '').trim() === normalizedId);
+  return rows
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) => String(row[idIndex] || '').trim() === normalizedId)
+    .map(({ index }) => index);
 }
 
 function upsertRowById(sheet, type, row, id) {
   const rows = sheet.getDataRange().getValues();
   const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
-  const rowIndex = findRowIndexById(rows.slice(dataRowStart - 1), headerKeys, type, id);
+  const rowIndexes = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, type, id);
 
-  if (rowIndex >= 0) {
-    const targetRow = dataRowStart + rowIndex;
-    sheet.getRange(targetRow, 1, 1, row.values.length).setValues([row.values]);
-    return { updated: true, rowIndex: targetRow };
+  if (rowIndexes.length > 0) {
+    const firstTargetRow = dataRowStart + rowIndexes[0];
+    sheet.getRange(firstTargetRow, 1, 1, row.values.length).setValues([row.values]);
+
+    // Remove any duplicate rows with the same ID, starting from the bottom.
+    for (let i = rowIndexes.length - 1; i > 0; i -= 1) {
+      const duplicateRow = dataRowStart + rowIndexes[i];
+      sheet.deleteRow(duplicateRow);
+    }
+
+    return { updated: true, rowIndex: firstTargetRow, duplicatesRemoved: rowIndexes.length - 1 };
   }
 
   sheet.appendRow(row.values);
@@ -212,13 +222,16 @@ function upsertRowById(sheet, type, row, id) {
 function deleteRowById(sheet, type, id) {
   const rows = sheet.getDataRange().getValues();
   const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
-  const rowIndex = findRowIndexById(rows.slice(dataRowStart - 1), headerKeys, type, id);
-  if (rowIndex === -1) {
+  const rowIndexes = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, type, id);
+  if (!rowIndexes.length) {
     return false;
   }
 
-  const targetRow = dataRowStart + rowIndex;
-  sheet.deleteRow(targetRow);
+  for (let i = rowIndexes.length - 1; i >= 0; i -= 1) {
+    const targetRow = dataRowStart + rowIndexes[i];
+    sheet.deleteRow(targetRow);
+  }
+
   return true;
 }
 
