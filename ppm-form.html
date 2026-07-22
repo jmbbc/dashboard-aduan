@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PPM Form - Technician</title>
+    <meta name="theme-color" content="#1d4ed8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="ppm-icon.svg" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <style>
@@ -185,6 +189,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .loc-sync-symbol {
+            flex: 0 0 auto;
+            font-weight: 800;
         }
 
         .ppm-card {
@@ -712,7 +721,12 @@
 
         @media (max-width: 768px) {
             .submission-track {
-                top: 7rem;
+                position: static;
+                top: auto;
+            }
+
+            .ppm-header {
+                position: static;
             }
 
             .submission-head {
@@ -733,6 +747,196 @@
                 width: auto;
             }
         }
+
+        .sync-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.55rem;
+            padding: 0.48rem 0.62rem;
+            margin-bottom: 0.6rem;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1e3a8a;
+            font-size: 0.76rem;
+        }
+
+        .sync-panel.is-offline {
+            border-color: #fcd34d;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .sync-panel.is-error {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .sync-status-main {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            min-width: 0;
+        }
+
+        .sync-help {
+            margin-top: 0.08rem;
+            color: #64748b;
+            font-size: 0.68rem;
+        }
+
+        .sync-actions {
+            display: flex;
+            gap: 0.35rem;
+            flex: 0 0 auto;
+        }
+
+        .draft-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .draft-list-item {
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            padding: 0.6rem;
+            background: #f8fafc;
+        }
+
+        .draft-list-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .draft-list-meta {
+            color: #64748b;
+            font-size: 0.72rem;
+        }
+
+        .sync-dot {
+            width: 0.58rem;
+            height: 0.58rem;
+            flex: 0 0 auto;
+            border-radius: 999px;
+            background: #16a34a;
+        }
+
+        .is-offline .sync-dot { background: #d97706; }
+        .is-error .sync-dot { background: #dc2626; }
+
+        .draft-save-state {
+            min-height: 1.2em;
+            margin-left: auto;
+            color: #64748b;
+            font-size: 0.72rem;
+        }
+
+        .step-pill.queued {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .step-pill.failed {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        @media (max-width: 480px) {
+            .ppm-shell {
+                padding: 0.48rem;
+            }
+
+            .ppm-header .d-flex.align-items-start.justify-content-between {
+                flex-direction: column;
+            }
+
+            .sync-panel {
+                align-items: flex-start;
+            }
+
+            .checklist-table .table-responsive {
+                overflow: visible;
+            }
+
+            .checklist-table table,
+            .checklist-table tbody,
+            .checklist-table tr,
+            .checklist-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .checklist-table thead {
+                display: none;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) {
+                display: flow-root;
+                margin-bottom: 0.55rem;
+                padding: 0.52rem;
+                border: 1px solid #dbe2ea;
+                border-radius: 10px;
+                background: #fff;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) td {
+                border: 0;
+                padding: 0.28rem 0;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) td:first-child {
+                float: left;
+                width: 2rem;
+                padding-right: 0.4rem;
+                font-weight: 700;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(2) {
+                min-height: 2rem;
+                padding-left: 2.2rem;
+                font-weight: 600;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(3)::before,
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(4)::before {
+                display: block;
+                margin-bottom: 0.22rem;
+                color: #64748b;
+                font-size: 0.66rem;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(3)::before { content: 'Status'; }
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(4)::before { content: 'Remarks'; }
+            .checklist-table tr.checklist-remark-only td:nth-child(3)::before { content: 'Remarks'; }
+
+            .status-icon-btn {
+                min-width: 72px;
+                min-height: 44px;
+                justify-content: center;
+            }
+
+            .checklist-group-row {
+                display: block;
+                width: 100%;
+            }
+
+            .checklist-group-row td {
+                display: block;
+                width: 100%;
+                padding: 0.5rem;
+            }
+
+            .sticky-actions .btn {
+                min-height: 44px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -741,20 +945,33 @@
             <div class="d-flex align-items-start justify-content-between gap-2">
                 <div>
                     <div class="d-flex align-items-center gap-2 mb-1">
-                        <a href="ppm-monthly-report.html" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
                         <span class="tech-badge">Technician View Only</span>
                     </div>
-                    <h1 class="ppm-title">Checklist PPM Electrical - Banjaria Court</h1>
+                    <h1 class="ppm-title" id="ppmPageTitle">Checklist PPM Electrical - Banjaria Court</h1>
                     <p class="ppm-subtitle">Structure aligned with your current checklist format.</p>
                 </div>
-                <span class="badge text-bg-warning">Draft Structure</span>
+                <span class="badge text-bg-warning" id="offlineCacheBadge">Preparing Offline</span>
             </div>
         </header>
+
+        <section class="sync-panel" id="syncPanel" aria-live="polite">
+            <div class="sync-status-main">
+                <span class="sync-dot" aria-hidden="true"></span>
+                <div>
+                    <span id="syncStatusText">Checking connection and pending submissions...</span>
+                    <div class="sync-help">Open this form online once before entering a no-coverage area.</div>
+                </div>
+            </div>
+            <div class="sync-actions">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="openDraftsBtn">Drafts <span class="badge text-bg-secondary" id="draftCountBadge">0</span></button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Sync now</button>
+            </div>
+        </section>
 
         <section class="submission-track" aria-label="Submission status by location">
             <div class="submission-head">
                 <p class="submission-title">Submission Status by Block Location</p>
-                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 submitted</span>
+                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 synced</span>
             </div>
             <div class="submission-groups" id="locationStatusTrack" aria-live="polite"></div>
         </section>
@@ -877,6 +1094,7 @@
                     <div class="upload-block">
                         <label class="form-label" for="pictureUpload">Upload Picture</label>
                         <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*">
+                        <div class="form-text mb-2">Maximum 6 confirmed pictures and 8 MB combined after compression.</div>
                         <label class="form-label" for="pictureNote">Picture Note</label>
                         <textarea class="form-control" id="pictureNote" rows="2" placeholder="Add notes regarding the uploaded picture (optional)"></textarea>
                         <div class="upload-feedback">
@@ -912,6 +1130,7 @@
 
             <div class="sticky-actions">
                 <div class="d-flex gap-2 justify-content-end">
+                    <span class="draft-save-state align-self-center" id="draftSaveState" aria-live="polite"></span>
                     <button type="button" class="btn btn-outline-secondary" id="saveDraftBtn">Save Draft</button>
                     <button type="submit" class="btn btn-primary">Submit PPM</button>
                 </div>
@@ -970,8 +1189,26 @@
         </div>
     </div>
 
+    <div class="modal fade" id="draftManagerModal" tabindex="-1" aria-labelledby="draftManagerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title fs-6" id="draftManagerModalLabel">Saved Drafts on This Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="draft-list" id="draftList"></div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="backend-config.js"></script>
+    <script src="ppm-offline-store.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const TEMPLATE_CONFIG = {
@@ -1599,6 +1836,7 @@
 
             const refs = {
                 form: document.getElementById('ppmTechnicianForm'),
+                ppmPageTitle: document.getElementById('ppmPageTitle'),
                 templateType: document.getElementById('templateType'),
                 categoryField: document.getElementById('categoryField'),
                 referenceNo: document.getElementById('referenceNo'),
@@ -1636,7 +1874,16 @@
                 checklistBody: document.getElementById('checklistBody'),
                 step2ScopeNote: document.getElementById('step2ScopeNote'),
                 statusLegend: document.getElementById('statusLegend'),
-                saveDraftBtn: document.getElementById('saveDraftBtn')
+                saveDraftBtn: document.getElementById('saveDraftBtn'),
+                draftSaveState: document.getElementById('draftSaveState'),
+                syncPanel: document.getElementById('syncPanel'),
+                syncStatusText: document.getElementById('syncStatusText'),
+                retrySyncBtn: document.getElementById('retrySyncBtn'),
+                offlineCacheBadge: document.getElementById('offlineCacheBadge'),
+                openDraftsBtn: document.getElementById('openDraftsBtn'),
+                draftCountBadge: document.getElementById('draftCountBadge'),
+                draftManagerModal: document.getElementById('draftManagerModal'),
+                draftList: document.getElementById('draftList')
             };
 
             const SUBMISSION_TRACKER_KEY = 'ppmSubmissionTrackerV1';
@@ -1662,11 +1909,23 @@
             const CIVIL_NG_REASON_CODES = ['P', 'T', 'B', 'LS'];
             const TECHNICIAN_NOTES_DEFAULT_BULLETS = ['- ', '- ', '- ', '- ', '- '].join('\n');
             const confirmedPictureEntries = [];
+            const MAX_PICTURES = 6;
+            const MAX_TOTAL_PICTURE_BYTES = 8 * 1024 * 1024;
+            const MAX_IMAGE_DIMENSION = 1600;
+            const IMAGE_QUALITY = 0.78;
+            let pendingDraftRecord = null;
+            let draftSaveTimer = null;
+            let syncInProgress = false;
+            let isRestoringOfflineState = false;
+            let hasUnsavedDraftChanges = false;
             const pictureViewerModal = refs.pictureViewerModal
                 ? new bootstrap.Modal(refs.pictureViewerModal)
                 : null;
             const civilWallNgReasonModal = refs.civilWallNgReasonModal
                 ? new bootstrap.Modal(refs.civilWallNgReasonModal)
+                : null;
+            const draftManagerModal = refs.draftManagerModal
+                ? new bootstrap.Modal(refs.draftManagerModal)
                 : null;
             const civilWallNgReasonState = {
                 rowNumber: '',
@@ -1706,6 +1965,369 @@
 
                 const mb = kb / 1024;
                 return `${mb.toFixed(1)} MB`;
+            }
+
+            function getCurrentContext() {
+                const templateKey = String(refs.templateType?.value || 'bilikSuis');
+                const monthKey = getMonthKeyFromInspectionDate();
+                const location = String(refs.locationSelect?.value || '').trim();
+                return {
+                    id: buildPPMSubmissionId(templateKey, monthKey, location),
+                    templateKey,
+                    monthKey,
+                    location
+                };
+            }
+
+            function picturesForOfflineStorage() {
+                return confirmedPictureEntries.map((entry) => ({
+                    blob: entry.blob,
+                    fileName: entry.fileName,
+                    fileSize: entry.fileSize,
+                    mimeType: entry.mimeType || entry.blob?.type || 'image/jpeg',
+                    note: entry.note || ''
+                })).filter((entry) => entry.blob instanceof Blob);
+            }
+
+            function getConfirmedPictureBytes() {
+                return confirmedPictureEntries.reduce((total, entry) => total + Number(entry?.blob?.size || 0), 0);
+            }
+
+            function buildDraftRecord() {
+                const context = getCurrentContext();
+                if (!context.location) return null;
+                return {
+                    ...context,
+                    snapshot: collectSubmittedFormSnapshot(),
+                    pictures: picturesForOfflineStorage(),
+                    savedAt: new Date().toISOString()
+                };
+            }
+
+            function setDraftSaveState(message) {
+                if (refs.draftSaveState) refs.draftSaveState.textContent = message || '';
+            }
+
+            async function persistDraftRecord(record, options = {}) {
+                if (!record || !window.PPMOfflineStore?.isSupported()) return false;
+                try {
+                    await window.PPMOfflineStore.putDraft(record);
+                    hasUnsavedDraftChanges = false;
+                    if (!options.silent) {
+                        const time = new Date(record.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        setDraftSaveState(`Draft saved ${time}`);
+                    }
+                    refreshDraftCount();
+                    return true;
+                } catch (error) {
+                    console.warn('Unable to save PPM draft:', error);
+                    setDraftSaveState('Draft save failed');
+                    return false;
+                }
+            }
+
+            function scheduleDraftSave() {
+                if (isRestoringOfflineState) return;
+                hasUnsavedDraftChanges = true;
+                pendingDraftRecord = buildDraftRecord();
+                if (!pendingDraftRecord) return;
+                setDraftSaveState('Saving draft...');
+                window.clearTimeout(draftSaveTimer);
+                draftSaveTimer = window.setTimeout(() => {
+                    const record = pendingDraftRecord;
+                    pendingDraftRecord = null;
+                    persistDraftRecord(record);
+                }, 450);
+            }
+
+            async function saveCurrentDraft() {
+                window.clearTimeout(draftSaveTimer);
+                pendingDraftRecord = null;
+                return persistDraftRecord(buildDraftRecord());
+            }
+
+            function restorePicturesFromOffline(pictures) {
+                clearAllConfirmedPictureEntries();
+                (Array.isArray(pictures) ? pictures : []).forEach((entry, index) => {
+                    if (!(entry?.blob instanceof Blob)) return;
+                    confirmedPictureEntries.push({
+                        blob: entry.blob,
+                        previewUrl: URL.createObjectURL(entry.blob),
+                        fileName: entry.fileName || `Picture ${index + 1}.jpg`,
+                        fileSize: entry.fileSize || formatFileSize(entry.blob.size),
+                        mimeType: entry.mimeType || entry.blob.type || 'image/jpeg',
+                        note: entry.note || ''
+                    });
+                });
+                renderConfirmedPictureEntries();
+            }
+
+            async function restoreOfflineDraftForCurrentContext() {
+                const context = getCurrentContext();
+                if (!context.location || !window.PPMOfflineStore?.isSupported()) return false;
+                try {
+                    const draft = await window.PPMOfflineStore.getDraft(context.id);
+                    if (!draft?.snapshot) return false;
+                    isRestoringOfflineState = true;
+                    applySubmittedSnapshotToForm(draft.snapshot, { applyInspectionDate: false });
+                    restorePicturesFromOffline(draft.pictures);
+                    const time = new Date(draft.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    setDraftSaveState(`Draft restored ${time}`);
+                    return true;
+                } catch (error) {
+                    console.warn('Unable to restore PPM draft:', error);
+                    return false;
+                } finally {
+                    isRestoringOfflineState = false;
+                }
+            }
+
+            async function restoreBestDataForCurrentContext() {
+                const restoredDraft = await restoreOfflineDraftForCurrentContext();
+                if (restoredDraft) return true;
+                isRestoringOfflineState = true;
+                try {
+                    clearAllConfirmedPictureEntries();
+                    return restoreSubmittedDataForCurrentContext();
+                } finally {
+                    isRestoringOfflineState = false;
+                }
+            }
+
+            async function getSavedDrafts() {
+                if (!window.PPMOfflineStore?.isSupported()) return [];
+                try {
+                    return (await window.PPMOfflineStore.getAllDrafts())
+                        .sort((a, b) => String(b.savedAt || '').localeCompare(String(a.savedAt || '')));
+                } catch (error) {
+                    console.warn('Unable to list PPM drafts:', error);
+                    return [];
+                }
+            }
+
+            async function refreshDraftCount() {
+                const drafts = await getSavedDrafts();
+                if (refs.draftCountBadge) refs.draftCountBadge.textContent = String(drafts.length);
+                return drafts.length;
+            }
+
+            function formatDraftSavedAt(value) {
+                const date = new Date(value || '');
+                return Number.isNaN(date.getTime()) ? 'Unknown save time' : date.toLocaleString();
+            }
+
+            async function renderDraftManager() {
+                if (!refs.draftList) return;
+                const drafts = await getSavedDrafts();
+                if (refs.draftCountBadge) refs.draftCountBadge.textContent = String(drafts.length);
+                if (drafts.length === 0) {
+                    refs.draftList.innerHTML = '<div class="text-muted small">No unfinished drafts are stored on this device.</div>';
+                    return;
+                }
+
+                refs.draftList.innerHTML = drafts.map((draft) => {
+                    const template = TEMPLATE_CONFIG[draft.templateKey] || TEMPLATE_CONFIG.bilikSuis;
+                    const pictureCount = Array.isArray(draft.pictures) ? draft.pictures.length : 0;
+                    return `
+                        <article class="draft-list-item">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <div class="draft-list-title">${escapeHtml(template.category)} · ${escapeHtml(draft.location || 'No location')}</div>
+                                    <div class="draft-list-meta">${escapeHtml(draft.templateKey)} · ${escapeHtml(draft.monthKey || '')} · ${pictureCount} picture${pictureCount === 1 ? '' : 's'}</div>
+                                    <div class="draft-list-meta">Saved ${escapeHtml(formatDraftSavedAt(draft.savedAt))}</div>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <button type="button" class="btn btn-sm btn-primary" data-draft-action="restore" data-draft-id="${escapeHtml(draft.id)}">Resume</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-draft-action="delete" data-draft-id="${escapeHtml(draft.id)}">Delete</button>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+            }
+
+            async function restoreDraftById(draftId) {
+                const draft = await window.PPMOfflineStore?.getDraft(draftId);
+                if (!draft?.snapshot) return false;
+                const template = TEMPLATE_CONFIG[draft.templateKey] || TEMPLATE_CONFIG.bilikSuis;
+                isRestoringOfflineState = true;
+                try {
+                    if (refs.categoryField) refs.categoryField.value = template.category;
+                    filterTemplateOptionsByCategory(template.category, draft.templateKey);
+                    applyTemplate(draft.templateKey);
+                    if (refs.inspectionDate && draft.snapshot.inspectionDate) {
+                        refs.inspectionDate.value = draft.snapshot.inspectionDate;
+                    }
+                    if (refs.locationSelect && Array.from(refs.locationSelect.options).some((option) => option.value === draft.location)) {
+                        refs.locationSelect.value = draft.location;
+                    }
+                    applySubmittedSnapshotToForm(draft.snapshot, { applyInspectionDate: true });
+                    restorePicturesFromOffline(draft.pictures);
+                    renderSubmissionTrack(draft.templateKey, template);
+                    renderCopySourceOptions();
+                    setDraftSaveState(`Draft restored ${formatDraftSavedAt(draft.savedAt)}`);
+                    hasUnsavedDraftChanges = false;
+                    draftManagerModal?.hide();
+                    return true;
+                } finally {
+                    isRestoringOfflineState = false;
+                }
+            }
+
+            async function deleteDraftById(draftId) {
+                if (!window.confirm('Delete this unfinished draft from this device?')) return;
+                await window.PPMOfflineStore?.deleteDraft(draftId);
+                await renderDraftManager();
+                await refreshDraftCount();
+            }
+
+            function blobToDataUrl(blob) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = () => reject(reader.error || new Error('Unable to read picture.'));
+                    reader.readAsDataURL(blob);
+                });
+            }
+
+            function compressPicture(file) {
+                return new Promise((resolve) => {
+                    if (!(file instanceof Blob) || !String(file.type || '').startsWith('image/')) {
+                        resolve(file);
+                        return;
+                    }
+
+                    const sourceUrl = URL.createObjectURL(file);
+                    const image = new Image();
+                    image.onload = () => {
+                        const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(image.naturalWidth, image.naturalHeight));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+                        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+                        const context = canvas.getContext('2d');
+                        if (!context || typeof canvas.toBlob !== 'function') {
+                            URL.revokeObjectURL(sourceUrl);
+                            resolve(file);
+                            return;
+                        }
+                        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob((blob) => {
+                            URL.revokeObjectURL(sourceUrl);
+                            resolve(blob || file);
+                        }, 'image/jpeg', IMAGE_QUALITY);
+                    };
+                    image.onerror = () => {
+                        URL.revokeObjectURL(sourceUrl);
+                        resolve(file);
+                    };
+                    image.src = sourceUrl;
+                });
+            }
+
+            async function picturesForBackend(pictures) {
+                const result = [];
+                for (const entry of (Array.isArray(pictures) ? pictures : [])) {
+                    if (!(entry?.blob instanceof Blob)) continue;
+                    result.push({
+                        name: entry.fileName || 'ppm-evidence.jpg',
+                        note: entry.note || '',
+                        dataUrl: await blobToDataUrl(entry.blob)
+                    });
+                }
+                return result;
+            }
+
+            function updateSyncPanel(message, state = 'online') {
+                if (!refs.syncPanel || !refs.syncStatusText) return;
+                refs.syncPanel.classList.toggle('is-offline', state === 'offline');
+                refs.syncPanel.classList.toggle('is-error', state === 'error');
+                refs.syncStatusText.textContent = message;
+            }
+
+            async function refreshSyncStatus() {
+                if (!window.PPMOfflineStore?.isSupported()) {
+                    updateSyncPanel('Offline storage is unavailable in this browser.', 'error');
+                    if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = true;
+                    return 0;
+                }
+
+                let pendingCount = 0;
+                try {
+                    pendingCount = (await window.PPMOfflineStore.getAllOutbox()).length;
+                } catch (error) {
+                    console.warn('Unable to read pending PPM submissions:', error);
+                }
+
+                if (!navigator.onLine) {
+                    updateSyncPanel(`Offline. ${pendingCount} submission${pendingCount === 1 ? '' : 's'} waiting safely on this device.`, 'offline');
+                } else if (pendingCount > 0) {
+                    updateSyncPanel(`Online. ${pendingCount} submission${pendingCount === 1 ? '' : 's'} waiting to sync.`, 'online');
+                } else {
+                    updateSyncPanel('Online. All saved submissions are synced.', 'online');
+                }
+                if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = syncInProgress || !navigator.onLine;
+                return pendingCount;
+            }
+
+            async function requestPersistentOfflineStorage() {
+                if (!navigator.storage?.persist) return false;
+                try {
+                    if (await navigator.storage.persisted?.()) return true;
+                    return await navigator.storage.persist();
+                } catch (error) {
+                    console.warn('Persistent offline storage request failed:', error);
+                    return false;
+                }
+            }
+
+            async function syncPendingSubmissions() {
+                if (syncInProgress || !navigator.onLine || !window.PPMOfflineStore?.isSupported()) {
+                    await refreshSyncStatus();
+                    return { synced: 0, failed: 0 };
+                }
+
+                syncInProgress = true;
+                if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = true;
+                updateSyncPanel('Syncing saved submissions...', 'online');
+                let synced = 0;
+                let failed = 0;
+
+                try {
+                    const queued = (await window.PPMOfflineStore.getAllOutbox())
+                        .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+
+                    for (const entry of queued) {
+                        try {
+                            entry.status = 'syncing';
+                            entry.attempts = Number(entry.attempts || 0) + 1;
+                            entry.lastAttemptAt = new Date().toISOString();
+                            await window.PPMOfflineStore.putOutbox(entry);
+                            const payload = {
+                                ...entry.payload,
+                                images: await picturesForBackend(entry.pictures)
+                            };
+                            await submitPPMToBackend(payload);
+                            await window.PPMOfflineStore.deleteOutbox(entry.id);
+                            await window.PPMOfflineStore.deleteDraft(entry.id);
+                            refreshDraftCount();
+                            markLocationSyncState(entry.templateKey, entry.monthKey, entry.location, 'synced');
+                            synced += 1;
+                        } catch (error) {
+                            entry.status = 'failed';
+                            entry.lastError = String(error?.message || error || 'Sync failed');
+                            await window.PPMOfflineStore.putOutbox(entry);
+                            markLocationSyncState(entry.templateKey, entry.monthKey, entry.location, 'failed', entry.lastError);
+                            failed += 1;
+                        }
+                    }
+                } finally {
+                    syncInProgress = false;
+                    const templateKey = refs.templateType?.value || 'bilikSuis';
+                    renderSubmissionTrack(templateKey, TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis);
+                    await refreshSyncStatus();
+                }
+
+                return { synced, failed };
             }
 
             function updatePictureInputState(customMessage) {
@@ -2090,26 +2712,44 @@
                 }).join('');
             }
 
-            function confirmSelectedPictureEntry() {
+            async function confirmSelectedPictureEntry() {
                 const selectedPicture = refs.pictureUpload?.files?.[0] || null;
                 if (!selectedPicture) {
                     updatePictureInputState('Please choose a picture first.');
                     return;
                 }
 
-                const previewUrl = URL.createObjectURL(selectedPicture);
+                if (confirmedPictureEntries.length >= MAX_PICTURES) {
+                    updatePictureInputState(`Maximum ${MAX_PICTURES} pictures per submission.`);
+                    return;
+                }
+
+                if (refs.confirmPictureBtn) refs.confirmPictureBtn.disabled = true;
+                updatePictureInputState('Optimising picture for offline storage...');
+                const compressedPicture = await compressPicture(selectedPicture);
+                if (getConfirmedPictureBytes() + Number(compressedPicture?.size || 0) > MAX_TOTAL_PICTURE_BYTES) {
+                    if (refs.pictureUpload) refs.pictureUpload.value = '';
+                    updatePictureInputState('Picture not added: confirmed pictures would exceed the 8 MB total limit.');
+                    return;
+                }
+                const previewUrl = URL.createObjectURL(compressedPicture);
                 const pictureNote = String(refs.pictureNote?.value || '').trim();
+                const originalBaseName = String(selectedPicture.name || `picture-${confirmedPictureEntries.length + 1}`)
+                    .replace(/\.[^.]+$/, '');
 
                 confirmedPictureEntries.push({
+                    blob: compressedPicture,
                     previewUrl,
-                    fileName: selectedPicture.name || `Picture ${confirmedPictureEntries.length + 1}`,
-                    fileSize: formatFileSize(selectedPicture.size),
+                    fileName: `${originalBaseName}.jpg`,
+                    fileSize: formatFileSize(compressedPicture.size),
+                    mimeType: compressedPicture.type || 'image/jpeg',
                     note: pictureNote
                 });
 
                 renderConfirmedPictureEntries();
                 clearUnconfirmedPictureInput();
                 updatePictureInputState('Picture confirmed. You can add another picture.');
+                scheduleDraftSave();
             }
 
             function openConfirmedPictureEntryPreview(index) {
@@ -2148,6 +2788,7 @@
 
                 renderConfirmedPictureEntries();
                 updatePictureInputState('Picture deleted.');
+                scheduleDraftSave();
             }
 
             function readSubmissionTracker() {
@@ -2186,6 +2827,30 @@
 
             function writeSubmissionFormDataStore(state) {
                 localStorage.setItem(SUBMISSION_FORM_DATA_KEY, JSON.stringify(state));
+            }
+
+            function purgeOldSubmittedSnapshots(retentionDays = 180) {
+                const store = readSubmissionFormDataStore();
+                const cutoff = Date.now() - (Number(retentionDays) * 24 * 60 * 60 * 1000);
+                let changed = false;
+
+                Object.keys(store).forEach((templateKey) => {
+                    const months = store[templateKey] || {};
+                    Object.keys(months).forEach((monthKey) => {
+                        const locations = months[monthKey] || {};
+                        Object.keys(locations).forEach((location) => {
+                            const savedAt = new Date(locations[location]?.savedAt || '').getTime();
+                            if (Number.isFinite(savedAt) && savedAt < cutoff) {
+                                delete locations[location];
+                                changed = true;
+                            }
+                        });
+                        if (Object.keys(locations).length === 0) delete months[monthKey];
+                    });
+                    if (Object.keys(months).length === 0) delete store[templateKey];
+                });
+
+                if (changed) writeSubmissionFormDataStore(store);
             }
 
             function collectChecklistFieldValues() {
@@ -2345,12 +3010,20 @@
                 }
 
                 const url = `${REMOTE_BACKEND_URL}?action=read&type=${encodeURIComponent(type)}`;
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json'
-                    }
-                });
+                const controller = new AbortController();
+                const timeoutId = window.setTimeout(() => controller.abort(), 20000);
+                let response;
+                try {
+                    response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json'
+                        },
+                        signal: controller.signal
+                    });
+                } finally {
+                    window.clearTimeout(timeoutId);
+                }
 
                 const text = await response.text();
                 let payload;
@@ -2419,14 +3092,22 @@
 
             async function submitPPMToBackend(payload) {
                 if (!REMOTE_BACKEND_URL) {
-                    return;
+                    throw new Error('Remote backend URL is not configured.');
                 }
 
                 const url = `${REMOTE_BACKEND_URL}?action=upsert`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
+                const controller = new AbortController();
+                const timeoutId = window.setTimeout(() => controller.abort(), 30000);
+                let response;
+                try {
+                    response = await fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        signal: controller.signal
+                    });
+                } finally {
+                    window.clearTimeout(timeoutId);
+                }
 
                 const text = await response.text();
                 let result;
@@ -2473,6 +3154,7 @@
                         savedAt: String(row.submittedAt || row.updatedAt || new Date().toISOString()),
                         snapshot
                     };
+                    markLocationSyncState(templateKey, monthKey, location, 'synced');
                 });
 
                 writeSubmissionFormDataStore(store);
@@ -2607,7 +3289,7 @@
                 alert(`Copied submitted values from ${sourceLocation} to current location.`);
             }
 
-            function markLocationSubmitted(templateKey, monthKey, location) {
+            function markLocationSyncState(templateKey, monthKey, location, syncStatus, lastError = '') {
                 if (!templateKey || !monthKey || !location) {
                     return;
                 }
@@ -2616,7 +3298,9 @@
                 tracker[templateKey] = tracker[templateKey] || {};
                 tracker[templateKey][monthKey] = tracker[templateKey][monthKey] || {};
                 tracker[templateKey][monthKey][location] = {
-                    submittedAt: new Date().toISOString()
+                    submittedAt: new Date().toISOString(),
+                    syncStatus: String(syncStatus || 'pending'),
+                    lastError: String(lastError || '')
                 };
 
                 writeSubmissionTracker(tracker);
@@ -2730,18 +3414,32 @@
                     let groupSubmittedCount = 0;
 
                     const groupPills = group.locations.map((location) => {
-                        const submitted = Boolean(submissionMap[location]);
+                        const locationState = submissionMap[location] || null;
+                        const hasLocationState = Boolean(locationState);
+                        const syncStatus = typeof locationState === 'object'
+                            ? String(locationState.syncStatus || 'synced')
+                            : (locationState ? 'synced' : 'pending');
+                        const submitted = syncStatus === 'synced';
                         if (submitted) {
                             submittedCount += 1;
                             groupSubmittedCount += 1;
                         }
 
-                        const statusClass = submitted ? 'submitted' : 'pending';
+                        const statusClass = submitted
+                            ? 'submitted'
+                            : (syncStatus === 'failed'
+                                ? 'failed'
+                                : (hasLocationState && (syncStatus === 'pending' || syncStatus === 'syncing') ? 'queued' : 'pending'));
                         const currentClass = location === selectedLocation ? 'current' : '';
                         const pillLabel = formatSubmissionPillLabel(templateKey, location);
+                        const syncLabel = submitted
+                            ? 'Synced'
+                            : (syncStatus === 'failed' ? 'Sync failed' : (hasLocationState ? 'Waiting to sync' : 'Not submitted'));
+                        const syncSymbol = submitted ? '✓' : (syncStatus === 'failed' ? '!' : (hasLocationState ? '↻' : '○'));
 
                         return `
-                            <span class="step-pill ${statusClass} ${currentClass}" title="${escapeHtml(location)}">
+                            <span class="step-pill ${statusClass} ${currentClass}" title="${escapeHtml(`${location} - ${syncLabel}`)}" aria-label="${escapeHtml(`${location}: ${syncLabel}`)}">
+                                <span class="loc-sync-symbol" aria-hidden="true">${syncSymbol}</span>
                                 <span class="loc-name">${escapeHtml(pillLabel)}</span>
                             </span>
                         `;
@@ -2757,7 +3455,7 @@
                         <details class="submission-group" data-group-key="${group.key}"${openAttr}>
                             <summary>
                                 <span class="submission-group-title">${escapeHtml(group.title)}</span>
-                                <span class="${groupSummaryClass}">${groupSubmittedCount}/${group.locations.length} submitted</span>
+                                <span class="${groupSummaryClass}">${groupSubmittedCount}/${group.locations.length} synced</span>
                             </summary>
                             <div class="step-track submission-group-track">
                                 ${groupPills}
@@ -2768,7 +3466,7 @@
 
                 refs.locationStatusTrack.innerHTML = groupsHtml || '<div class="step-pill pending"><span class="loc-name">No locations configured</span></div>';
 
-                refs.submissionSummary.textContent = `${submittedCount}/${locations.length} submitted`;
+                refs.submissionSummary.textContent = `${submittedCount}/${locations.length} synced`;
                 refs.submissionSummary.className = submittedCount === locations.length && locations.length > 0
                     ? 'badge text-bg-success submission-summary'
                     : 'badge text-bg-danger submission-summary';
@@ -3373,7 +4071,7 @@
 
                         if (isCivilRiserLeakingTemplate(template) || isFfWetRiser2Template(template)) {
                             return `
-                                <tr>
+                                <tr class="checklist-status-only">
                                     <td class="col-bil">${rowNumber}</td>
                                     <td>${formatChecklistItemCell(item, template)}</td>
                                     <td colspan="2" class="civil-riser-status-span">
@@ -3385,7 +4083,7 @@
 
                         if (isWaterRiserTestingGroup) {
                             return `
-                                <tr>
+                                <tr class="checklist-remark-only">
                                     <td class="col-bil">${rowNumber}</td>
                                     <td>${formatChecklistItemCell(item, template)}</td>
                                     <td colspan="2">
@@ -3402,7 +4100,7 @@
 
                         if (isStandbyExpandedRemarkRow || isCapacitorExpandedRemarkRow) {
                             return `
-                                <tr>
+                                <tr class="checklist-remark-only">
                                     <td class="col-bil">${rowNumber}</td>
                                     <td>${formatChecklistItemCell(item, template)}</td>
                                     <td colspan="2">
@@ -3413,7 +4111,7 @@
                         }
 
                         return `
-                            <tr>
+                            <tr class="checklist-standard">
                                 <td class="col-bil">${rowNumber}</td>
                                 <td>${formatChecklistItemCell(item, template)}</td>
                                 <td>
@@ -3564,6 +4262,10 @@
                 refs.locationLabel.textContent = template.locationLabel;
                 refs.locationSelect.innerHTML = buildLocationOptions(template.locations);
                 refs.templateDescription.textContent = template.description;
+                const categoryName = String(template.category || 'PPM');
+                const pageTitle = `Checklist PPM ${categoryName} - Banjaria Court`;
+                if (refs.ppmPageTitle) refs.ppmPageTitle.textContent = pageTitle;
+                document.title = `${pageTitle} - Technician`;
 
                 renderStep2ScopeNote(template);
                 renderChecklistRows(template);
@@ -3585,7 +4287,7 @@
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
-                restoreSubmittedDataForCurrentContext();
+                restoreBestDataForCurrentContext();
             });
 
             refs.categoryField?.addEventListener('change', (event) => {
@@ -3599,7 +4301,7 @@
 
                 applyTemplate(nextTemplateKey);
                 renderCopySourceOptions();
-                restoreSubmittedDataForCurrentContext();
+                restoreBestDataForCurrentContext();
             });
 
             refs.templateType?.addEventListener('change', (event) => {
@@ -3611,7 +4313,7 @@
 
                 applyTemplate(event.target.value);
                 renderCopySourceOptions();
-                restoreSubmittedDataForCurrentContext();
+                restoreBestDataForCurrentContext();
             });
 
             refs.locationSelect?.addEventListener('change', () => {
@@ -3619,7 +4321,7 @@
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
-                restoreSubmittedDataForCurrentContext();
+                restoreBestDataForCurrentContext();
             });
 
             refs.copyFromLocationSelect?.addEventListener('change', () => {
@@ -3875,8 +4577,8 @@
                 updatePictureInputState();
             });
 
-            refs.confirmPictureBtn?.addEventListener('click', () => {
-                confirmSelectedPictureEntry();
+            refs.confirmPictureBtn?.addEventListener('click', async () => {
+                await confirmSelectedPictureEntry();
             });
 
             refs.clearPictureBtn?.addEventListener('click', () => {
@@ -3913,11 +4615,69 @@
                 }
             });
 
-            refs.saveDraftBtn?.addEventListener('click', () => {
-                alert('Draft structure based on current checklist is ready. Save draft integration will be implemented in the next phase.');
+            refs.saveDraftBtn?.addEventListener('click', async () => {
+                if ((refs.pictureUpload?.files?.length || 0) > 0) {
+                    alert('Please click “Confirm Picture” before saving the draft so the picture is stored offline.');
+                    return;
+                }
+                const saved = await saveCurrentDraft();
+                alert(saved
+                    ? 'Draft saved safely on this device. You can close the form and continue later.'
+                    : 'Draft could not be saved on this device. Please keep this page open and check browser storage settings.');
             });
 
-            refs.form?.addEventListener('submit', (event) => {
+            const structuralFieldIds = new Set([
+                'categoryField',
+                'templateType',
+                'inspectionDate',
+                'locationSelect',
+                'copyFromLocationSelect',
+                'pictureUpload'
+            ]);
+
+            refs.form?.addEventListener('input', (event) => {
+                if (!structuralFieldIds.has(String(event.target?.id || ''))) scheduleDraftSave();
+            });
+
+            refs.form?.addEventListener('change', (event) => {
+                if (!structuralFieldIds.has(String(event.target?.id || ''))) scheduleDraftSave();
+            });
+
+            refs.retrySyncBtn?.addEventListener('click', async () => {
+                await syncPendingSubmissions();
+            });
+
+            refs.openDraftsBtn?.addEventListener('click', async () => {
+                await renderDraftManager();
+                draftManagerModal?.show();
+            });
+
+            refs.draftList?.addEventListener('click', async (event) => {
+                const button = event.target.closest('button[data-draft-action][data-draft-id]');
+                if (!button) return;
+                const draftId = String(button.dataset.draftId || '');
+                if (!draftId) return;
+                if (button.dataset.draftAction === 'restore') {
+                    await restoreDraftById(draftId);
+                } else if (button.dataset.draftAction === 'delete') {
+                    await deleteDraftById(draftId);
+                }
+            });
+
+            window.addEventListener('online', () => {
+                refreshSyncStatus();
+                syncPendingSubmissions();
+            });
+
+            window.addEventListener('offline', () => {
+                refreshSyncStatus();
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden' && hasUnsavedDraftChanges) saveCurrentDraft();
+            });
+
+            refs.form?.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
@@ -3945,28 +4705,98 @@
                 const location = String(refs.locationSelect?.value || '');
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
 
-                markLocationSubmitted(templateKey, monthKey, location);
-                saveSubmittedFormSnapshot(templateKey, monthKey, location);
-                submitPPMToBackend(buildPPMPayload(templateKey, monthKey, location)).catch((error) => {
-                    console.warn('PPM backend sync failed:', error);
-                });
-                renderSubmissionTrack(templateKey, template);
-                renderCopySourceOptions();
+                if (!window.PPMOfflineStore?.isSupported()) {
+                    alert('Offline storage is unavailable in this browser. Please use a current version of Chrome, Safari, or Edge.');
+                    return;
+                }
 
-                clearAllConfirmedPictureEntries();
-                clearUnconfirmedPictureInput();
+                const submitButton = refs.form.querySelector('button[type="submit"]');
+                if (submitButton) submitButton.disabled = true;
 
-                alert('Submission saved locally and sync queued to backend.');
+                try {
+                    const payload = buildPPMPayload(templateKey, monthKey, location);
+                    const context = getCurrentContext();
+                    const outboxRecord = {
+                        id: payload.id,
+                        templateKey,
+                        monthKey,
+                        location,
+                        payload,
+                        pictures: picturesForOfflineStorage(),
+                        status: 'pending',
+                        attempts: 0,
+                        createdAt: new Date().toISOString(),
+                        lastError: ''
+                    };
+
+                    await window.PPMOfflineStore.putOutbox(outboxRecord);
+                    markLocationSyncState(templateKey, monthKey, location, 'pending');
+                    saveSubmittedFormSnapshot(templateKey, monthKey, location);
+                    await window.PPMOfflineStore.deleteDraft(context.id);
+                    refreshDraftCount();
+                    hasUnsavedDraftChanges = false;
+                    renderSubmissionTrack(templateKey, template);
+                    renderCopySourceOptions();
+                    clearAllConfirmedPictureEntries();
+                    clearUnconfirmedPictureInput();
+                    setDraftSaveState('Submission saved on device');
+
+                    if (!navigator.onLine) {
+                        await refreshSyncStatus();
+                        alert('Saved offline on this device. It will sync automatically when internet returns.');
+                        return;
+                    }
+
+                    const result = await syncPendingSubmissions();
+                    if (result.failed > 0) {
+                        alert('Saved safely on this device, but the online sync failed. Use “Sync now” when the connection is stable.');
+                    } else {
+                        alert('PPM submission synced successfully.');
+                    }
+                } catch (error) {
+                    console.warn('Unable to queue PPM submission:', error);
+                    updateSyncPanel('Could not save this submission on the device.', 'error');
+                    alert('The submission could not be saved. Please use Save Draft and try again.');
+                } finally {
+                    if (submitButton) submitButton.disabled = false;
+                }
             });
 
             initDefaultDates();
+            purgeOldSubmittedSnapshots();
             const initialTemplateKey = initializeCategoryAndTemplateFilters();
             applyTemplate(initialTemplateKey);
             renderConfirmedPictureEntries();
             updatePictureInputState();
+            refreshSyncStatus();
+            refreshDraftCount();
+            requestPersistentOfflineStorage();
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./ppm-service-worker.js')
+                    .then(() => navigator.serviceWorker.ready)
+                    .then(() => {
+                        if (refs.offlineCacheBadge) {
+                            refs.offlineCacheBadge.textContent = 'Offline Ready';
+                            refs.offlineCacheBadge.className = 'badge text-bg-success';
+                        }
+                    })
+                    .catch((error) => {
+                        console.warn('PPM offline cache registration failed:', error);
+                        if (refs.offlineCacheBadge) {
+                            refs.offlineCacheBadge.textContent = 'Offline Cache Failed';
+                            refs.offlineCacheBadge.className = 'badge text-bg-danger';
+                        }
+                    });
+            } else if (refs.offlineCacheBadge) {
+                refs.offlineCacheBadge.textContent = 'Offline Unsupported';
+                refs.offlineCacheBadge.className = 'badge text-bg-danger';
+            }
+
             refreshPPMFromBackend().finally(() => {
                 renderCopySourceOptions();
-                restoreSubmittedDataForCurrentContext();
+                restoreBestDataForCurrentContext();
+                syncPendingSubmissions();
             });
         });
     </script>

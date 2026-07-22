@@ -82,6 +82,8 @@ Columns:
 - `confirmChecklist`
 - `technicianNotes`
 - `checklistFieldValues`
+- PPM evidence image URLs are stored as `__imageUrls` inside `checklistFieldValues` for backward compatibility
+- PPM evidence metadata (`url`, `name`, `note`, and SHA-256 `digest`) is stored as `__evidence`
 - `updatedAt`
 - `submittedAt`
 
@@ -326,4 +328,5 @@ const result = await response.json();
 
 - `ANYONE` access for the web app is needed for public submission from GitHub Pages.
 - If you want a more secure version later, we can add a simple secret token and check it in `doPost`.
-- Use the same sheet names exactly as `Aduan` and `Technical`.
+- Use the same sheet names exactly as `Aduan`, `Technical`, and `PPM`.
+- The current backend uses a script lock to serialize writes and deduplicates retried PPM evidence by submission ID plus SHA-256 digest.

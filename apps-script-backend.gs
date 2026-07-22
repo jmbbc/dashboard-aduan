@@ -6,12 +6,18 @@ function normalizeIdValue(id) {
 }
 
 function doPost(e) {
+  let lock = null;
   try {
     const payload = JSON.parse(e.postData.contents || '{}');
     const type = String(e.parameter.type || payload.type || '').trim();
     const action = String(e.parameter.action || payload.action || 'upsert').trim().toLowerCase();
     if (!type || !['Aduan', 'Technical', 'PPM'].includes(type)) {
       return jsonResponse({ success: false, error: 'Invalid type, expected Aduan, Technical, or PPM' }, 400);
+    }
+
+    lock = LockService.getScriptLock();
+    if (!lock.tryLock(30000)) {
+      return jsonResponse({ success: false, error: 'Backend is busy. Please retry shortly.' }, 503);
     }
 
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(type);
@@ -33,6 +39,14 @@ function doPost(e) {
     return jsonResponse({ success: true, row: row.object, result });
   } catch (err) {
     return jsonResponse({ success: false, error: err.message }, 500);
+  } finally {
+    if (lock) {
+      try {
+        lock.releaseLock();
+      } catch (releaseError) {
+        // Lock may already be released after an Apps Script runtime interruption.
+      }
+    }
   }
 }
 
@@ -271,7 +285,7 @@ function deleteRowById(sheet, type, id) {
 function buildRow(type, data) {
   const now = new Date().toISOString();
   const id = normalizeIdValue(data.id || generateId(type));
-  const imageUrls = uploadImages(data.images || []);
+  const imageUrls = type === 'PPM' ? [] : uploadImages(data.images || []);
   const workLogs = Array.isArray(data.workLogs)
     ? data.workLogs.map((log) => `${log.date || ''} | ${log.note || ''}`).join('\n')
     : '';
@@ -349,6 +363,8 @@ function buildRow(type, data) {
   }
 
   if (type === 'PPM') {
+    const evidence = uploadPPMEvidence(data.images || [], id);
+    const ppmImageUrls = evidence.map((item) => item.url).filter(Boolean);
     let checklistFieldValues = {};
     try {
       if (typeof data.checklistFieldValues === 'string') {
@@ -358,6 +374,13 @@ function buildRow(type, data) {
       }
     } catch (error) {
       checklistFieldValues = {};
+    }
+
+    // Keep PPM evidence URLs inside the existing JSON column so current sheets
+    // remain backward compatible and do not require a column migration.
+    if (ppmImageUrls.length > 0) {
+      checklistFieldValues.__imageUrls = ppmImageUrls;
+      checklistFieldValues.__evidence = evidence;
     }
 
     return {
@@ -396,6 +419,7 @@ function buildRow(type, data) {
         confirmChecklist: Boolean(data.confirmChecklist),
         technicianNotes: data.technicianNotes || '',
         checklistFieldValues,
+        imageUrls: ppmImageUrls,
         updatedAt: data.updatedAt || now,
         submittedAt: data.submittedAt || now
       }
@@ -428,6 +452,64 @@ function uploadImages(images) {
       // If sharing fails, still return the file URL for browser access when possible.
     }
     return file.getUrl();
+  }).filter(Boolean);
+}
+
+function uploadPPMEvidence(images, submissionId) {
+  if (!Array.isArray(images)) {
+    return [];
+  }
+
+  const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+  const safeSubmissionId = String(submissionId || 'PPM')
+    .replace(/[^a-zA-Z0-9_-]+/g, '_')
+    .slice(0, 80);
+
+  return images.map((image, index) => {
+    try {
+      const dataUrl = String(image.dataUrl || '');
+      const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+      if (!match) return null;
+
+      const mimeType = match[1];
+      const bytes = Utilities.base64Decode(match[2]);
+      const digestBytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, bytes);
+      const digest = digestBytes.map((value) => (`0${((value + 256) % 256).toString(16)}`).slice(-2)).join('');
+      const originalName = String(image.name || `evidence-${index + 1}.jpg`)
+        .replace(/[^a-zA-Z0-9._-]+/g, '_')
+        .slice(-80);
+      const storageName = `${safeSubmissionId}__${digest.slice(0, 20)}__${originalName}`;
+      const existingFiles = folder.getFilesByName(storageName);
+      let file;
+
+      if (existingFiles.hasNext()) {
+        file = existingFiles.next();
+      } else {
+        const blob = Utilities.newBlob(bytes, mimeType, storageName);
+        file = folder.createFile(blob);
+        try {
+          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        } catch (sharingError) {
+          // Keep the Drive URL even when public sharing is restricted by policy.
+        }
+      }
+
+      const note = String(image.note || '');
+      try {
+        file.setDescription(JSON.stringify({ submissionId: safeSubmissionId, digest, note }));
+      } catch (descriptionError) {
+        // Description metadata is helpful but not required for persistence.
+      }
+
+      return {
+        url: file.getUrl(),
+        name: originalName,
+        note,
+        digest
+      };
+    } catch (error) {
+      return null;
+    }
   }).filter(Boolean);
 }
 
