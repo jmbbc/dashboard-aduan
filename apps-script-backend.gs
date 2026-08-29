@@ -87,7 +87,8 @@ function doGet(e) {
       dataRows = rows;
     }
 
-    const items = dataRows.map((row) => buildRowObject(headerKeys, row, type));
+    const timeZone = sheet.getParent().getSpreadsheetTimeZone();
+    const items = dataRows.map((row) => buildRowObject(headerKeys, row, type, timeZone));
     return jsonResponse({ success: true, rows: items });
   } catch (err) {
     return jsonResponse({ success: false, error: err.message }, 500);
@@ -180,11 +181,27 @@ function getDefaultHeadersForType(type) {
   return ['id', 'templateKey', 'category', 'referenceNo', 'frequency', 'location', 'monthKey', 'inspectionDate', 'templateDescription', 'technicianName', 'verifiedBy', 'techDeclaration', 'confirmChecklist', 'technicianNotes', 'checklistFieldValues', 'updatedAt', 'submittedAt'];
 }
 
-function buildRowObject(headerKeys, row, type) {
+function formatPPMDateValue(value, format, timeZone) {
+  if (Object.prototype.toString.call(value) !== '[object Date]' || Number.isNaN(value.getTime())) {
+    return value;
+  }
+  return Utilities.formatDate(value, timeZone || Session.getScriptTimeZone(), format);
+}
+
+function buildRowObject(headerKeys, row, type, timeZone) {
   const headers = headerKeys.map((header, index) => header || getDefaultHeadersForType(type)[index] || `col${index}`);
   const obj = {};
   headers.forEach((key, index) => {
-    obj[key] = row[index];
+    const value = row[index];
+    if (type === 'PPM' && key === 'monthKey') {
+      obj[key] = formatPPMDateValue(value, 'yyyy-MM', timeZone);
+      return;
+    }
+    if (type === 'PPM' && key === 'inspectionDate') {
+      obj[key] = formatPPMDateValue(value, 'yyyy-MM-dd', timeZone);
+      return;
+    }
+    obj[key] = value;
   });
   return obj;
 }
