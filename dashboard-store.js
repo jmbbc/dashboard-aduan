@@ -604,6 +604,7 @@
             reporter: String(item.reporter || '-'),
             phone: String(item.phone || ''),
             unit: canonicalUnit,
+            relatedUnit: String(item.relatedUnit || item.location || '').trim(),
             date: complaintDate,
             status: String(item.status || 'Baru'),
             details: rawDetails || (workLogs[0] ? workLogs[0].note : ''),
