@@ -493,8 +493,11 @@
     function normalizeImageSourceUrl(value) {
         const source = String(value || '').trim();
         const driveFileMatch = source.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/?#]+)/i);
-        if (driveFileMatch) {
-            return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(driveFileMatch[1])}`;
+        const driveQueryMatch = source.match(/^https?:\/\/drive\.google\.com\/(?:uc|open).*?[?&]id=([^&#]+)/i);
+        const driveImageMatch = source.match(/^https?:\/\/lh3\.googleusercontent\.com\/d\/([^/?#]+)/i);
+        const driveFileId = driveFileMatch?.[1] || driveQueryMatch?.[1] || driveImageMatch?.[1];
+        if (driveFileId) {
+            return `https://lh3.googleusercontent.com/d/${encodeURIComponent(decodeURIComponent(driveFileId))}`;
         }
         return source;
     }

@@ -471,7 +471,7 @@ function uploadImages(images) {
     } catch (ex) {
       // If sharing fails, still return the file URL for browser access when possible.
     }
-    return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(file.getId())}`;
+    return `https://lh3.googleusercontent.com/d/${encodeURIComponent(file.getId())}`;
   }).filter(Boolean);
 }
 
