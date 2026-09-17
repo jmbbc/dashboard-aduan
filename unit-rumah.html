@@ -1194,6 +1194,7 @@
             let sortMode = 'total';
             let unitChart;
             let statusChart;
+            const SYNC_OUTBOX_KEY = `${store.STORAGE_KEYS.complaints}_sync_outbox`;
 
             const unitDetailModal = refs.unitDetailModalEl
                 ? new bootstrap.Modal(refs.unitDetailModalEl)
@@ -1323,12 +1324,46 @@
                 try {
                     const rows = await fetchBackendData('Aduan');
                     if (Array.isArray(rows) && rows.length) {
-                        complaints = store.saveComplaints(rows);
+                        complaints = store.saveComplaints(mergeBackendComplaints(rows));
                         renderAll();
                     }
                 } catch (error) {
                     console.warn('Backend refresh failed:', error);
                 }
+            }
+
+            function loadPendingChanges() {
+                try {
+                    const items = JSON.parse(localStorage.getItem(SYNC_OUTBOX_KEY) || '[]');
+                    return Array.isArray(items) ? items : [];
+                } catch (error) {
+                    console.warn('Gagal membaca perubahan tertunda:', error);
+                    return [];
+                }
+            }
+
+            function mergeBackendComplaints(rows) {
+                let merged = Array.isArray(rows) ? [...rows] : [];
+                const localById = new Map(complaints.map((row) => [String(row?.id || '').trim(), row]));
+
+                loadPendingChanges().forEach((item) => {
+                    const pendingId = String(item?.payload?.id || '').trim();
+                    if (!pendingId) return;
+                    if (item.action === 'delete') {
+                        merged = merged.filter((row) => String(row?.id || '').trim() !== pendingId);
+                        return;
+                    }
+
+                    const pendingSnapshot = localById.get(pendingId) || item.payload;
+                    const index = merged.findIndex((row) => String(row?.id || '').trim() === pendingId);
+                    if (index === -1) {
+                        merged.unshift({ ...item.payload, ...pendingSnapshot });
+                    } else {
+                        merged[index] = { ...merged[index], ...item.payload, ...pendingSnapshot };
+                    }
+                });
+
+                return merged;
             }
 
             function renderAll() {

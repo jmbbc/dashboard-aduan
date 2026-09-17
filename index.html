@@ -2633,6 +2633,7 @@ if (!document.hidden) {
 
             function mergeBackendComplaints(rows) {
                 let merged = Array.isArray(rows) ? [...rows] : [];
+                const localById = new Map(complaints.map((row) => [String(row?.id || '').trim(), row]));
                 loadSyncOutbox().forEach((item) => {
                     const pendingId = String(item?.payload?.id || '').trim();
                     if (!pendingId) return;
@@ -2640,11 +2641,12 @@ if (!document.hidden) {
                         merged = merged.filter((row) => String(row?.id || '') !== pendingId);
                         return;
                     }
+                    const pendingSnapshot = localById.get(pendingId) || item.payload;
                     const index = merged.findIndex((row) => String(row?.id || '') === pendingId);
                     if (index === -1) {
-                        merged.unshift(item.payload);
+                        merged.unshift({ ...item.payload, ...pendingSnapshot });
                     } else {
-                        merged[index] = { ...merged[index], ...item.payload };
+                        merged[index] = { ...merged[index], ...item.payload, ...pendingSnapshot };
                     }
                 });
                 return merged;
