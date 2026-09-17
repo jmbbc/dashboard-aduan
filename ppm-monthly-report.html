@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PPM Monthly Report</title>
+    <title>Laporan Bulanan PPM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <style>
@@ -46,34 +46,35 @@
             .next-grid { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="navigation.css?v=2">
 </head>
 <body>
-    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Main menu">
+    <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
         <div class="text-center mb-4">
             <i class="bi bi-cpu fs-1"></i>
-            <h4 class="mt-2">Technical</h4>
+            <h4 class="mt-2">Teknikal</h4>
         </div>
         <nav class="nav flex-column">
-            <div class="nav-item mb-1">
+            <div class="nav-item nav-section nav-section-aduan">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="false" aria-controls="aduanMenu">
-                    Complaints
+                    <span class="nav-section-label"><i class="bi bi-chat-left-text-fill nav-section-icon"></i><span>Aduan</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse" id="aduanMenu">
-                    <a class="nav-link ps-4" href="index.html">Complaints Dashboard</a>
-                    <a class="nav-link ps-4" href="unit-rumah.html">Residential Units</a>
+                    <a class="nav-link ps-4" href="index.html">Dashboard Aduan</a>
+                    <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item nav-section nav-section-teknikal">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="true" aria-controls="techMenu">
-                    Technical
+                    <span class="nav-section-label"><i class="bi bi-tools nav-section-icon"></i><span>Teknikal</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse show" id="techMenu">
-                    <a class="nav-link ps-4" href="technical.html">Technical Dashboard</a>
-                    <a class="nav-link active ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
-                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
-                    <a class="nav-link ps-4" href="technical-equipment.html">Equipment Status</a>
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Teknikal</a>
+                    <a class="nav-link active ps-4" href="ppm-monthly-report.html">Laporan Bulanan PPM</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Teknikal</a>
+                    <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
             </div>
         </nav>
@@ -81,20 +82,20 @@
 
     <div class="main-content ppm-layout" id="main-content" role="main">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Buka atau tutup menu sisi" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item"><a href="technical.html">Technical</a></li>
-                        <li class="breadcrumb-item active">PPM Monthly Report</li>
+                        <li class="breadcrumb-item"><a href="technical.html">Teknikal</a></li>
+                        <li class="breadcrumb-item active">Laporan Bulanan PPM</li>
                     </ol>
                 </nav>
-                <h2 class="mb-0">PPM Monthly Report - Page Map Draft</h2>
-                <p class="text-muted small mb-0">Compact phased version for reference before actual flow implementation.</p>
+                <h2 class="mb-0">Laporan Bulanan PPM - Draf Peta Halaman</h2>
+                <p class="text-muted small mb-0">Versi ringkas berfasa untuk rujukan sebelum aliran sebenar dilaksanakan.</p>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <a class="btn btn-sm btn-outline-primary" href="ppm-form.html">Open Form Structure</a>
-                <span class="badge text-bg-warning badge-draft">Draft Only</span>
+                <a class="btn btn-sm btn-outline-primary" href="ppm-form.html">Buka Struktur Borang</a>
+                <span class="badge text-bg-warning badge-draft">Draf Sahaja</span>
             </div>
         </div>
 
@@ -102,38 +103,38 @@
             <div class="col-lg-3 col-md-6">
                 <div class="card card-light h-100">
                     <div class="card-body">
-                        <div class="small-title">Objective</div>
-                        <p class="quick-text">Complete flow for online submission, review, and physical reporting.</p>
+                        <div class="small-title">Objektif</div>
+                        <p class="quick-text">Aliran lengkap untuk penghantaran dalam talian, semakan, dan laporan fizikal.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="card card-light h-100">
                     <div class="card-body">
-                        <div class="small-title">Main Roles</div>
-                        <p class="quick-text">Technician submit. Admin/Supervisor review, approve/reject, export.</p>
+                        <div class="small-title">Peranan Utama</div>
+                        <p class="quick-text">Teknikal menghantar. Admin/Penyelia menyemak, meluluskan/menolak, dan mengeksport.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="card card-light h-100">
                     <div class="card-body">
-                        <div class="small-title">Technician Access</div>
-                        <p class="quick-text">Technician can only see one screen: <span class="path-mono">ppm-form.html</span>.</p>
+                        <div class="small-title">Akses Teknikal</div>
+                        <p class="quick-text">Teknikal hanya boleh melihat satu skrin: <span class="path-mono">ppm-form.html</span>.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="card card-light h-100">
                     <div class="card-body">
-                        <div class="small-title">Status Workflow</div>
+                        <div class="small-title">Aliran Status</div>
                         <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-secondary badge-stage">Draft</span>
-                            <span class="badge bg-primary badge-stage">Submitted</span>
-                            <span class="badge bg-info text-dark badge-stage">In Review</span>
-                            <span class="badge bg-success badge-stage">Approved</span>
-                            <span class="badge bg-danger badge-stage">Rejected</span>
-                            <span class="badge bg-dark badge-stage">Locked</span>
+                            <span class="badge bg-secondary badge-stage">Draf</span>
+                            <span class="badge bg-primary badge-stage">Dihantar</span>
+                            <span class="badge bg-info text-dark badge-stage">Dalam Semakan</span>
+                            <span class="badge bg-success badge-stage">Diluluskan</span>
+                            <span class="badge bg-danger badge-stage">Ditolak</span>
+                            <span class="badge bg-dark badge-stage">Dikunci</span>
                         </div>
                     </div>
                 </div>
@@ -142,33 +143,33 @@
 
         <div class="card card-light mb-3">
             <div class="card-body">
-                <h5 class="mb-2">Implementation Sequence</h5>
+                <h5 class="mb-2">Turutan Pelaksanaan</h5>
                 <div class="flow-track">
-                    <div class="flow-step"><span class="num">1</span><span class="label">PPM Dashboard</span></div>
-                    <div class="flow-step"><span class="num">2</span><span class="label">PPM Form</span></div>
-                    <div class="flow-step"><span class="num">3</span><span class="label">PPM Review</span></div>
-                    <div class="flow-step"><span class="num">4</span><span class="label">Report Center</span></div>
-                    <div class="flow-step"><span class="num">5</span><span class="label">Print Preview</span></div>
+                    <div class="flow-step"><span class="num">1</span><span class="label">Dashboard PPM</span></div>
+                    <div class="flow-step"><span class="num">2</span><span class="label">Borang PPM</span></div>
+                    <div class="flow-step"><span class="num">3</span><span class="label">Semakan PPM</span></div>
+                    <div class="flow-step"><span class="num">4</span><span class="label">Pusat Laporan</span></div>
+                    <div class="flow-step"><span class="num">5</span><span class="label">Pratonton Cetakan</span></div>
                 </div>
             </div>
         </div>
 
         <div class="alert alert-info py-2 px-3 mb-3 small" role="alert">
-            <strong>Role rule:</strong> Technician view is restricted to the PPM form only. Dashboard, review, report center, and print preview screens are for admin/supervisor.
+            <strong>Peraturan peranan:</strong> Paparan teknikal dihadkan kepada borang PPM sahaja. Dashboard, semakan, pusat laporan, dan pratonton cetakan adalah untuk admin/penyelia.
         </div>
 
         <div class="card card-light mb-3">
             <div class="card-body">
-                <h5 class="mb-2">Page Map (Compact)</h5>
+                <h5 class="mb-2">Peta Halaman (Ringkas)</h5>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover mb-0">
                         <thead>
                             <tr>
                                 <th class="col-no">#</th>
-                                <th>Path (Planned)</th>
-                                <th>Screen</th>
-                                <th>Role</th>
-                                <th>Purpose</th>
+                                <th>Laluan (Dirancang)</th>
+                                <th>Skrin</th>
+                                <th>Peranan</th>
+                                <th>Tujuan</th>
                                 <th class="col-status">Status</th>
                             </tr>
                         </thead>
@@ -176,42 +177,42 @@
                             <tr>
                                 <td>1</td>
                                 <td><span class="path-mono">ppm-monthly-report.html</span></td>
-                                <td>PPM Dashboard</td>
-                                <td>Admin only</td>
-                                <td>Monitor monthly submissions, progress, and approval queue</td>
-                                <td><span class="badge text-bg-success">Draft completed</span></td>
+                                <td>Dashboard PPM</td>
+                                <td>Admin sahaja</td>
+                                <td>Pantau penghantaran bulanan, kemajuan, dan senarai menunggu kelulusan</td>
+                                <td><span class="badge text-bg-success">Draf siap</span></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td><a class="path-mono" href="ppm-form.html">ppm-form.html</a></td>
-                                <td>PPM Submission Form</td>
-                                <td>Technician only</td>
-                                <td>Fill checklist, readings, corrective action, and photo evidence</td>
-                                <td><span class="badge text-bg-success">Structure draft completed</span></td>
+                                <td>Borang Penghantaran PPM</td>
+                                <td>Teknikal sahaja</td>
+                                <td>Isi senarai semak, bacaan, tindakan pembetulan, dan bukti gambar</td>
+                                <td><span class="badge text-bg-success">Draf struktur siap</span></td>
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td><span class="path-mono">ppm-review.html</span></td>
-                                <td>PPM Detail & Review</td>
-                                <td>Admin/Supervisor</td>
-                                <td>Review checklist items, approve/reject with comments</td>
-                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                                <td>Butiran & Semakan PPM</td>
+                                <td>Admin/Penyelia</td>
+                                <td>Semak item senarai semak, luluskan/tolak dengan ulasan</td>
+                                <td><span class="badge text-bg-warning">Belum dibina</span></td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td><span class="path-mono">ppm-report-center.html</span></td>
-                                <td>Monthly Report Center</td>
+                                <td>Pusat Laporan Bulanan</td>
                                 <td>Admin</td>
-                                <td>Filter monthly data and export CSV/PDF</td>
-                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                                <td>Tapis data bulanan dan eksport CSV/PDF</td>
+                                <td><span class="badge text-bg-warning">Belum dibina</span></td>
                             </tr>
                             <tr>
                                 <td>5</td>
                                 <td><span class="path-mono">ppm-print-preview.html</span></td>
-                                <td>Print Preview</td>
+                                <td>Pratonton Cetakan</td>
                                 <td>Admin</td>
-                                <td>Preview physical format before printing</td>
-                                <td><span class="badge text-bg-warning">Not built yet</span></td>
+                                <td>Pratonton format fizikal sebelum mencetak</td>
+                                <td><span class="badge text-bg-warning">Belum dibina</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -221,12 +222,12 @@
 
         <div class="card card-light">
             <div class="card-body">
-                <h5 class="mb-2">Next Blueprint (Not Implemented Yet)</h5>
+                <h5 class="mb-2">Pelan Seterusnya (Belum Dilaksanakan)</h5>
                 <ul class="small text-muted mb-0 next-grid">
-                    <li>Finalize checklist field list by equipment/asset type.</li>
-                    <li>Define photo evidence format and minimum submission requirements.</li>
-                    <li>Prepare data schema for monthly summary and report details.</li>
-                    <li>Plan route and permissions so technician can only access <span class="path-mono">ppm-form.html</span>.</li>
+                    <li>Muktamadkan senarai medan semakan mengikut jenis peralatan/aset.</li>
+                    <li>Tetapkan format bukti gambar dan keperluan minimum penghantaran.</li>
+                    <li>Sediakan skema data untuk ringkasan bulanan dan butiran laporan.</li>
+                    <li>Rancang laluan dan kebenaran supaya teknikal hanya boleh mengakses <span class="path-mono">ppm-form.html</span>.</li>
                 </ul>
             </div>
         </div>

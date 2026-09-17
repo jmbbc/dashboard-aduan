@@ -302,7 +302,7 @@ function deleteRowById(sheet, type, id) {
 function buildRow(type, data) {
   const now = new Date().toISOString();
   const id = normalizeIdValue(data.id || generateId(type));
-  const imageUrls = type === 'PPM' ? [] : uploadImages(data.images || []);
+  const imageUrls = type === 'PPM' ? [] : uploadImages(data.images || data.imageAttachments || []);
   const workLogs = Array.isArray(data.workLogs)
     ? data.workLogs.map((log) => `${log.date || ''} | ${log.note || ''}`).join('\n')
     : '';
@@ -453,7 +453,10 @@ function uploadImages(images) {
 
   const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
   return images.map((image) => {
-    const dataUrl = String(image.dataUrl || '');
+    const dataUrl = String(image.dataUrl || image.url || '').trim();
+    if (/^https?:\/\//i.test(dataUrl)) {
+      return dataUrl;
+    }
     const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
     if (!match) {
       return '';
@@ -468,7 +471,7 @@ function uploadImages(images) {
     } catch (ex) {
       // If sharing fails, still return the file URL for browser access when possible.
     }
-    return file.getUrl();
+    return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(file.getId())}`;
   }).filter(Boolean);
 }
 

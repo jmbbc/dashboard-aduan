@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Technical</title>
+    <title>Dashboard Teknikal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <style>
@@ -362,6 +362,42 @@
             display: none;
         }
 
+        .tech-sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.84rem;
+        }
+
+        .tech-sync-status.is-pending,
+        .tech-sync-status.is-offline { border-color: #f4d58d; background: #fffbeb; color: #92400e; }
+        .tech-sync-status.is-synced { border-color: #bbf7d0; background: #f0fdf4; color: #166534; }
+        .technical-mobile-list { display: none; }
+
+        .technical-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+
+        .technical-card + .technical-card { margin-top: 0.65rem; }
+        .technical-card-title { margin: 0; font-size: 0.98rem; font-weight: 700; line-height: 1.35; }
+        .technical-card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem 0.75rem; margin: 0.7rem 0; color: #64748b; font-size: 0.8rem; }
+        .technical-card-meta strong { color: #334155; }
+
+        .tech-form-steps { display: flex; gap: 0.35rem; padding: 0.65rem 0.9rem 0; }
+        .tech-form-step-indicator { flex: 1; border: 0; border-bottom: 3px solid #dbe3ef; background: transparent; padding: 0 0 0.45rem; color: #64748b; font-size: 0.78rem; font-weight: 600; text-align: left; }
+        .tech-form-step-indicator.is-active { border-color: #198754; color: #198754; }
+        .tech-form-step[hidden] { display: none !important; }
+
         @media (max-width: 768px) {
             .tech-modal-compact {
                 --tech-modal-body-height: clamp(310px, 56vh, 390px);
@@ -374,20 +410,30 @@
                 padding-right: 0.68rem;
             }
         }
-        @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .main-content { margin-left: 0; padding: 16px; } .sidebar.show { width: var(--sidebar-width); } }
+        @media (max-width: 768px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .main-content { margin-left: 0; padding: 16px; }
+            .sidebar.show { width: var(--sidebar-width); }
+            .technical-desktop-table { display: none; }
+            .technical-mobile-list { display: block; }
+            .technical-card-meta { grid-template-columns: 1fr; }
+            .quick-tech-entry { display: none; }
+            .tech-modal-compact .modal-footer .btn { flex: 1 1 auto; }
+        }
     </style>
+    <link rel="stylesheet" href="navigation.css?v=2">
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
         <div class="text-center mb-4">
             <i class="bi bi-cpu fs-1"></i>
-            <h4 class="mt-2">Technical</h4>
+            <h4 class="mt-2">Teknikal</h4>
         </div>
         <nav class="nav flex-column">
-            <div class="nav-item mb-1">
+            <div class="nav-item nav-section nav-section-aduan">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="false" aria-controls="aduanMenu">
-                    Aduan
+                    <span class="nav-section-label"><i class="bi bi-chat-left-text-fill nav-section-icon"></i><span>Aduan</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse" id="aduanMenu">
@@ -395,15 +441,15 @@
                     <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item nav-section nav-section-teknikal">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="true" aria-controls="techMenu">
-                    Technical
+                    <span class="nav-section-label"><i class="bi bi-tools nav-section-icon"></i><span>Teknikal</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse show" id="techMenu">
-                    <a class="nav-link active ps-4" href="technical.html">Dashboard Technical</a>
-                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
-                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link active ps-4" href="technical.html">Dashboard Teknikal</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">Laporan Bulanan PPM</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Teknikal</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
             </div>
@@ -416,12 +462,12 @@
         </div>
     </div>
 
-    <div class="main-content compact-technical" id="main-content" role="main" aria-label="Dashboard technical">
+    <div class="main-content compact-technical" id="main-content" role="main" aria-label="Dashboard teknikal">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
             <div>
-                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="index.html">Dashboard</a></li><li class="breadcrumb-item active">Technical</li></ol></nav>
-                <h2 class="mb-0">Dashboard Technical</h2>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="index.html">Dashboard</a></li><li class="breadcrumb-item active">Teknikal</li></ol></nav>
+                <h2 class="mb-0">Dashboard Teknikal</h2>
                 <p class="text-muted small mb-0">Pantau lesen, penyelenggaraan, pembaikan, dan isu teknikal</p>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -483,7 +529,7 @@
             </div>
         </div>
 
-        <div class="card chart-container mb-4">
+        <div class="card chart-container mb-4 quick-tech-entry">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-1">Catatan Teknikal Baru</h5>
@@ -557,7 +603,7 @@
 
         <div class="card chart-container">
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Senarai Technical</h5>
+                <h5 class="mb-0">Senarai Teknikal</h5>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
                     <input type="text" class="form-control search-box" id="searchTech" placeholder="Cari teknikal..." aria-label="Cari teknikal" style="width:240px;">
                     <select class="form-select sort-select" id="techSort" aria-label="Susun senarai teknikal">
@@ -580,8 +626,13 @@
                 <span id="techResultInfo">Memaparkan 0 rekod</span>
                 <span id="techLastSync">Data terakhir: -</span>
             </div>
+            <div class="tech-sync-status" id="techSyncStatus" role="status" aria-live="polite">
+                <i class="bi bi-cloud-check" aria-hidden="true"></i>
+                <span id="techSyncStatusText">Menyemak sambungan...</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-auto d-none" id="retryTechSyncBtn">Cuba semula</button>
+            </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped mb-0">
+                <table class="table table-hover table-striped mb-0 technical-desktop-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -597,6 +648,7 @@
                     </thead>
                     <tbody id="technicalBody"></tbody>
                 </table>
+                <div class="technical-mobile-list" id="technicalMobileList" aria-live="polite"></div>
                 <nav class="mt-3">
                     <ul class="pagination justify-content-end" id="techPagination"></ul>
                 </nav>
@@ -612,8 +664,14 @@
                     <h5 class="modal-title" id="techModalLabel">Catatan Teknikal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+                <div class="tech-form-steps" id="techFormSteps" aria-label="Langkah borang">
+                    <button class="tech-form-step-indicator is-active" type="button" data-tech-form-step="1">1. Maklumat</button>
+                    <button class="tech-form-step-indicator" type="button" data-tech-form-step="2">2. Kerja</button>
+                    <button class="tech-form-step-indicator" type="button" data-tech-form-step="3">3. Gambar</button>
+                </div>
+                <div class="px-3 pt-2 small text-muted" id="techDraftStatus" aria-live="polite"></div>
                 <div class="modal-body">
-                    <div class="row g-2 tech-meta-grid">
+                    <div class="row g-2 tech-meta-grid tech-form-step" data-tech-step="1">
                         <div class="col-md-6 tech-meta-field">
                             <label class="form-label" for="techTitle">Perkara</label>
                             <input type="text" class="form-control" id="techTitle" placeholder="Contoh: Lesen AV Endpoint" required>
@@ -666,6 +724,8 @@
                             </select>
                             <div class="invalid-feedback">Pilih status.</div>
                         </div>
+                    </div>
+                    <section class="tech-form-step" data-tech-step="2" hidden>
                         <div class="col-12">
                             <label class="form-label mb-1">Butiran Teknikal (Log Report)</label>
                             <div class="tech-log-wrap">
@@ -697,6 +757,8 @@
                                 <div class="small text-danger mt-1 d-none" id="techLogFeedback">Tambah sekurang-kurangnya satu log sebelum simpan.</div>
                             </div>
                         </div>
+                    </section>
+                    <section class="tech-form-step" data-tech-step="3" hidden>
                         <div class="col-12">
                             <label class="form-label mb-1">Lampiran Gambar (Opsyenal)</label>
                             <div class="tech-image-wrap">
@@ -713,10 +775,12 @@
                                 <div class="tech-image-grid mt-2" id="techImagePreview"></div>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" id="closeTechBtn" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-outline-secondary d-none" id="prevTechStepBtn"><i class="bi bi-arrow-left me-1"></i>Kembali</button>
+                    <button type="button" class="btn btn-success" id="nextTechStepBtn">Seterusnya<i class="bi bi-arrow-right ms-1"></i></button>
                     <button type="button" class="btn btn-success d-none" id="techModalEditBtn">Edit</button>
                     <button type="submit" class="btn btn-success" id="submitTechBtn">Simpan</button>
                 </div>
@@ -736,10 +800,14 @@
                 return;
             }
 
+            const TECH_SYNC_OUTBOX_KEY = `${store.STORAGE_KEYS.technical}_sync_outbox`;
+            const TECH_FORM_DRAFT_KEY = `${store.STORAGE_KEYS.technical}_form_draft`;
+
             const refs = {
                 sidebarToggle: document.getElementById('sidebarToggle'),
                 sidebar: document.querySelector('.sidebar'),
                 techBody: document.getElementById('technicalBody'),
+                techMobileList: document.getElementById('technicalMobileList'),
                 techPagination: document.getElementById('techPagination'),
                 techSearch: document.getElementById('searchTech'),
                 techSort: document.getElementById('techSort'),
@@ -756,6 +824,11 @@
                 closeTechBtn: document.getElementById('closeTechBtn'),
                 techModalEditBtn: document.getElementById('techModalEditBtn'),
                 submitTechBtn: document.getElementById('submitTechBtn'),
+                previousTechStepBtn: document.getElementById('prevTechStepBtn'),
+                nextTechStepBtn: document.getElementById('nextTechStepBtn'),
+                techFormStepButtons: document.querySelectorAll('[data-tech-form-step]'),
+                techFormSteps: document.querySelectorAll('.tech-form-step'),
+                techDraftStatus: document.getElementById('techDraftStatus'),
                 techLogBody: document.getElementById('techLogBody'),
                 techLogDateInput: document.getElementById('techLogDate'),
                 techLogDetailsInput: document.getElementById('techLogDetails'),
@@ -768,7 +841,10 @@
                 statTechExpiring: document.getElementById('statTechExpiring'),
                 statTechRepairs: document.getElementById('statTechRepairs'),
                 statTechOpen: document.getElementById('statTechOpen'),
-                statTechCompliance: document.getElementById('statTechCompliance')
+                statTechCompliance: document.getElementById('statTechCompliance'),
+                techSyncStatus: document.getElementById('techSyncStatus'),
+                techSyncStatusText: document.getElementById('techSyncStatusText'),
+                retryTechSyncBtn: document.getElementById('retryTechSyncBtn')
             };
 
             const techFields = {
@@ -801,7 +877,13 @@
             let techReturnToViewAfterSave = false;
             let techDraftLogs = [];
             let techDraftImages = [];
+            let techCurrentFormStep = 1;
+            let techFormHasUnsavedChanges = false;
+            let techAllowModalClose = false;
+            let techDraftSaveTimer = null;
+            let isTechSyncing = false;
             const techPageSize = 5;
+            const TECH_FORM_STEP_COUNT = 3;
             let techPage = 1;
             const MAX_TECH_IMAGES = 3;
             const MAX_TECH_IMAGE_BYTES = 350 * 1024;
@@ -812,6 +894,144 @@
             bindSyncEvents();
             renderAll();
             refreshTechFromBackend();
+            renderTechSyncStatus();
+            void syncPendingTechChanges();
+
+            function loadTechOutbox() {
+                try {
+                    const items = JSON.parse(localStorage.getItem(TECH_SYNC_OUTBOX_KEY) || '[]');
+                    return Array.isArray(items) ? items : [];
+                } catch { return []; }
+            }
+
+            function saveTechOutbox(items) {
+                localStorage.setItem(TECH_SYNC_OUTBOX_KEY, JSON.stringify(items));
+            }
+
+            function queueTechChange(action, payload) {
+                const itemId = String(payload?.id || '');
+                let items = loadTechOutbox();
+                if (itemId) items = items.filter(item => String(item?.payload?.id || '') !== itemId);
+                items.push({ id: `${action}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, action, payload, queuedAt: new Date().toISOString() });
+                saveTechOutbox(items);
+                renderTechSyncStatus();
+            }
+
+            function setTechSyncStatus(style, message, canRetry = false) {
+                refs.techSyncStatus?.classList.remove('is-offline', 'is-pending', 'is-synced');
+                if (style) refs.techSyncStatus?.classList.add(style);
+                if (refs.techSyncStatusText) refs.techSyncStatusText.textContent = message;
+                refs.retryTechSyncBtn?.classList.toggle('d-none', !canRetry);
+            }
+
+            function renderTechSyncStatus() {
+                const pending = loadTechOutbox().length;
+                if (!REMOTE_BACKEND_URL) return setTechSyncStatus('is-pending', 'Disimpan pada peranti ini sahaja. Backend belum disambungkan.');
+                if (!navigator.onLine) return setTechSyncStatus('is-offline', pending ? `${pending} perubahan disimpan. Akan dihantar apabila internet kembali.` : 'Anda sedang offline. Perubahan baharu akan disimpan pada peranti ini.', true);
+                if (isTechSyncing) return setTechSyncStatus('is-pending', `Menghantar ${pending || 'perubahan'} ke server...`);
+                if (pending) return setTechSyncStatus('is-pending', `${pending} perubahan menunggu dihantar ke server.`, true);
+                setTechSyncStatus('is-synced', 'Semua perubahan telah diselaraskan.');
+            }
+
+            async function syncPendingTechChanges() {
+                if (isTechSyncing || !REMOTE_BACKEND_URL || !navigator.onLine) return renderTechSyncStatus();
+                let items = loadTechOutbox();
+                if (!items.length) return renderTechSyncStatus();
+                isTechSyncing = true;
+                renderTechSyncStatus();
+                try {
+                    while (items.length) {
+                        const item = items[0];
+                        if (item.action === 'delete') await deleteTechFromBackend(item.payload.id);
+                        else await submitTechToBackend(item.payload);
+                        items.shift();
+                        saveTechOutbox(items);
+                    }
+                    await refreshTechFromBackend();
+                } catch (error) {
+                    console.warn('Technical sync failed:', error);
+                    setTechSyncStatus('is-pending', `Belum dapat dihantar: ${error.message || 'cuba lagi apabila sambungan stabil.'}`, true);
+                } finally {
+                    isTechSyncing = false;
+                    renderTechSyncStatus();
+                }
+            }
+
+            function setTechDraftStatus(message) {
+                if (refs.techDraftStatus) refs.techDraftStatus.textContent = message || '';
+            }
+
+            function isNewTechDraftable() {
+                return !techEditingId && !techViewingId && !refs.techModalDialog?.classList.contains('tech-modal-mode-view');
+            }
+
+            function isMeaningfulTechDraft(draft) {
+                const fields = draft?.fields || {};
+                return Boolean(String(fields.title || '').trim() || String(fields.asset || '').trim() || String(fields.owner || '').trim() || String(fields.type || '').trim() || (Array.isArray(draft?.logs) && draft.logs.length) || (Array.isArray(draft?.images) && draft.images.length));
+            }
+
+            function saveTechFormDraft() {
+                if (!isNewTechDraftable() || !techFormHasUnsavedChanges) return;
+                const draft = { savedAt: new Date().toISOString(), step: techCurrentFormStep, fields: Object.fromEntries(Object.entries(techFields).map(([key, field]) => [key, field?.value || ''])), logs: techDraftLogs, images: techDraftImages };
+                if (!isMeaningfulTechDraft(draft)) return;
+                try {
+                    localStorage.setItem(TECH_FORM_DRAFT_KEY, JSON.stringify(draft));
+                    setTechDraftStatus(`Draf disimpan pada ${new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}.`);
+                } catch {
+                    setTechDraftStatus('Draf tidak dapat disimpan pada peranti ini.');
+                }
+            }
+
+            function scheduleTechFormDraft() {
+                if (!isNewTechDraftable()) return;
+                techFormHasUnsavedChanges = true;
+                if (techDraftSaveTimer) clearTimeout(techDraftSaveTimer);
+                techDraftSaveTimer = setTimeout(() => { techDraftSaveTimer = null; saveTechFormDraft(); }, 350);
+            }
+
+            function clearTechFormDraft() {
+                localStorage.removeItem(TECH_FORM_DRAFT_KEY);
+                setTechDraftStatus('');
+            }
+
+            function restoreTechFormDraft() {
+                let draft;
+                try { draft = JSON.parse(localStorage.getItem(TECH_FORM_DRAFT_KEY) || 'null'); } catch { return false; }
+                if (!isMeaningfulTechDraft(draft)) return false;
+                if (!confirm('Terdapat draf catatan teknikal yang disimpan. Sambung semula draf ini?')) { clearTechFormDraft(); return false; }
+                Object.entries(techFields).forEach(([key, field]) => { if (field) field.value = draft.fields?.[key] || ''; });
+                techDraftLogs = normalizeTechLogsForForm(draft.logs, techFields.due.value, '');
+                techDraftImages = normalizeTechImageAttachmentsForForm(draft.images);
+                refs.techLogDateInput.value = techFields.due.value || new Date().toISOString().slice(0, 10);
+                refs.techLogDetailsInput.value = '';
+                renderTechLogTable();
+                renderTechImagePreview();
+                techCurrentFormStep = Math.min(Math.max(Number(draft.step) || 1, 1), TECH_FORM_STEP_COUNT);
+                techFormHasUnsavedChanges = true;
+                setTechDraftStatus('Draf dipulihkan.');
+                return true;
+            }
+
+            function setTechFormStep(step) {
+                techCurrentFormStep = Math.min(Math.max(Number(step) || 1, 1), TECH_FORM_STEP_COUNT);
+                const isView = refs.techModalDialog?.classList.contains('tech-modal-mode-view');
+                refs.techFormSteps.forEach(section => { section.hidden = Number(section.dataset.techStep) !== techCurrentFormStep; });
+                refs.techFormStepButtons.forEach(button => button.classList.toggle('is-active', Number(button.dataset.techFormStep) === techCurrentFormStep));
+                refs.previousTechStepBtn?.classList.toggle('d-none', techCurrentFormStep === 1);
+                refs.nextTechStepBtn?.classList.toggle('d-none', techCurrentFormStep === TECH_FORM_STEP_COUNT);
+                refs.submitTechBtn?.classList.toggle('d-none', isView || techCurrentFormStep !== TECH_FORM_STEP_COUNT);
+                if (isNewTechDraftable() && techFormHasUnsavedChanges) saveTechFormDraft();
+            }
+
+            function validateTechCurrentStep() {
+                if (techCurrentFormStep !== 1) return true;
+                const step = document.querySelector(`.tech-form-step[data-tech-step="${techCurrentFormStep}"]`);
+                const invalid = Array.from(step?.querySelectorAll('input[required], select[required]') || []).find(field => !field.checkValidity());
+                if (!invalid) return true;
+                refs.techForm.classList.add('was-validated');
+                invalid.focus();
+                return false;
+            }
 
             function bindEvents() {
                 refs.newTechBtn?.addEventListener('click', () => openTechModal('new'));
@@ -834,7 +1054,27 @@
                     }
                 });
 
+                refs.techMobileList?.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button[data-action]');
+                    if (!btn) return;
+                    const id = btn.dataset.id;
+                    if (btn.dataset.action === 'view') openTechView(id);
+                    else if (btn.dataset.action === 'edit') openTechModal('edit', id);
+                    else if (btn.dataset.action === 'delete') handleTechDelete(id);
+                });
+
                 refs.techForm?.addEventListener('submit', handleTechSubmit);
+                refs.techForm?.addEventListener('input', scheduleTechFormDraft);
+                refs.techForm?.addEventListener('change', scheduleTechFormDraft);
+
+                refs.nextTechStepBtn?.addEventListener('click', () => {
+                    if (refs.techModalDialog?.classList.contains('tech-modal-mode-view') || validateTechCurrentStep()) setTechFormStep(techCurrentFormStep + 1);
+                });
+                refs.previousTechStepBtn?.addEventListener('click', () => setTechFormStep(techCurrentFormStep - 1));
+                refs.techFormStepButtons.forEach(button => button.addEventListener('click', () => {
+                    const requestedStep = Number(button.dataset.techFormStep);
+                    if (requestedStep <= techCurrentFormStep || refs.techModalDialog?.classList.contains('tech-modal-mode-view') || validateTechCurrentStep()) setTechFormStep(requestedStep);
+                }));
 
                 refs.techModalEditBtn?.addEventListener('click', () => {
                     if (techViewingId) {
@@ -857,6 +1097,7 @@
                     refs.techLogDetailsInput.value = '';
                     clearTechLogFeedback();
                     renderTechLogTable();
+                    scheduleTechFormDraft();
                 });
 
                 refs.techLogBody?.addEventListener('click', (event) => {
@@ -869,6 +1110,7 @@
                     techDraftLogs.splice(index, 1);
                     clearTechLogFeedback();
                     renderTechLogTable();
+                    scheduleTechFormDraft();
                 });
 
                 refs.techImageInput?.addEventListener('change', (event) => {
@@ -885,6 +1127,7 @@
                     techDraftImages.splice(index, 1);
                     clearTechImageFeedback();
                     renderTechImagePreview();
+                    scheduleTechFormDraft();
                 });
 
                 refs.techImagePreview?.addEventListener('input', (event) => {
@@ -894,12 +1137,36 @@
                     if (Number.isNaN(index) || !techDraftImages[index]) return;
 
                     techDraftImages[index].details = String(detailsInput.value || '').slice(0, 160);
+                    scheduleTechFormDraft();
+                });
+
+                refs.retryTechSyncBtn?.addEventListener('click', () => void syncPendingTechChanges());
+                window.addEventListener('online', () => { renderTechSyncStatus(); void syncPendingTechChanges(); });
+                window.addEventListener('offline', renderTechSyncStatus);
+                window.addEventListener('beforeunload', (event) => {
+                    if (!techFormHasUnsavedChanges || !isNewTechDraftable()) return;
+                    saveTechFormDraft();
+                    event.preventDefault();
+                    event.returnValue = '';
+                });
+
+                refs.techModalEl?.addEventListener('hide.bs.modal', (event) => {
+                    if (techAllowModalClose || !techFormHasUnsavedChanges || !isNewTechDraftable()) return;
+                    event.preventDefault();
+                    saveTechFormDraft();
+                    if (!confirm('Borang ini belum dihantar. Draf telah disimpan pada peranti ini. Keluar daripada borang?')) return;
+                    techAllowModalClose = true;
+                    setTimeout(() => techModal.hide(), 0);
                 });
 
                 refs.techModalEl?.addEventListener('hidden.bs.modal', () => {
                     techEditingId = null;
                     techViewingId = null;
                     techReturnToViewAfterSave = false;
+                    techAllowModalClose = false;
+                    techFormHasUnsavedChanges = false;
+                    if (techDraftSaveTimer) clearTimeout(techDraftSaveTimer);
+                    techDraftSaveTimer = null;
                     techDraftLogs = [];
                     techDraftImages = [];
                     refs.techForm?.classList.remove('was-validated');
@@ -914,6 +1181,7 @@
                     clearTechLogFeedback();
                     clearTechImageFeedback();
                     setTechFormReadonly(false);
+                    setTechFormStep(1);
                     renderTechLogTable();
                     renderTechImagePreview();
                 });
@@ -983,6 +1251,7 @@
                     if (!document.hidden) {
                         refreshTechData();
                         refreshTechFromBackend();
+                        void syncPendingTechChanges();
                     }
                 });
 
@@ -1034,13 +1303,31 @@
             async function refreshTechFromBackend() {
                 try {
                     const rows = await fetchBackendData('Technical');
-                    if (Array.isArray(rows) && rows.length) {
-                        techItems = store.saveTechnical(rows);
+                    if (Array.isArray(rows)) {
+                        techItems = store.saveTechnical(mergeBackendTechItems(rows));
                         renderAll();
                     }
                 } catch (error) {
                     console.warn('Backend refresh failed:', error);
+                } finally {
+                    renderTechSyncStatus();
                 }
+            }
+
+            function mergeBackendTechItems(rows) {
+                let merged = Array.isArray(rows) ? [...rows] : [];
+                loadTechOutbox().forEach((item) => {
+                    const id = String(item?.payload?.id || '');
+                    if (!id) return;
+                    if (item.action === 'delete') {
+                        merged = merged.filter(row => String(row?.id || '') !== id);
+                        return;
+                    }
+                    const index = merged.findIndex(row => String(row?.id || '') === id);
+                    if (index === -1) merged.unshift(item.payload);
+                    else merged[index] = { ...merged[index], ...item.payload };
+                });
+                return merged;
             }
 
             function renderAll() {
@@ -1111,6 +1398,7 @@
 
                 if (!pageRows.length) {
                     refs.techBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Tiada rekod teknikal ditemui.</td></tr>';
+                    if (refs.techMobileList) refs.techMobileList.innerHTML = '<div class="text-center text-muted py-4">Tiada rekod teknikal ditemui.</div>';
                     renderTechPagination(1);
                     return;
                 }
@@ -1122,9 +1410,9 @@
                     return `
                         <tr>
                             <td><strong>#${t.id}</strong></td>
-                            <td>${t.title}</td>
-                            <td><span class="badge bg-light text-dark border">${t.type}</span></td>
-                            <td>${t.asset}</td>
+                            <td>${escapeHtml(t.title || '-')}</td>
+                            <td><span class="badge bg-light text-dark border">${escapeHtml(t.type || '-')}</span></td>
+                            <td>${escapeHtml(t.asset || '-')}</td>
                             <td>${due}</td>
                             <td>${priorityBadge}</td>
                             <td>${statusBadge}</td>
@@ -1138,7 +1426,27 @@
                     `;
                 }).join('');
 
+                renderTechnicalMobileCards(pageRows);
                 renderTechPagination(totalPages);
+            }
+
+            function renderTechnicalMobileCards(rows) {
+                if (!refs.techMobileList) return;
+                refs.techMobileList.innerHTML = rows.map((item) => `
+                    <article class="technical-card">
+                        <div class="d-flex align-items-start justify-content-between gap-2">
+                            <div><div class="small text-muted mb-1">#${escapeHtml(item.id || '-')}</div><h6 class="technical-card-title">${escapeHtml(item.title || '-')}</h6></div>
+                            ${getTechStatusBadge(item.status)}
+                        </div>
+                        <div class="technical-card-meta">
+                            <div><span>Aset</span><br><strong>${escapeHtml(item.asset || '-')}</strong></div>
+                            <div><span>Tarikh due</span><br><strong>${escapeHtml(formatDisplayDate(item.due))}</strong></div>
+                            <div><span>Prioriti</span><br><strong>${getPriorityBadge(item.priority)}</strong></div>
+                            <div><span>PIC</span><br><strong>${escapeHtml(item.owner || '-')}</strong></div>
+                        </div>
+                        <div class="d-grid"><button type="button" class="btn btn-success" data-action="view" data-id="${escapeHtml(item.id || '')}"><i class="bi bi-eye me-1"></i>Lihat dan kemaskini</button></div>
+                    </article>
+                `).join('');
             }
 
             function renderSyncMeta() {
@@ -1215,6 +1523,8 @@
                 techItems.unshift(data);
                 saveTech();
                 renderAll();
+                queueTechChange('upsert', { ...data, type: 'Technical' });
+                void syncPendingTechChanges();
                 refs.quickTechForm.reset();
                 refs.quickTechForm.classList.remove('was-validated');
                 if (quickTechFields.due) quickTechFields.due.value = new Date().toISOString().slice(0, 10);
@@ -1410,6 +1720,7 @@
 
                 renderTechImagePreview();
                 event.target.value = '';
+                scheduleTechFormDraft();
             }
 
             function setTechFormReadonly(isReadonly) {
@@ -1455,6 +1766,9 @@
                 techEditingId = isEdit ? id : null;
                 techViewingId = isView ? id : null;
                 techReturnToViewAfterSave = isEdit ? editFromView : false;
+                techAllowModalClose = false;
+                techFormHasUnsavedChanges = false;
+                setTechDraftStatus('');
 
                 refs.techForm.classList.remove('was-validated');
                 refs.techModalDialog?.classList.toggle('tech-modal-mode-view', isView);
@@ -1466,12 +1780,13 @@
                 setTechFormReadonly(isView);
 
                 if (isView) {
-                    refs.techModalLabel.textContent = 'Butiran Technical';
+                    refs.techModalLabel.textContent = 'Butiran Teknikal';
                 } else {
-                    refs.techModalLabel.textContent = isEdit ? 'Edit Technical' : 'Catatan Teknikal';
+                    refs.techModalLabel.textContent = isEdit ? 'Edit Teknikal' : 'Catatan Teknikal';
                     refs.submitTechBtn.textContent = isEdit ? 'Kemaskini' : 'Simpan';
                 }
 
+                let restoredDraft = false;
                 if ((isEdit || isView) && id) {
                     const data = techItems.find(t => t.id === id);
                     if (!data) return;
@@ -1489,8 +1804,10 @@
                     clearTechImageFeedback();
                     renderTechLogTable();
                     renderTechImagePreview();
+                    restoredDraft = restoreTechFormDraft();
                 }
 
+                setTechFormStep(restoredDraft ? techCurrentFormStep : 1);
                 techModal.show();
              }
  
@@ -1535,6 +1852,7 @@
                 event.preventDefault();
                 event.stopPropagation();
                 const shouldReturnToView = Boolean(techEditingId && techReturnToViewAfterSave);
+                const isNewTechnicalItem = !techEditingId;
 
                 if (!refs.techForm.checkValidity()) {
                     refs.techForm.classList.add('was-validated');
@@ -1569,10 +1887,11 @@
 
                 saveTech();
                 renderAll();
-                submitTechToBackend({ ...data, type: 'Technical', images: data.imageAttachments }).catch((error) => {
-                    console.warn('Backend sync failed:', error);
-                    alert(`Technical item disimpan secara tempatan, tetapi penghantaran ke backend gagal.\n\n${error.message}`);
-                });
+                queueTechChange('upsert', { ...data, type: 'Technical', images: data.imageAttachments });
+                void syncPendingTechChanges();
+                if (isNewTechnicalItem) clearTechFormDraft();
+                techFormHasUnsavedChanges = false;
+                techAllowModalClose = true;
 
                 if (shouldReturnToView) {
                     const savedId = data.id;
@@ -1618,9 +1937,8 @@
                 techItems = techItems.filter(t => t.id !== id);
                 saveTech();
                 renderAll();
-                deleteTechFromBackend(id).catch((error) => {
-                    console.warn('Backend delete failed:', error);
-                });
+                queueTechChange('delete', { type: 'Technical', id });
+                void syncPendingTechChanges();
             }
 
             async function deleteTechFromBackend(id) {

@@ -233,6 +233,7 @@
 
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
     </style>
+    <link rel="stylesheet" href="navigation.css?v=2">
 </head>
 <body>
     <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
@@ -241,9 +242,9 @@
             <h4 class="mt-2">Sistem Aduan</h4>
         </div>
         <nav class="nav flex-column">
-            <div class="nav-item mb-1">
+            <div class="nav-item nav-section nav-section-aduan">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="true" aria-controls="aduanMenu">
-                    Aduan
+                    <span class="nav-section-label"><i class="bi bi-chat-left-text-fill nav-section-icon"></i><span>Aduan</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse show" id="aduanMenu">
@@ -251,15 +252,15 @@
                     <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item nav-section nav-section-teknikal">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="false" aria-controls="techMenu">
-                    Technical
+                    <span class="nav-section-label"><i class="bi bi-tools nav-section-icon"></i><span>Teknikal</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse" id="techMenu">
-                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
-                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
-                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Teknikal</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">Laporan Bulanan PPM</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Teknikal</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
             </div>

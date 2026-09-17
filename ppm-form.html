@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PPM Form - Technician</title>
+    <title>Borang PPM - Teknikal</title>
     <meta name="theme-color" content="#1d4ed8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.webmanifest">
@@ -945,12 +945,12 @@
             <div class="d-flex align-items-start justify-content-between gap-2">
                 <div>
                     <div class="d-flex align-items-center gap-2 mb-1">
-                        <span class="tech-badge">Technician View Only</span>
+                        <span class="tech-badge">Paparan Teknikal Sahaja</span>
                     </div>
-                    <h1 class="ppm-title" id="ppmPageTitle">Checklist PPM Electrical - Banjaria Court</h1>
-                    <p class="ppm-subtitle">Structure aligned with your current checklist format.</p>
+                    <h1 class="ppm-title" id="ppmPageTitle">Senarai Semak PPM Elektrikal - Banjaria Court</h1>
+                    <p class="ppm-subtitle">Struktur mengikut format senarai semak semasa.</p>
                 </div>
-                <span class="badge text-bg-warning" id="offlineCacheBadge">Preparing Offline</span>
+                <span class="badge text-bg-warning" id="offlineCacheBadge">Menyediakan Mod Offline</span>
             </div>
         </header>
 
@@ -958,35 +958,35 @@
             <div class="sync-status-main">
                 <span class="sync-dot" aria-hidden="true"></span>
                 <div>
-                    <span id="syncStatusText">Checking connection and pending submissions...</span>
-                    <div class="sync-help">Open this form online once before entering a no-coverage area.</div>
+                    <span id="syncStatusText">Menyemak sambungan dan penghantaran tertunda...</span>
+                    <div class="sync-help">Buka borang ini sekali dalam talian sebelum memasuki kawasan tanpa liputan.</div>
                 </div>
             </div>
             <div class="sync-actions">
-                <button type="button" class="btn btn-sm btn-outline-secondary" id="openDraftsBtn">Drafts <span class="badge text-bg-secondary" id="draftCountBadge">0</span></button>
-                <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Sync now</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="openDraftsBtn">Draf <span class="badge text-bg-secondary" id="draftCountBadge">0</span></button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Segerak sekarang</button>
             </div>
         </section>
 
         <section class="submission-track" aria-label="Submission status by location">
             <div class="submission-head">
-                <p class="submission-title">Submission Status by Block Location</p>
-                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 synced</span>
+                <p class="submission-title">Status Penghantaran Mengikut Lokasi Blok</p>
+                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 disegerakkan</span>
             </div>
             <div class="submission-groups" id="locationStatusTrack" aria-live="polite"></div>
         </section>
 
         <form id="ppmTechnicianForm" class="needs-validation" novalidate>
             <section class="card ppm-card">
-                <div class="card-header">Step 1 - Form Details</div>
+                <div class="card-header">Langkah 1 - Maklumat Borang</div>
                 <div class="card-body">
                     <div class="row g-2">
                         <div class="col-6">
-                            <label class="form-label" for="categoryField">Checklist Category</label>
+                            <label class="form-label" for="categoryField">Kategori Senarai Semak</label>
                             <select class="form-select" id="categoryField"></select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label" for="templateType">Checklist Template</label>
+                            <label class="form-label" for="templateType">Templat Senarai Semak</label>
                             <select class="form-select" id="templateType" required>
                                 <option value="bilikSuis" selected>ELEKT - Switch Room</option>
                                 <option value="waterPump">ELEKT - Water Pump</option>
@@ -1003,44 +1003,44 @@
                                 <option value="civilWallLeaking">CIVIL - Wall Leaking Checking</option>
                                 <option value="plToilet">PL - Toilet</option>
                             </select>
-                            <div class="invalid-feedback">Please select a checklist template.</div>
+                            <div class="invalid-feedback">Sila pilih templat senarai semak.</div>
                         </div>
 
                         <div class="w-100"></div>
 
                         <div class="col-6">
-                            <label class="form-label" for="frequencyField">Frequency</label>
+                            <label class="form-label" for="frequencyField">Kekerapan</label>
                             <input type="text" class="form-control" id="frequencyField" readonly>
                         </div>
                         <div class="col-6">
-                            <label class="form-label" for="inspectionDate">Date</label>
+                            <label class="form-label" for="inspectionDate">Tarikh</label>
                             <input type="date" class="form-control" id="inspectionDate" required>
-                            <div class="invalid-feedback">Please select a date.</div>
+                            <div class="invalid-feedback">Sila pilih tarikh.</div>
                         </div>
 
                         <div class="w-100"></div>
 
                         <div class="col-6">
-                            <label class="form-label" for="referenceNo">Reference No.</label>
+                            <label class="form-label" for="referenceNo">No. Rujukan</label>
                             <input type="text" class="form-control" id="referenceNo" readonly>
                         </div>
                         <div class="col-6">
-                            <label class="form-label" id="locationLabel" for="locationSelect">Block Location</label>
+                            <label class="form-label" id="locationLabel" for="locationSelect">Lokasi Blok</label>
                             <select class="form-select" id="locationSelect" required></select>
-                            <div class="invalid-feedback">Please select a location.</div>
+                            <div class="invalid-feedback">Sila pilih lokasi.</div>
                         </div>
 
                         <div class="w-100"></div>
 
                         <div class="col-md-8">
-                            <label class="form-label" for="copyFromLocationSelect">Copy Submitted Data (Same Month)</label>
+                            <label class="form-label" for="copyFromLocationSelect">Salin Data Dihantar (Bulan Sama)</label>
                             <select class="form-select" id="copyFromLocationSelect">
-                                <option value="">Select source location</option>
+                                <option value="">Pilih lokasi sumber</option>
                             </select>
-                            <div class="form-text">Copies filled values from submitted data in the same checklist template and month.</div>
+                            <div class="form-text">Salin nilai yang telah diisi daripada data dihantar bagi templat dan bulan yang sama.</div>
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
-                            <button type="button" class="btn btn-outline-primary w-100" id="copyFromLocationBtn" disabled>Copy To Current Location</button>
+                            <button type="button" class="btn btn-outline-primary w-100" id="copyFromLocationBtn" disabled>Salin Ke Lokasi Semasa</button>
                         </div>
                     </div>
 
@@ -1049,7 +1049,7 @@
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Step 2 - Checklist (No. | Item | Status | Remarks)</div>
+                <div class="card-header">Langkah 2 - Senarai Semak (Bil. | Item | Status | Catatan)</div>
                 <div class="card-body">
                     <div class="step2-scope-note d-none" id="step2ScopeNote"></div>
                     <div class="checklist-table">
@@ -1060,7 +1060,7 @@
                                         <th class="col-bil">NO.</th>
                                         <th>ITEM</th>
                                         <th class="col-status">STATUS</th>
-                                        <th class="col-remark">REMARKS</th>
+                                        <th class="col-remark">CATATAN</th>
                                     </tr>
                                 </thead>
                                 <tbody id="checklistBody"></tbody>
@@ -1072,16 +1072,16 @@
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Step 3 - Notes</div>
+                <div class="card-header">Langkah 3 - Catatan</div>
                 <div class="card-body">
-                    <label class="form-label" for="autoRemarkSummary">Auto Summary (from Item Remarks)</label>
+                    <label class="form-label" for="autoRemarkSummary">Ringkasan Automatik (daripada Catatan Item)</label>
                     <textarea class="form-control notes-summary-area" id="autoRemarkSummary" rows="5" readonly></textarea>
 
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                        <label class="form-label mb-0" for="technicianNotes">Technician Additional Notes</label>
+                        <label class="form-label mb-0" for="technicianNotes">Catatan Tambahan Teknikal</label>
                         <div class="notes-toolbar">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesBulletBtn">Bullet</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesNumberBtn">Numbering</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesBulletBtn">Poin</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="notesNumberBtn">Nombor</button>
                         </div>
                     </div>
                     <textarea class="form-control notes-input-area" id="technicianNotes" rows="6" placeholder="Add additional notes here..."></textarea>
@@ -1089,50 +1089,50 @@
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Step 4 - Attachments / Evidence</div>
+                <div class="card-header">Langkah 4 - Lampiran / Bukti</div>
                 <div class="card-body">
                     <div class="upload-block">
-                        <label class="form-label" for="pictureUpload">Upload Picture</label>
+                        <label class="form-label" for="pictureUpload">Muat Naik Gambar</label>
                         <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*">
-                        <div class="form-text mb-2">Maximum 6 confirmed pictures and 8 MB combined after compression.</div>
-                        <label class="form-label" for="pictureNote">Picture Note</label>
+                        <div class="form-text mb-2">Maksimum 6 gambar disahkan dan jumlah 8 MB selepas pemampatan.</div>
+                        <label class="form-label" for="pictureNote">Catatan Gambar</label>
                         <textarea class="form-control" id="pictureNote" rows="2" placeholder="Add notes regarding the uploaded picture (optional)"></textarea>
                         <div class="upload-feedback">
-                            <span class="upload-status" id="pictureUploadStatus">No picture selected.</span>
+                            <span class="upload-status" id="pictureUploadStatus">Tiada gambar dipilih.</span>
                             <div class="upload-actions">
-                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" id="clearPictureBtn" disabled>Clear</button>
-                                <button type="button" class="btn btn-sm btn-primary py-0 px-2" id="confirmPictureBtn" disabled>Confirm Picture</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" id="clearPictureBtn" disabled>Kosongkan</button>
+                                <button type="button" class="btn btn-sm btn-primary py-0 px-2" id="confirmPictureBtn" disabled>Sahkan Gambar</button>
                             </div>
                         </div>
                         <div class="picture-entry-list" id="pictureEntryList">
-                            <div class="picture-entry-empty">No confirmed picture yet.</div>
+                            <div class="picture-entry-empty">Belum ada gambar disahkan.</div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Step 5 - Confirmation</div>
+                <div class="card-header">Langkah 5 - Pengesahan</div>
                 <div class="card-body">
                     <div class="mb-2">
-                        <label class="form-label" for="techDeclaration">Technician Confirmation</label>
+                        <label class="form-label" for="techDeclaration">Pengesahan Teknikal</label>
                         <input type="text" class="form-control" id="techDeclaration" placeholder="Full name as confirmation" required>
-                        <div class="invalid-feedback">Please enter technician confirmation.</div>
+                        <div class="invalid-feedback">Sila masukkan pengesahan teknikal.</div>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="confirmChecklist" required>
-                        <label class="form-check-label" for="confirmChecklist">I confirm all checklist items were filled based on actual inspection.</label>
-                        <div class="invalid-feedback">Please check the confirmation box.</div>
+                        <label class="form-check-label" for="confirmChecklist">Saya mengesahkan semua item senarai semak diisi berdasarkan pemeriksaan sebenar.</label>
+                        <div class="invalid-feedback">Sila tandakan kotak pengesahan.</div>
                     </div>
-                    <p class="form-text mt-2 mb-0">This form now syncs submissions to the remote backend as PPM records.</p>
+                    <p class="form-text mt-2 mb-0">Borang ini menyegerakkan penghantaran ke backend jauh sebagai rekod PPM.</p>
                 </div>
             </section>
 
             <div class="sticky-actions">
                 <div class="d-flex gap-2 justify-content-end">
                     <span class="draft-save-state align-self-center" id="draftSaveState" aria-live="polite"></span>
-                    <button type="button" class="btn btn-outline-secondary" id="saveDraftBtn">Save Draft</button>
-                    <button type="submit" class="btn btn-primary">Submit PPM</button>
+                    <button type="button" class="btn btn-outline-secondary" id="saveDraftBtn">Simpan Draf</button>
+                    <button type="submit" class="btn btn-primary">Hantar PPM</button>
                 </div>
             </div>
         </form>
@@ -1142,7 +1142,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h5 class="modal-title fs-6" id="pictureViewerModalLabel">Picture Preview</h5>
+                    <h5 class="modal-title fs-6" id="pictureViewerModalLabel">Pratonton Gambar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-2 text-center bg-light">
@@ -1156,11 +1156,11 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h5 class="modal-title fs-6" id="civilWallNgReasonTitle">NG Problem Code</h5>
+                    <h5 class="modal-title fs-6" id="civilWallNgReasonTitle">Kod Masalah NG</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body py-2">
-                    <p class="small text-muted mb-2">Select one or more problem code(s).</p>
+                    <p class="small text-muted mb-2">Pilih satu atau lebih kod masalah.</p>
                     <div class="civil-wall-ng-code-grid" id="civilWallNgReasonOptions">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="P" id="civilWallNgCodeP" name="civilWallNgReasonOption">
@@ -1179,11 +1179,11 @@
                             <label class="form-check-label" for="civilWallNgCodeLS">LS</label>
                         </div>
                     </div>
-                    <div class="small text-danger mt-2 d-none" id="civilWallNgReasonFeedback">Please select at least one code.</div>
+                    <div class="small text-danger mt-2 d-none" id="civilWallNgReasonFeedback">Sila pilih sekurang-kurangnya satu kod.</div>
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-primary" id="civilWallNgReasonSaveBtn">Save</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="civilWallNgReasonSaveBtn">Simpan</button>
                 </div>
             </div>
         </div>
@@ -1193,14 +1193,14 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h5 class="modal-title fs-6" id="draftManagerModalLabel">Saved Drafts on This Device</h5>
+                    <h5 class="modal-title fs-6" id="draftManagerModalLabel">Draf Disimpan Pada Peranti Ini</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="draft-list" id="draftList"></div>
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>

@@ -138,10 +138,9 @@
 
         .aduan-toolbar-controls {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             align-items: center;
             gap: 0.5rem;
-            overflow-x: auto;
         }
 
         .aduan-toolbar-controls .search-box {
@@ -157,6 +156,92 @@
         .aduan-toolbar-controls .btn-group {
             flex: 0 0 auto;
         }
+
+        .filter-panel {
+            width: 100%;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 42px;
+            margin-bottom: 0.85rem;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.875rem;
+        }
+
+        .sync-status.is-offline,
+        .sync-status.is-pending {
+            border-color: #f4d58d;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .sync-status.is-synced {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .complaint-mobile-list { display: none; }
+
+        .complaint-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+
+        .complaint-card + .complaint-card { margin-top: 0.65rem; }
+
+        .complaint-card-title {
+            margin: 0;
+            font-size: 0.98rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .complaint-card-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.45rem 0.75rem;
+            margin: 0.7rem 0;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        .complaint-card-meta strong { color: #334155; }
+
+        .complaint-form-steps {
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.65rem 0.9rem 0;
+        }
+
+        .complaint-form-step-indicator {
+            flex: 1;
+            border: 0;
+            border-bottom: 3px solid #dbe3ef;
+            background: transparent;
+            padding: 0 0 0.45rem;
+            color: #64748b;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .complaint-form-step-indicator.is-active {
+            border-color: #0d6efd;
+            color: #0d6efd;
+        }
+
+        .form-step[hidden] { display: none !important; }
 
         .table-responsive {
             background: #ffffff;
@@ -663,9 +748,563 @@
             .compact-dashboard { padding: 10px; }
             .compact-dashboard .table-responsive { padding: 8px; }
             .compact-dashboard .table > :not(caption) > * > * { font-size: 0.8rem; }
+
+            .dashboard-header { align-items: flex-start !important; }
+            .dashboard-header .top-toolbar { flex-wrap: wrap; justify-content: flex-end; }
+            .dashboard-header #dateRangeBtn { display: none; }
+            .complaints-desktop-table { display: none; }
+            .complaint-mobile-list { display: block; }
+            .aduan-toolbar-controls { align-items: stretch; }
+            .aduan-toolbar-controls .search-box,
+            .aduan-toolbar-controls .category-select { width: 100%; min-width: 0; }
+            .filter-panel.collapse:not(.show) { display: none; }
+            .filter-panel .btn-group { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+            .filter-panel .filter-btn { border-radius: 8px !important; }
+            .complaint-card-meta { grid-template-columns: 1fr; }
+            .complaint-form-step-indicator { font-size: 0.72rem; }
+            .complaint-modal-compact .modal-footer { gap: 0.35rem; }
+            .complaint-modal-compact .modal-footer .btn { flex: 1 1 auto; }
+        }
+
+        @media (min-width: 769px) {
+            .filter-toggle { display: none; }
+            .filter-panel.collapse:not(.show) { display: block; }
+        }
+
+        /* Dashboard Aduan content redesign */
+        .dashboard-redesign {
+            --aduan-ink: #172033;
+            --aduan-muted: #64748b;
+            --aduan-line: #e4e9f1;
+            --aduan-surface: #ffffff;
+            background:
+                radial-gradient(circle at 92% 3%, rgba(251, 191, 36, 0.10), transparent 21rem),
+                #f6f8fc;
+            color: var(--aduan-ink);
+        }
+
+        .dashboard-redesign .dashboard-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 1rem 1.15rem;
+            border: 1px solid #fed7aa;
+            border-left: 5px solid #f59e0b;
+            border-radius: 18px;
+            background: linear-gradient(120deg, #ffffff 0%, #fffaf0 100%);
+            box-shadow: 0 12px 28px rgba(120, 53, 15, 0.08);
+        }
+
+        .dashboard-redesign .dashboard-hero::after {
+            position: absolute;
+            top: -55px;
+            right: 24%;
+            width: 150px;
+            height: 150px;
+            border: 28px solid rgba(245, 158, 11, 0.07);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .dashboard-redesign .dashboard-title-block,
+        .dashboard-redesign .dashboard-hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-redesign .dashboard-title-icon {
+            display: inline-grid;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            place-items: center;
+            border-radius: 14px;
+            color: #92400e;
+            background: linear-gradient(145deg, #fde68a, #fbbf24);
+            box-shadow: 0 7px 16px rgba(217, 119, 6, 0.2);
+            font-size: 1.2rem;
+        }
+
+        .dashboard-redesign .dashboard-eyebrow,
+        .dashboard-redesign .dashboard-section-kicker {
+            display: block;
+            color: #b45309;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.09em;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .dashboard-redesign .dashboard-header h2 {
+            color: var(--aduan-ink);
+            font-size: 1.55rem;
+            font-weight: 750;
+            letter-spacing: -0.025em;
+        }
+
+        .dashboard-redesign .dashboard-header .breadcrumb {
+            font-size: 0.74rem;
+        }
+
+        .dashboard-redesign .top-toolbar .btn {
+            min-height: 36px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .dashboard-redesign .top-toolbar .btn-new-complaint {
+            border-color: #d97706;
+            background: #d97706;
+            box-shadow: 0 6px 14px rgba(217, 119, 6, 0.2);
+        }
+
+        .dashboard-redesign .top-toolbar .btn-new-complaint:hover,
+        .dashboard-redesign .top-toolbar .btn-new-complaint:focus-visible {
+            border-color: #b45309;
+            background: #b45309;
+        }
+
+        .dashboard-redesign .sync-status {
+            min-height: 40px;
+            margin-bottom: 1rem;
+            border-color: var(--aduan-line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.035);
+        }
+
+        .dashboard-redesign .dashboard-section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 1rem;
+            margin: 1.05rem 0 0.55rem;
+            padding: 0 0.15rem;
+        }
+
+        .dashboard-redesign .dashboard-section-heading h3,
+        .dashboard-redesign .complaints-panel-title {
+            margin: 0.1rem 0 0;
+            color: var(--aduan-ink);
+            font-size: 1.05rem;
+            font-weight: 750;
+            letter-spacing: -0.012em;
+        }
+
+        .dashboard-redesign .dashboard-section-note {
+            color: var(--aduan-muted);
+            font-size: 0.76rem;
+        }
+
+        .dashboard-redesign .spark-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--aduan-line);
+            border-top: 3px solid var(--card-accent, #6366f1);
+            border-left-width: 1px;
+            border-radius: 14px;
+            background: var(--aduan-surface);
+            box-shadow: 0 7px 18px rgba(15, 23, 42, 0.05);
+        }
+
+        .dashboard-redesign .spark-card::after {
+            position: absolute;
+            top: -28px;
+            right: -22px;
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: var(--card-soft, #eef2ff);
+            content: "";
+            pointer-events: none;
+        }
+
+        .dashboard-redesign .spark-card.accent-indigo { --card-accent: #6366f1; --card-soft: #eef2ff; }
+        .dashboard-redesign .spark-card.accent-teal { --card-accent: #06b6d4; --card-soft: #ecfeff; }
+        .dashboard-redesign .spark-card.accent-amber { --card-accent: #f59e0b; --card-soft: #fffbeb; }
+        .dashboard-redesign .spark-card.accent-emerald { --card-accent: #10b981; --card-soft: #ecfdf5; }
+
+        .dashboard-redesign .spark-card .card-body {
+            position: relative;
+            z-index: 1;
+            padding: 0.72rem 0.8rem;
+        }
+
+        .dashboard-redesign .spark-card small {
+            color: var(--aduan-muted) !important;
+            font-weight: 650;
+        }
+
+        .dashboard-redesign .spark-card .stat-number {
+            margin-top: 0.18rem;
+            color: var(--aduan-ink);
+            font-size: 1.42rem;
+        }
+
+        .dashboard-redesign .sparkline-wrap {
+            position: relative;
+            z-index: 1;
+            opacity: 0.82;
+        }
+
+        .dashboard-redesign .overview-card {
+            --overview-accent: #2563eb;
+            --overview-soft: #eff6ff;
+            height: 100%;
+            border: 1px solid var(--aduan-line);
+            border-radius: 15px;
+            background: var(--aduan-surface);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+        }
+
+        .dashboard-redesign .overview-total { --overview-accent: #2563eb; --overview-soft: #eff6ff; }
+        .dashboard-redesign .overview-process { --overview-accent: #d97706; --overview-soft: #fff7ed; }
+        .dashboard-redesign .overview-done { --overview-accent: #059669; --overview-soft: #ecfdf5; }
+        .dashboard-redesign .overview-time { --overview-accent: #7c3aed; --overview-soft: #f5f3ff; }
+
+        .dashboard-redesign .overview-card .card-body {
+            min-height: 118px;
+            padding: 0.8rem 0.9rem;
+        }
+
+        .dashboard-redesign .overview-card h6 {
+            color: var(--aduan-muted) !important;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .dashboard-redesign .overview-card .stat-number {
+            color: var(--overview-accent) !important;
+            font-size: 1.75rem;
+        }
+
+        .dashboard-redesign .overview-card .card-body > .d-flex > div:last-child {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            place-items: center;
+            border-radius: 13px;
+            color: var(--overview-accent);
+            background: var(--overview-soft);
+        }
+
+        .dashboard-redesign .overview-card .card-body > .d-flex > div:last-child i {
+            color: inherit !important;
+            font-size: 1.25rem !important;
+            opacity: 1 !important;
+        }
+
+        .dashboard-redesign .overview-card small {
+            display: block;
+            margin-top: 0.55rem;
+            font-size: 0.72rem;
+        }
+
+        .dashboard-redesign .chart-container,
+        .dashboard-redesign .complaints-panel {
+            border: 1px solid var(--aduan-line);
+            border-radius: 16px;
+            background: var(--aduan-surface);
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+        }
+
+        .dashboard-redesign .chart-container h5,
+        .dashboard-redesign .activity-panel h6 {
+            color: var(--aduan-ink);
+            font-weight: 720;
+        }
+
+        .dashboard-redesign .modern-chart-card,
+        .dashboard-redesign .modern-activity-card {
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .dashboard-redesign .modern-chart-card::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #22d3ee);
+            content: "";
+        }
+
+        .dashboard-redesign .status-panel::before {
+            background: linear-gradient(90deg, #f59e0b, #10b981);
+        }
+
+        .dashboard-redesign .analytics-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .dashboard-redesign .analytics-card-kicker {
+            display: block;
+            margin-bottom: 0.12rem;
+            color: #94a3b8;
+            font-size: 0.64rem;
+            font-weight: 800;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .dashboard-redesign .analytics-period-badge,
+        .dashboard-redesign .analytics-live-badge {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            padding: 0.34rem 0.55rem;
+            border-radius: 999px;
+            color: #475569;
+            background: #f1f5f9;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .dashboard-redesign .analytics-live-badge {
+            color: #047857;
+            background: #ecfdf5;
+        }
+
+        .dashboard-redesign .analytics-live-badge span {
+            width: 6px;
+            height: 6px;
+            margin-right: 0.35rem;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+        }
+
+        .dashboard-redesign .trend-chart-shell {
+            position: relative;
+            height: 245px;
+        }
+
+        .dashboard-redesign .status-chart-shell {
+            position: relative;
+            width: min(100%, 300px);
+            height: 245px;
+            margin: 0 auto;
+        }
+
+        .dashboard-redesign #trendChart,
+        .dashboard-redesign #statusChart {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: none !important;
+        }
+
+        .dashboard-redesign .modern-activity-card {
+            padding-block: 0.85rem;
+        }
+
+        .dashboard-redesign .activity-header-icon {
+            display: inline-grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 10px;
+            color: #7c3aed;
+            background: #f5f3ff;
+            font-size: 1rem;
+        }
+
+        .dashboard-redesign .modern-activity-card .activity-feed {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.6rem;
+            overflow: visible;
+        }
+
+        .dashboard-redesign .modern-activity-card .activity-feed .list-group-item {
+            min-width: 0;
+            border: 1px solid #e8edf4;
+            border-radius: 11px;
+            background: #f8fafc;
+        }
+
+        .dashboard-redesign .activity-feed {
+            border: 0;
+            border-radius: 11px;
+        }
+
+        .dashboard-redesign .activity-feed .list-group-item {
+            border-color: #eef1f6;
+            background: #fbfcfe;
+        }
+
+        .dashboard-redesign .complaints-panel {
+            padding: 0.9rem;
+        }
+
+        .dashboard-redesign .complaints-panel .search-box,
+        .dashboard-redesign .complaints-panel .form-select {
+            min-height: 38px;
+            border-color: #dce2ea;
+            border-radius: 10px;
+            background-color: #f8fafc;
+        }
+
+        .dashboard-redesign .aduan-toolbar-controls {
+            margin-left: auto;
+            justify-content: flex-end;
+        }
+
+        @media (min-width: 769px) {
+            .dashboard-redesign .aduan-toolbar-controls .filter-panel {
+                display: flex !important;
+                width: auto;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 0.4rem;
+            }
+
+            .dashboard-redesign .aduan-toolbar-controls .category-select {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        .dashboard-redesign .complaints-panel thead th {
+            border-bottom-width: 1px;
+            color: #64748b;
+            background: #f8fafc;
+            font-size: 0.72rem;
+            font-weight: 750;
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+        }
+
+        .dashboard-redesign .complaints-panel tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-redesign {
+                padding: 0.7rem;
+            }
+
+            .dashboard-redesign .dashboard-hero {
+                display: grid !important;
+                grid-template-columns: auto minmax(0, 1fr);
+                gap: 0.65rem;
+                padding: 0.85rem;
+                border-radius: 16px;
+            }
+
+            .dashboard-redesign .dashboard-hero > .d-flex:last-child {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+
+            .dashboard-redesign .dashboard-hero .top-toolbar {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .dashboard-redesign .dashboard-hero .top-toolbar .btn-new-complaint {
+                flex: 1;
+            }
+
+            .dashboard-redesign .dashboard-title-icon {
+                width: 40px;
+                height: 40px;
+                flex-basis: 40px;
+                border-radius: 12px;
+            }
+
+            .dashboard-redesign .dashboard-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .dashboard-redesign .dashboard-header .breadcrumb,
+            .dashboard-redesign .dashboard-section-note {
+                display: none;
+            }
+
+            .dashboard-redesign .dashboard-section-heading {
+                margin-top: 0.9rem;
+            }
+
+            .dashboard-redesign .dashboard-section-heading h3,
+            .dashboard-redesign .complaints-panel-title {
+                font-size: 1rem;
+            }
+
+            .dashboard-redesign .dashboard-pulse-grid > [class*="col-"],
+            .dashboard-redesign .overview-grid > [class*="col-"] {
+                width: 50%;
+            }
+
+            .dashboard-redesign .spark-card .card-body,
+            .dashboard-redesign .overview-card .card-body {
+                min-height: 106px;
+                padding: 0.7rem;
+            }
+
+            .dashboard-redesign .sparkline-wrap {
+                width: 38px;
+                flex-basis: 38px;
+            }
+
+            .dashboard-redesign .overview-card .card-body > .d-flex > div:last-child {
+                width: 36px;
+                height: 36px;
+                flex-basis: 36px;
+            }
+
+            .dashboard-redesign .overview-card small {
+                line-height: 1.25;
+            }
+
+            .dashboard-redesign .chart-container,
+            .dashboard-redesign .complaints-panel {
+                border-radius: 14px;
+            }
+
+            .dashboard-redesign .trend-chart-shell {
+                height: 220px;
+            }
+
+            .dashboard-redesign .status-chart-shell {
+                height: 250px;
+            }
+
+            .dashboard-redesign .modern-activity-card .activity-feed {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-redesign .aduan-toolbar-controls {
+                width: 100%;
+                margin-left: 0;
+                justify-content: stretch;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .dashboard-redesign .spark-card .stat-number,
+            .dashboard-redesign .overview-card .stat-number {
+                font-size: 1.35rem;
+            }
+
+            .dashboard-redesign .overview-card .card-body > .d-flex > div:last-child {
+                display: none;
+            }
+
+            .dashboard-redesign .overview-card small {
+                font-size: 0.67rem;
+            }
         }
 
     </style>
+    <link rel="stylesheet" href="navigation.css?v=2">
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -676,9 +1315,9 @@
             <h4 class="mt-2">Sistem Aduan</h4>
         </div>
         <nav class="nav flex-column">
-            <div class="nav-item mb-1">
+            <div class="nav-item nav-section nav-section-aduan">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="true" aria-controls="aduanMenu">
-                    Aduan
+                    <span class="nav-section-label"><i class="bi bi-chat-left-text-fill nav-section-icon"></i><span>Aduan</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse show" id="aduanMenu">
@@ -686,15 +1325,15 @@
                     <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item nav-section nav-section-teknikal">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="false" aria-controls="techMenu">
-                    Technical
+                    <span class="nav-section-label"><i class="bi bi-tools nav-section-icon"></i><span>Teknikal</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse" id="techMenu">
-                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
-                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
-                    <a class="nav-link ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Teknikal</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">Laporan Bulanan PPM</a>
+                    <a class="nav-link ps-4" href="sub-technical.html">Sub Teknikal</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
             </div>
@@ -722,8 +1361,14 @@
                     <h5 class="modal-title" id="complaintModalLabel">Aduan Baru</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+                <div class="complaint-form-steps" id="complaintFormSteps" aria-label="Langkah borang">
+                    <button class="complaint-form-step-indicator is-active" type="button" data-form-step="1">1. Maklumat</button>
+                    <button class="complaint-form-step-indicator" type="button" data-form-step="2">2. Log kerja</button>
+                    <button class="complaint-form-step-indicator" type="button" data-form-step="3">3. Gambar</button>
+                </div>
+                <div class="px-3 pt-2 small text-muted" id="complaintDraftStatus" aria-live="polite"></div>
                 <div class="modal-body">
-                    <div class="row g-2 complaint-meta-grid">
+                    <div class="row g-2 complaint-meta-grid form-step" data-step="1" id="complaintFormStep1">
                         <div class="col-12 complaint-meta-field">
                             <label class="form-label" for="inputTitle">Tajuk Aduan</label>
                             <input type="text" class="form-control" id="inputTitle" placeholder="Contoh: Sistem pembayaran gagal" required>
@@ -781,6 +1426,8 @@
                             <input type="text" class="form-control" id="inputRelatedUnit" placeholder="Contoh: Unit A-1-2, koridor aras 1" autocomplete="off">
                             <div class="form-text">Nyatakan lokasi yang terlibat untuk rujukan kerja pembaikan.</div>
                         </div>
+                    </div>
+                    <section class="form-step" data-step="2" id="complaintFormStep2" hidden>
                         <div class="col-12">
                             <label class="form-label mb-1">Butiran Aduan (Log Report)</label>
                             <div class="complaint-log-wrap">
@@ -815,6 +1462,8 @@
                                 <div class="small text-danger mt-1 d-none" id="inputLogFeedback">Tambah sekurang-kurangnya satu log sebelum simpan.</div>
                             </div>
                         </div>
+                    </section>
+                    <section class="form-step" data-step="3" id="complaintFormStep3" hidden>
                         <div class="col-12">
                             <label class="form-label mb-1">Lampiran Gambar (Opsyenal)</label>
                             <div class="complaint-image-wrap">
@@ -831,10 +1480,12 @@
                                 <div class="complaint-image-grid mt-2" id="inputImagePreview"></div>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" id="closeComplaintBtn" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-outline-secondary d-none" id="prevComplaintStepBtn"><i class="bi bi-arrow-left me-1"></i>Kembali</button>
+                    <button type="button" class="btn btn-primary" id="nextComplaintStepBtn">Seterusnya<i class="bi bi-arrow-right ms-1"></i></button>
                     <button type="button" class="btn btn-success d-none" id="complaintViewEditBtn">Edit</button>
                     <button type="submit" class="btn btn-primary" id="submitComplaintBtn">Simpan</button>
                 </div>
@@ -875,14 +1526,20 @@
 
     
     <!-- Main Content -->
-    <div class="main-content compact-dashboard" id="main-content" role="main" aria-label="Dashboard utama">
+    <div class="main-content compact-dashboard dashboard-redesign" id="main-content" role="main" aria-label="Dashboard utama">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3 dashboard-header dashboard-hero">
             <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
-            <div>
+            <div class="dashboard-title-block">
                 <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item active">Dashboard</li></ol></nav>
-                <h2 class="mb-0">Dashboard Aduan</h2>
-                <p class="text-muted small mb-0">Pantau dan urus aduan dengan mudah</p>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="dashboard-title-icon" aria-hidden="true"><i class="bi bi-chat-square-text-fill"></i></span>
+                    <div>
+                        <span class="dashboard-eyebrow">Pusat Operasi Aduan</span>
+                        <h2 class="mb-0">Dashboard Aduan</h2>
+                        <p class="text-muted small mb-0">Pantau status, tindakan dan kemajuan setiap aduan</p>
+                    </div>
+                </div>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <div class="top-toolbar d-flex gap-2 align-items-center">
@@ -893,8 +1550,21 @@
             </div>
         </div>
 
+        <div class="sync-status" id="aduanSyncStatus" role="status" aria-live="polite">
+            <i class="bi bi-cloud-check" aria-hidden="true"></i>
+            <span id="aduanSyncStatusText">Menyemak sambungan...</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-auto d-none" id="retryAduanSyncBtn">Cuba semula</button>
+        </div>
+
         <!-- Small Metric Widgets (sparklines) -->
-        <div class="row g-3 mb-3 align-items-stretch">
+        <div class="dashboard-section-heading">
+            <div>
+                <span class="dashboard-section-kicker">Hari Ini</span>
+                <h3>Status Semasa</h3>
+            </div>
+            <span class="dashboard-section-note">Gambaran pantas aliran aduan terkini</span>
+        </div>
+        <div class="row g-3 mb-3 align-items-stretch dashboard-pulse-grid">
             <div class="col-md-3 col-sm-6">
                 <div class="card stat-card card-light spark-card accent-indigo h-100">
                     <div class="card-body">
@@ -950,9 +1620,16 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="row g-3 mb-3">
+        <div class="dashboard-section-heading">
+            <div>
+                <span class="dashboard-section-kicker">Keseluruhan</span>
+                <h3>Prestasi Pengurusan</h3>
+            </div>
+            <span class="dashboard-section-note">Ringkasan semua rekod dalam sistem</span>
+        </div>
+        <div class="row g-3 mb-3 overview-grid">
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card border-start border-primary border-4">
+                <div class="card stat-card overview-card overview-total">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -963,15 +1640,15 @@
                                 <i class="bi bi-inbox-fill fs-1 text-primary opacity-25"></i>
                             </div>
                         </div>
-                        <small class="text-success">
-                            <i class="bi bi-arrow-up"></i> 12% dari bulan lalu
+                        <small class="text-muted">
+                            <i class="bi bi-database-check me-1"></i>Semua rekod berdaftar
                         </small>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card border-start border-warning border-4">
+                <div class="card stat-card overview-card overview-process">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -982,15 +1659,15 @@
                                 <i class="bi bi-hourglass-split fs-1 text-warning opacity-25"></i>
                             </div>
                         </div>
-                        <small class="text-info">
-                            <i class="bi bi-clock"></i> 24 memerlukan tindakan
+                        <small class="text-muted">
+                            <i class="bi bi-person-workspace me-1"></i>Menunggu tindakan pasukan
                         </small>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card border-start border-success border-4">
+                <div class="card stat-card overview-card overview-done">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -1001,15 +1678,15 @@
                                 <i class="bi bi-check-circle-fill fs-1 text-success opacity-25"></i>
                             </div>
                         </div>
-                        <small class="text-success">
-                            69.4% kadar penyelesaian
+                        <small class="text-muted">
+                            <i class="bi bi-check2-all me-1"></i>Aduan yang telah ditutup
                         </small>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-3 col-sm-6">
-                <div class="card stat-card border-start border-danger border-4">
+                <div class="card stat-card overview-card overview-time">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -1021,60 +1698,91 @@
                             </div>
                         </div>
                         <small class="text-muted">
-                            hari untuk penyelesaian
+                            <i class="bi bi-stopwatch me-1"></i>Purata hari hingga selesai
                         </small>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Charts Row (blended) -->
-        <div class="row g-3 mb-3 analytics-panels-row align-items-stretch">
-            <div class="col-lg-8">
-                <div class="chart-container combined-charts-section panel-card">
-                    <div class="row g-3 align-items-stretch">
-                        <div class="col-lg-8">
-                            <h5 class="mb-3">Trend Aduan (7 Hari Terakhir)</h5>
-                            <canvas id="trendChart"></canvas>
+        <!-- Analytics -->
+        <div class="dashboard-section-heading">
+            <div>
+                <span class="dashboard-section-kicker">Analitik</span>
+                <h3>Corak & Aktiviti</h3>
+            </div>
+            <span class="dashboard-section-note">Trend tujuh hari dan tindakan terbaharu</span>
+        </div>
+        <div class="row g-3 mb-3 analytics-panels-row align-items-stretch modern-analytics-grid">
+            <div class="col-xl-8">
+                <div class="chart-container panel-card modern-chart-card trend-panel">
+                    <div class="analytics-card-header">
+                        <div>
+                            <span class="analytics-card-kicker">Pergerakan Aduan</span>
+                            <h5 class="mb-0">Trend 7 Hari</h5>
                         </div>
-                        <div class="col-lg-4 text-center status-col">
-                            <h5 class="mb-3">Status Aduan</h5>
-                            <div class="status-chart-wrap">
-                                <canvas id="statusChart"></canvas>
-                            </div>
-                        </div>
+                        <span class="analytics-period-badge"><i class="bi bi-calendar3 me-1"></i>7 hari terkini</span>
+                    </div>
+                    <div class="trend-chart-shell">
+                        <canvas id="trendChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="card chart-container activity-panel panel-card">
-                    <h6 class="mb-3">Aktiviti Terkini</h6>
+            <div class="col-xl-4">
+                <div class="chart-container panel-card modern-chart-card status-panel">
+                    <div class="analytics-card-header">
+                        <div>
+                            <span class="analytics-card-kicker">Komposisi</span>
+                            <h5 class="mb-0">Status Aduan</h5>
+                        </div>
+                        <span class="analytics-live-badge"><span></span>Semasa</span>
+                    </div>
+                    <div class="status-chart-shell">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card chart-container activity-panel panel-card modern-activity-card">
+                    <div class="analytics-card-header">
+                        <div>
+                            <span class="analytics-card-kicker">Log Sistem</span>
+                            <h6 class="mb-0">Aktiviti Terkini</h6>
+                        </div>
+                        <i class="bi bi-activity activity-header-icon" aria-hidden="true"></i>
+                    </div>
                     <ul class="list-group activity-feed" id="activityList"></ul>
                 </div>
             </div>
         </div>
         
         <!-- Complaints Table -->
-        <div class="table-responsive">
+        <div class="table-responsive complaints-panel">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                <h5>Aduan Terkini</h5>
+                <div>
+                    <span class="dashboard-section-kicker">Senarai Kerja</span>
+                    <h3 class="complaints-panel-title">Aduan Terkini</h3>
+                </div>
                 <div class="aduan-toolbar-controls">
                     <label for="searchAduan" class="visually-hidden-focusable">Cari aduan</label>
                     <input type="text" class="form-control search-box" id="searchAduan" aria-label="Cari aduan" placeholder="Cari aduan...">
-                    <label for="categoryFilter" class="visually-hidden-focusable">Tapis kategori</label>
-                    <select class="form-select category-select" id="categoryFilter" aria-label="Tapis kategori">
-                        <option value="Semua">Kategori: Semua</option>
-                    </select>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-primary filter-btn active" data-status="Semua" aria-pressed="true">Semua</button>
-                        <button class="btn btn-outline-primary filter-btn" data-status="Baru" aria-pressed="false">Baru</button>
-                        <button class="btn btn-outline-primary filter-btn" data-status="Dalam Proses" aria-pressed="false">Proses</button>
-                        <button class="btn btn-outline-primary filter-btn" data-status="Selesai" aria-pressed="false">Selesai</button>
+                    <button class="btn btn-outline-primary filter-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#aduanFilterPanel" aria-expanded="false" aria-controls="aduanFilterPanel"><i class="bi bi-funnel me-1"></i>Tapis</button>
+                    <div class="filter-panel collapse" id="aduanFilterPanel">
+                        <label for="categoryFilter" class="visually-hidden-focusable">Tapis kategori</label>
+                        <select class="form-select category-select mb-2" id="categoryFilter" aria-label="Tapis kategori">
+                            <option value="Semua">Kategori: Semua</option>
+                        </select>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary filter-btn active" data-status="Semua" aria-pressed="true">Semua</button>
+                            <button class="btn btn-outline-primary filter-btn" data-status="Baru" aria-pressed="false">Baru</button>
+                            <button class="btn btn-outline-primary filter-btn" data-status="Dalam Proses" aria-pressed="false">Proses</button>
+                            <button class="btn btn-outline-primary filter-btn" data-status="Selesai" aria-pressed="false">Selesai</button>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <table class="table table-hover table-striped" aria-describedby="table-caption" tabindex="0">
+            <table class="table table-hover table-striped complaints-desktop-table" aria-describedby="table-caption" tabindex="0">
                 <caption id="table-caption" class="visually-hidden-focusable">Senarai Aduan</caption>
                 <thead>
                     <tr>
@@ -1091,6 +1799,7 @@
                 </thead>
                 <tbody id="complaintsBody"></tbody>
             </table>
+            <div class="complaint-mobile-list" id="complaintsMobileList" aria-live="polite"></div>
             
             <!-- Pagination -->
             <nav>
@@ -1117,6 +1826,8 @@
             }
 
             const ACTIVITY_KEY = store.STORAGE_KEYS.activity;
+            const SYNC_OUTBOX_KEY = `${store.STORAGE_KEYS.complaints}_sync_outbox`;
+            const FORM_DRAFT_KEY = `${store.STORAGE_KEYS.complaints}_form_draft`;
 
             const defaultActivity = [
                 { message: 'Siti menghantar maklum balas', time: '2025-12-31T09:10:00Z' },
@@ -1126,6 +1837,7 @@
 
             const refs = {
                 tableBody: document.getElementById('complaintsBody'),
+                mobileComplaintList: document.getElementById('complaintsMobileList'),
                 searchBox: document.getElementById('searchAduan'),
                 categoryFilter: document.getElementById('categoryFilter'),
                 unitOptionsList: document.getElementById('inputUnitOptions'),
@@ -1149,6 +1861,11 @@
                 complaintModalLabel: document.getElementById('complaintModalLabel'),
                 submitComplaintBtn: document.getElementById('submitComplaintBtn'),
                 closeComplaintBtn: document.getElementById('closeComplaintBtn'),
+                previousComplaintStepBtn: document.getElementById('prevComplaintStepBtn'),
+                nextComplaintStepBtn: document.getElementById('nextComplaintStepBtn'),
+                formStepButtons: document.querySelectorAll('[data-form-step]'),
+                formSteps: document.querySelectorAll('.form-step'),
+                draftStatus: document.getElementById('complaintDraftStatus'),
                 complaintViewEditBtn: document.getElementById('complaintViewEditBtn'),
                 workLogBody: document.getElementById('inputWorkLogBody'),
                 logDateInput: document.getElementById('inputLogDate'),
@@ -1164,7 +1881,10 @@
                 unitSummaryStats: document.getElementById('unitSummaryStats'),
                 unitSummaryBody: document.getElementById('unitSummaryBody'),
                 sidebarToggle: document.getElementById('sidebarToggle'),
-                sidebar: document.querySelector('.sidebar')
+                sidebar: document.querySelector('.sidebar'),
+                syncStatus: document.getElementById('aduanSyncStatus'),
+                syncStatusText: document.getElementById('aduanSyncStatusText'),
+                retrySyncBtn: document.getElementById('retryAduanSyncBtn')
             };
 
             const formFields = {
@@ -1193,7 +1913,16 @@
             let editingLogIndex = null;
             const pageSize = 5;
             let currentPage = 1;
+            let currentFormStep = 1;
+            let isSyncing = false;
+            let formHasUnsavedChanges = false;
+            let allowModalClose = false;
+            let draftSaveTimer = null;
             const MAX_COMPLAINT_IMAGES = 3;
+            const MAX_IMAGE_SOURCE_BYTES = 15 * 1024 * 1024;
+            const MAX_IMAGE_STORED_BYTES = 800 * 1024;
+            const MAX_IMAGE_EDGE = 1280;
+            const FORM_STEP_COUNT = 3;
             const MAIN_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_MAIN_CATEGORY__';
             const SUB_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_SUB_CATEGORY__';
 
@@ -1209,6 +1938,8 @@
             renderAll();
             bindEvents();
             refreshComplaintsFromBackend();
+            renderSyncStatus();
+            void syncPendingChanges();
 
             function loadFromStorage(key, fallback) {
                 try {
@@ -1227,6 +1958,267 @@
 
             function saveComplaints() {
                 complaints = store.saveComplaints(complaints);
+            }
+
+            function loadSyncOutbox() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem(SYNC_OUTBOX_KEY) || '[]');
+                    return Array.isArray(saved) ? saved : [];
+                } catch (error) {
+                    console.warn('Gagal membaca senarai sync tertunda:', error);
+                    return [];
+                }
+            }
+
+            function saveSyncOutbox(items) {
+                localStorage.setItem(SYNC_OUTBOX_KEY, JSON.stringify(items));
+            }
+
+            function setDraftStatus(message) {
+                if (refs.draftStatus) refs.draftStatus.textContent = message || '';
+            }
+
+            function isNewFormDraftable() {
+                return !editingId && !viewingId && !refs.complaintModalDialog.classList.contains('complaint-modal-mode-view');
+            }
+
+            function getSavedFormDraft() {
+                try {
+                    const draft = JSON.parse(localStorage.getItem(FORM_DRAFT_KEY) || 'null');
+                    return draft && typeof draft === 'object' ? draft : null;
+                } catch (error) {
+                    console.warn('Gagal membaca draf borang:', error);
+                    return null;
+                }
+            }
+
+            function isMeaningfulFormDraft(draft) {
+                if (!draft || typeof draft !== 'object') return false;
+                const fields = draft.fields || {};
+                return Boolean(
+                    String(fields.title || '').trim() ||
+                    String(fields.reporter || '').trim() ||
+                    String(fields.phone || '').trim() ||
+                    String(fields.unit || '').trim() ||
+                    String(fields.relatedUnit || '').trim() ||
+                    String(fields.categoryMain || '').trim() ||
+                    String(fields.category || '').trim() ||
+                    (Array.isArray(draft.workLogs) && draft.workLogs.length) ||
+                    (Array.isArray(draft.images) && draft.images.length)
+                );
+            }
+
+            function buildFormDraft() {
+                return {
+                    savedAt: new Date().toISOString(),
+                    step: currentFormStep,
+                    fields: {
+                        title: formFields.title?.value || '',
+                        categoryMain: formFields.categoryMain?.value || '',
+                        category: formFields.category?.value || '',
+                        reporter: formFields.reporter?.value || '',
+                        phone: formFields.phone?.value || '',
+                        unit: formFields.unit?.value || '',
+                        relatedUnit: formFields.relatedUnit?.value || '',
+                        status: formFields.status?.value || 'Baru',
+                        date: formFields.date?.value || ''
+                    },
+                    workLogs: draftWorkLogs,
+                    images: draftImages
+                };
+            }
+
+            function clearFormDraft() {
+                localStorage.removeItem(FORM_DRAFT_KEY);
+                setDraftStatus('');
+            }
+
+            function saveFormDraft() {
+                if (!isNewFormDraftable() || !formHasUnsavedChanges) return;
+                const draft = buildFormDraft();
+                if (!isMeaningfulFormDraft(draft)) {
+                    clearFormDraft();
+                    return;
+                }
+                try {
+                    localStorage.setItem(FORM_DRAFT_KEY, JSON.stringify(draft));
+                    setDraftStatus(`Draf disimpan pada ${new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}.`);
+                } catch (error) {
+                    console.warn('Gagal menyimpan draf borang:', error);
+                    setDraftStatus('Draf tidak dapat disimpan pada peranti ini.');
+                }
+            }
+
+            function scheduleFormDraftSave() {
+                if (!isNewFormDraftable()) return;
+                formHasUnsavedChanges = true;
+                if (draftSaveTimer) window.clearTimeout(draftSaveTimer);
+                draftSaveTimer = window.setTimeout(() => {
+                    draftSaveTimer = null;
+                    saveFormDraft();
+                }, 350);
+            }
+
+            function restoreFormDraft() {
+                const draft = getSavedFormDraft();
+                if (!isMeaningfulFormDraft(draft)) return false;
+                const savedTime = draft.savedAt ? new Date(draft.savedAt).toLocaleString('ms-MY') : 'sebelum ini';
+                if (!window.confirm(`Terdapat draf aduan yang disimpan (${savedTime}). Sambung semula draf ini?`)) {
+                    clearFormDraft();
+                    return false;
+                }
+
+                const fields = draft.fields || {};
+                formFields.title.value = fields.title || '';
+                renderComplaintCategoryFields(fields.categoryMain || '', fields.category || '');
+                formFields.categoryMain.value = fields.categoryMain || '';
+                formFields.category.value = fields.category || '';
+                formFields.reporter.value = fields.reporter || '';
+                formFields.phone.value = fields.phone || '';
+                formFields.unit.value = fields.unit || '';
+                formFields.relatedUnit.value = fields.relatedUnit || '';
+                formFields.status.value = fields.status || 'Baru';
+                formFields.date.value = fields.date || new Date().toISOString().slice(0, 10);
+                draftWorkLogs = normalizeWorkLogsForForm(draft.workLogs, formFields.date.value, '');
+                draftImages = normalizeImageAttachmentsForForm(draft.images);
+                refs.logDateInput.value = formFields.date.value;
+                refs.logDetailsInput.value = '';
+                renderWorkLogTable();
+                renderImagePreview();
+                currentFormStep = Math.min(Math.max(Number(draft.step) || 1, 1), FORM_STEP_COUNT);
+                formHasUnsavedChanges = true;
+                setDraftStatus(`Draf dipulihkan daripada ${savedTime}.`);
+                return true;
+            }
+
+            function setFormStep(step) {
+                currentFormStep = Math.min(Math.max(Number(step) || 1, 1), FORM_STEP_COUNT);
+                const isView = refs.complaintModalDialog.classList.contains('complaint-modal-mode-view');
+                refs.formSteps.forEach((section) => {
+                    section.hidden = Number(section.dataset.step) !== currentFormStep;
+                });
+                refs.formStepButtons.forEach((button) => {
+                    const buttonStep = Number(button.dataset.formStep);
+                    button.classList.toggle('is-active', buttonStep === currentFormStep);
+                    button.setAttribute('aria-current', buttonStep === currentFormStep ? 'step' : 'false');
+                });
+                refs.previousComplaintStepBtn?.classList.toggle('d-none', currentFormStep === 1);
+                refs.nextComplaintStepBtn?.classList.toggle('d-none', currentFormStep === FORM_STEP_COUNT);
+                refs.submitComplaintBtn.classList.toggle('d-none', isView || currentFormStep !== FORM_STEP_COUNT);
+                refs.nextComplaintStepBtn?.classList.toggle('d-none', isView && currentFormStep === FORM_STEP_COUNT);
+                if (isNewFormDraftable() && formHasUnsavedChanges) saveFormDraft();
+            }
+
+            function validateCurrentFormStep() {
+                if (currentFormStep !== 1) return true;
+                validateUnitField(formFields.unit);
+                const step = document.querySelector(`.form-step[data-step="${currentFormStep}"]`);
+                const fields = step ? Array.from(step.querySelectorAll('input[required], select[required], textarea[required]')) : [];
+                const firstInvalid = fields.find((field) => !field.checkValidity());
+                if (!firstInvalid) return true;
+                refs.complaintForm.classList.add('was-validated');
+                firstInvalid.focus();
+                return false;
+            }
+
+            function queueBackendChange(action, payload) {
+                const id = String(payload?.id || '').trim();
+                let items = loadSyncOutbox();
+
+                if (id) {
+                    items = items.filter((item) => String(item?.payload?.id || '') !== id);
+                }
+
+                const queuedPayload = { ...(payload || {}) };
+                if (action === 'upsert') {
+                    delete queuedPayload.images;
+                    delete queuedPayload.imageAttachments;
+                }
+
+                items.push({
+                    id: `${action}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                    action,
+                    payload: queuedPayload,
+                    queuedAt: new Date().toISOString()
+                });
+                saveSyncOutbox(items);
+                renderSyncStatus();
+            }
+
+            function setSyncStatus(style, message, canRetry = false) {
+                if (!refs.syncStatus || !refs.syncStatusText) return;
+                refs.syncStatus.classList.remove('is-offline', 'is-pending', 'is-synced');
+                if (style) refs.syncStatus.classList.add(style);
+                refs.syncStatusText.textContent = message;
+                refs.retrySyncBtn?.classList.toggle('d-none', !canRetry);
+            }
+
+            function renderSyncStatus() {
+                const pending = loadSyncOutbox().length;
+                if (!REMOTE_BACKEND_URL) {
+                    setSyncStatus('is-pending', 'Disimpan pada peranti ini sahaja. Backend belum disambungkan.');
+                    return;
+                }
+                if (!navigator.onLine) {
+                    setSyncStatus('is-offline', pending
+                        ? `${pending} perubahan disimpan. Akan dihantar apabila internet kembali.`
+                        : 'Anda sedang offline. Perubahan baharu akan disimpan pada peranti ini.', true);
+                    return;
+                }
+                if (isSyncing) {
+                    setSyncStatus('is-pending', `Menghantar ${pending || 'perubahan'} ke server...`);
+                    return;
+                }
+                if (pending) {
+                    setSyncStatus('is-pending', `${pending} perubahan menunggu dihantar ke server.`, true);
+                    return;
+                }
+                setSyncStatus('is-synced', 'Semua perubahan telah diselaraskan.', false);
+            }
+
+            async function syncPendingChanges() {
+                if (isSyncing) return;
+                if (!REMOTE_BACKEND_URL) {
+                    renderSyncStatus();
+                    return;
+                }
+                if (!navigator.onLine) {
+                    renderSyncStatus();
+                    return;
+                }
+
+                let items = loadSyncOutbox();
+                if (!items.length) {
+                    renderSyncStatus();
+                    return;
+                }
+
+                isSyncing = true;
+                renderSyncStatus();
+                try {
+                    while (items.length) {
+                        const item = items[0];
+                        if (item.action === 'delete') {
+                            await deleteComplaintFromBackend(item.payload.id);
+                        } else {
+                            const latestComplaint = complaints.find((complaint) => String(complaint.id) === String(item.payload.id));
+                            const syncPayload = latestComplaint
+                                ? { ...item.payload, ...latestComplaint, type: 'Aduan', images: latestComplaint.imageAttachments || [] }
+                                : item.payload;
+                            await submitComplaintToBackend(syncPayload);
+                        }
+                        items.shift();
+                        saveSyncOutbox(items);
+                        renderSyncStatus();
+                    }
+                    await refreshComplaintsFromBackend();
+                } catch (error) {
+                    console.warn('Backend sync failed:', error);
+                    setSyncStatus('is-pending', `Belum dapat dihantar: ${error.message || 'cuba lagi apabila sambungan stabil.'}`, true);
+                } finally {
+                    isSyncing = false;
+                    renderSyncStatus();
+                }
             }
 
             function saveActivity() {
@@ -1392,6 +2384,27 @@
                 });
 
                 refs.complaintForm.addEventListener('submit', handleSubmitForm);
+                refs.complaintForm.addEventListener('input', scheduleFormDraftSave);
+                refs.complaintForm.addEventListener('change', scheduleFormDraftSave);
+
+                refs.nextComplaintStepBtn?.addEventListener('click', () => {
+                    if (refs.complaintModalDialog.classList.contains('complaint-modal-mode-view') || validateCurrentFormStep()) {
+                        setFormStep(currentFormStep + 1);
+                    }
+                });
+
+                refs.previousComplaintStepBtn?.addEventListener('click', () => {
+                    setFormStep(currentFormStep - 1);
+                });
+
+                refs.formStepButtons.forEach((button) => {
+                    button.addEventListener('click', () => {
+                        const requestedStep = Number(button.dataset.formStep);
+                        if (requestedStep <= currentFormStep || refs.complaintModalDialog.classList.contains('complaint-modal-mode-view') || validateCurrentFormStep()) {
+                            setFormStep(requestedStep);
+                        }
+                    });
+                });
 
                 refs.complaintViewEditBtn.addEventListener('click', () => {
                     if (viewingId) {
@@ -1421,6 +2434,7 @@
                     resetWorkLogEditor();
                     clearLogFeedback();
                     renderWorkLogTable();
+                    scheduleFormDraftSave();
                 });
 
                 refs.cancelWorkLogEditBtn?.addEventListener('click', () => {
@@ -1447,6 +2461,7 @@
                     resetWorkLogEditor();
                     clearLogFeedback();
                     renderWorkLogTable();
+                    scheduleFormDraftSave();
                 });
 
                 refs.imageInput?.addEventListener('change', (event) => {
@@ -1462,6 +2477,7 @@
                     draftImages.splice(index, 1);
                     clearImageFeedback();
                     renderImagePreview();
+                    scheduleFormDraftSave();
                 });
 
                 refs.imagePreview?.addEventListener('input', (event) => {
@@ -1471,12 +2487,58 @@
                     if (Number.isNaN(index) || !draftImages[index]) return;
 
                     draftImages[index].details = String(detailsInput.value || '').slice(0, 160);
+                    scheduleFormDraftSave();
+                });
+
+                refs.mobileComplaintList?.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button[data-action]');
+                    if (btn) {
+                        const id = btn.dataset.id;
+                        if (btn.dataset.action === 'view') openViewModal(id);
+                        if (btn.dataset.action === 'edit') openFormModal('edit', id);
+                        if (btn.dataset.action === 'delete') handleDelete(id);
+                        return;
+                    }
+                    const unitBtn = e.target.closest('button[data-unit-action="summary"]');
+                    if (unitBtn) openUnitSummaryModal(safeDecodeURIComponent(unitBtn.dataset.unit || ''));
+                });
+
+                refs.retrySyncBtn?.addEventListener('click', () => {
+                    void syncPendingChanges();
+                });
+
+                window.addEventListener('online', () => {
+                    renderSyncStatus();
+                    void syncPendingChanges();
+                });
+
+                window.addEventListener('offline', renderSyncStatus);
+
+                window.addEventListener('beforeunload', (event) => {
+                    if (!formHasUnsavedChanges || !isNewFormDraftable()) return;
+                    saveFormDraft();
+                    event.preventDefault();
+                    event.returnValue = '';
+                });
+
+                refs.complaintModalEl.addEventListener('hide.bs.modal', (event) => {
+                    if (allowModalClose || !formHasUnsavedChanges || !isNewFormDraftable()) return;
+                    event.preventDefault();
+                    saveFormDraft();
+                    const shouldLeave = window.confirm('Borang ini belum dihantar. Draf telah disimpan pada peranti ini. Keluar daripada borang?');
+                    if (!shouldLeave) return;
+                    allowModalClose = true;
+                    window.setTimeout(() => complaintModal.hide(), 0);
                 });
 
                 refs.complaintModalEl.addEventListener('hidden.bs.modal', () => {
                     viewingId = null;
                     editingId = null;
                     returnToViewAfterSave = false;
+                    allowModalClose = false;
+                    formHasUnsavedChanges = false;
+                    if (draftSaveTimer) window.clearTimeout(draftSaveTimer);
+                    draftSaveTimer = null;
                     draftWorkLogs = [];
                     draftImages = [];
                     setFormReadonly(false);
@@ -1484,6 +2546,7 @@
                     refs.submitComplaintBtn.classList.remove('d-none');
                     refs.complaintViewEditBtn.classList.add('d-none');
                     refs.closeComplaintBtn.textContent = 'Batal';
+                    setFormStep(1);
                     refs.logDateInput.value = new Date().toISOString().slice(0, 10);
                     refs.logDetailsInput.value = '';
                     if (refs.imageInput) refs.imageInput.value = '';
@@ -1505,6 +2568,7 @@
 if (!document.hidden) {
                     refreshComplaints();
                     refreshComplaintsFromBackend();
+                    void syncPendingChanges();
                 }
             });
 
@@ -1556,13 +2620,34 @@ if (!document.hidden) {
             async function refreshComplaintsFromBackend() {
                 try {
                     const rows = await fetchBackendData('Aduan');
-                    if (Array.isArray(rows) && rows.length) {
-                        complaints = store.saveComplaints(rows);
+                    if (Array.isArray(rows)) {
+                        complaints = store.saveComplaints(mergeBackendComplaints(rows));
                         renderAll();
                     }
                 } catch (error) {
                     console.warn('Backend refresh failed:', error);
+                } finally {
+                    renderSyncStatus();
                 }
+            }
+
+            function mergeBackendComplaints(rows) {
+                let merged = Array.isArray(rows) ? [...rows] : [];
+                loadSyncOutbox().forEach((item) => {
+                    const pendingId = String(item?.payload?.id || '').trim();
+                    if (!pendingId) return;
+                    if (item.action === 'delete') {
+                        merged = merged.filter((row) => String(row?.id || '') !== pendingId);
+                        return;
+                    }
+                    const index = merged.findIndex((row) => String(row?.id || '') === pendingId);
+                    if (index === -1) {
+                        merged.unshift(item.payload);
+                    } else {
+                        merged[index] = { ...merged[index], ...item.payload };
+                    }
+                });
+                return merged;
             }
 
             function renderAll() {
@@ -1841,6 +2926,9 @@ if (!document.hidden) {
 
                 if (!pageRows.length) {
                     refs.tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Tiada aduan ditemui.</td></tr>';
+                    if (refs.mobileComplaintList) {
+                        refs.mobileComplaintList.innerHTML = '<div class="text-center text-muted py-4">Tiada aduan ditemui.</div>';
+                    }
                     renderPagination(1);
                     return;
                 }
@@ -1856,7 +2944,7 @@ if (!document.hidden) {
                     return `
                         <tr>
                             <td><strong>#${c.id}</strong></td>
-                            <td>${c.title}</td>
+                            <td>${escapeHtml(c.title || '-')}</td>
                             <td><span class="badge bg-light text-dark border">${escapeHtml(categoryLabel)}</span></td>
                             <td>${c.reporter}</td>
                             <td>${c.phone || '-'}</td>
@@ -1872,7 +2960,38 @@ if (!document.hidden) {
                     `;
                 }).join('');
 
+                renderMobileComplaintCards(pageRows);
                 renderPagination(totalPages);
+            }
+
+            function renderMobileComplaintCards(rows) {
+                if (!refs.mobileComplaintList) return;
+                refs.mobileComplaintList.innerHTML = rows.map((complaint) => {
+                    const unit = String(complaint.unit || '').trim();
+                    const unitLabel = unit
+                        ? `<button type="button" class="btn btn-link p-0 text-start" data-unit-action="summary" data-unit="${encodeURIComponent(unit)}">${escapeHtml(unit)}</button>`
+                        : '-';
+                    return `
+                        <article class="complaint-card">
+                            <div class="d-flex align-items-start justify-content-between gap-2">
+                                <div>
+                                    <div class="small text-muted mb-1">#${escapeHtml(complaint.id || '-')}</div>
+                                    <h6 class="complaint-card-title">${escapeHtml(complaint.title || '-')}</h6>
+                                </div>
+                                ${getStatusBadge(complaint.status)}
+                            </div>
+                            <div class="complaint-card-meta">
+                                <div><span>Unit</span><br><strong>${unitLabel}</strong></div>
+                                <div><span>Tarikh</span><br><strong>${escapeHtml(formatDisplayDate(complaint.date))}</strong></div>
+                                <div><span>Pengadu</span><br><strong>${escapeHtml(complaint.reporter || '-')}</strong></div>
+                                <div><span>Kategori</span><br><strong>${escapeHtml(formatComplaintCategoryLabel(complaint))}</strong></div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-primary" data-action="view" data-id="${escapeHtml(complaint.id || '')}"><i class="bi bi-eye me-1"></i>Lihat dan kemaskini</button>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
             }
 
             function openUnitSummaryModal(unitName) {
@@ -2078,22 +3197,37 @@ if (!document.hidden) {
             }
 
             function normalizeImageAttachmentsForForm(rows) {
-                const source = Array.isArray(rows) ? rows : [];
+                let source = Array.isArray(rows) ? rows : [];
+                if (typeof rows === 'string' && rows.trim()) {
+                    const raw = rows.trim();
+                    source = raw.startsWith('data:image/')
+                        ? [raw]
+                        : raw.split(/,\s*(?=https?:\/\/)/i).filter(Boolean);
+                }
                 return source
-                    .map((entry) => {
-                        if (!entry || typeof entry !== 'object') return null;
-                        const dataUrl = String(entry.dataUrl || entry.url || '').trim();
-                        if (!dataUrl.startsWith('data:image/')) return null;
+                    .map((entry, index) => {
+                        const rawUrl = typeof entry === 'string' ? entry : entry?.dataUrl || entry?.url;
+                        const dataUrl = normalizeDisplayImageUrl(rawUrl);
+                        if (!dataUrl.startsWith('data:image/') && !/^https?:\/\//i.test(dataUrl)) return null;
                         return {
                             dataUrl,
-                            name: String(entry.name || 'Gambar').slice(0, 120),
-                            type: String(entry.type || ''),
-                            size: Number.isFinite(Number(entry.size)) ? Number(entry.size) : 0,
-                            details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
+                            name: String(entry?.name || `Gambar ${index + 1}`).slice(0, 120),
+                            type: String(entry?.type || ''),
+                            size: Number.isFinite(Number(entry?.size)) ? Number(entry.size) : 0,
+                            details: String(entry?.details || entry?.detail || entry?.description || entry?.caption || entry?.note || '').trim().slice(0, 160)
                         };
                     })
                     .filter(Boolean)
                     .slice(0, MAX_COMPLAINT_IMAGES);
+            }
+
+            function normalizeDisplayImageUrl(value) {
+                const source = String(value || '').trim();
+                const driveFileMatch = source.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+                if (driveFileMatch) {
+                    return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(driveFileMatch[1])}`;
+                }
+                return source;
             }
 
             function renderImagePreview() {
@@ -2127,6 +3261,54 @@ if (!document.hidden) {
                 });
             }
 
+            function loadImageFromDataUrl(dataUrl) {
+                return new Promise((resolve, reject) => {
+                    const image = new Image();
+                    image.onload = () => resolve(image);
+                    image.onerror = () => reject(new Error('Gagal memproses gambar.'));
+                    image.src = dataUrl;
+                });
+            }
+
+            function estimateDataUrlBytes(dataUrl) {
+                const base64 = String(dataUrl || '').split(',')[1] || '';
+                return Math.ceil((base64.length * 3) / 4);
+            }
+
+            async function optimizeImageFile(file) {
+                const originalDataUrl = await readImageAsDataUrl(file);
+                if (Number(file.size) <= MAX_IMAGE_STORED_BYTES) {
+                    return { dataUrl: originalDataUrl, type: String(file.type || ''), size: Number(file.size) || estimateDataUrlBytes(originalDataUrl) };
+                }
+
+                const image = await loadImageFromDataUrl(originalDataUrl);
+                const largestEdge = Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height);
+                const scale = largestEdge > MAX_IMAGE_EDGE ? MAX_IMAGE_EDGE / largestEdge : 1;
+                const width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
+                const height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const context = canvas.getContext('2d');
+                context.fillStyle = '#ffffff';
+                context.fillRect(0, 0, width, height);
+                context.drawImage(image, 0, 0, width, height);
+
+                let optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+                if (estimateDataUrlBytes(optimizedDataUrl) > MAX_IMAGE_STORED_BYTES) {
+                    optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.64);
+                }
+                if (estimateDataUrlBytes(optimizedDataUrl) > MAX_IMAGE_STORED_BYTES) {
+                    optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.52);
+                }
+
+                return {
+                    dataUrl: optimizedDataUrl,
+                    type: 'image/jpeg',
+                    size: estimateDataUrlBytes(optimizedDataUrl)
+                };
+            }
+
             async function handleImageSelection(event) {
                 const files = Array.from(event.target.files || []);
                 if (!files.length) return;
@@ -2149,8 +3331,14 @@ if (!document.hidden) {
                         continue;
                     }
 
+                    if (Number(file.size) > MAX_IMAGE_SOURCE_BYTES) {
+                        issues.push(`${file.name}: saiz melebihi 15 MB.`);
+                        continue;
+                    }
+
                     try {
-                        const dataUrl = await readImageAsDataUrl(file);
+                        const optimizedImage = await optimizeImageFile(file);
+                        const dataUrl = optimizedImage.dataUrl;
                         if (!dataUrl.startsWith('data:image/')) {
                             issues.push(`${file.name}: format data tidak sah.`);
                             continue;
@@ -2159,8 +3347,8 @@ if (!document.hidden) {
                         draftImages.push({
                             dataUrl,
                             name: String(file.name || 'Gambar').slice(0, 120),
-                            type: String(file.type || ''),
-                            size: Number(file.size) || 0,
+                            type: optimizedImage.type,
+                            size: optimizedImage.size,
                             details: ''
                         });
                     } catch {
@@ -2178,6 +3366,7 @@ if (!document.hidden) {
 
                 renderImagePreview();
                 event.target.value = '';
+                scheduleFormDraftSave();
             }
 
             function renderWorkLogTable() {
@@ -2265,7 +3454,7 @@ if (!document.hidden) {
                 formFields.relatedUnit.value = data.relatedUnit || '';
                 formFields.date.value = data.date;
                 draftWorkLogs = normalizeWorkLogsForForm(data.workLogs, data.date, data.details);
-                draftImages = normalizeImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments);
+                draftImages = normalizeImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments || data.imageUrls);
                 refs.logDateInput.value = data.date || new Date().toISOString().slice(0, 10);
                 refs.logDetailsInput.value = '';
                 if (refs.imageInput) refs.imageInput.value = '';
@@ -2283,6 +3472,9 @@ if (!document.hidden) {
                 editingId = isEdit ? id : null;
                 viewingId = isView ? id : null;
                 returnToViewAfterSave = isEdit ? editFromView : false;
+                allowModalClose = false;
+                formHasUnsavedChanges = false;
+                setDraftStatus('');
                 resetWorkLogEditor();
                 refs.complaintForm.classList.remove('was-validated');
                 formFields.unit.setCustomValidity('');
@@ -2301,6 +3493,7 @@ if (!document.hidden) {
                     refs.submitComplaintBtn.textContent = isEdit ? 'Kemaskini' : 'Simpan';
                 }
 
+                let restoredDraft = false;
                 if ((isEdit || isView) && id) {
                     const data = complaints.find(c => c.id === id);
                     if (!data) return;
@@ -2321,8 +3514,10 @@ if (!document.hidden) {
                     clearImageFeedback();
                     renderWorkLogTable();
                     renderImagePreview();
+                    restoredDraft = restoreFormDraft();
                 }
 
+                setFormStep(restoredDraft ? currentFormStep : 1);
                 complaintModal.show();
             }
 
@@ -2331,6 +3526,7 @@ if (!document.hidden) {
                 event.stopPropagation();
                 const form = refs.complaintForm;
                 const shouldReturnToView = Boolean(editingId && returnToViewAfterSave);
+                const isNewComplaint = !editingId;
 
                 validateUnitField(formFields.unit);
 
@@ -2382,10 +3578,11 @@ if (!document.hidden) {
 
                 saveComplaints();
                 renderAll();
-                submitComplaintToBackend({ ...payload, type: 'Aduan', images: payload.imageAttachments }).catch((error) => {
-                    console.warn('Backend sync failed:', error);
-                    alert(`Aduan disimpan secara tempatan, tetapi penghantaran ke backend gagal.\n\n${error.message}`);
-                });
+                queueBackendChange('upsert', { ...payload, type: 'Aduan', images: payload.imageAttachments });
+                void syncPendingChanges();
+                if (isNewComplaint) clearFormDraft();
+                formHasUnsavedChanges = false;
+                allowModalClose = true;
 
                 if (shouldReturnToView) {
                     const savedId = payload.id;
@@ -2426,7 +3623,7 @@ if (!document.hidden) {
                         size: Number(image.size) || 0,
                         details: String(image.details || '').trim().slice(0, 160)
                     }))
-                    .filter((image) => image.dataUrl.startsWith('data:image/'))
+                    .filter((image) => image.dataUrl.startsWith('data:image/') || /^https?:\/\//i.test(image.dataUrl))
                     .slice(0, MAX_COMPLAINT_IMAGES);
                 return {
                     id,
@@ -2483,13 +3680,8 @@ if (!document.hidden) {
                 complaints = store.removeComplaint(id);
                 addActivity(`Aduan ${id} dipadam`);
                 renderAll();
-
-                try {
-                    await deleteComplaintFromBackend(id);
-                    await refreshComplaintsFromBackend();
-                } catch (error) {
-                    console.warn('Backend delete failed:', error);
-                }
+                queueBackendChange('delete', { type: 'Aduan', id });
+                void syncPendingChanges();
             }
 
             async function deleteComplaintFromBackend(id) {
@@ -2554,20 +3746,137 @@ if (!document.hidden) {
                 const trendCtx = document.getElementById('trendChart').getContext('2d');
                 const statusCtx = document.getElementById('statusChart').getContext('2d');
 
+                const newComplaintGradient = trendCtx.createLinearGradient(0, 0, 0, 260);
+                newComplaintGradient.addColorStop(0, 'rgba(99, 102, 241, 0.28)');
+                newComplaintGradient.addColorStop(1, 'rgba(99, 102, 241, 0.01)');
+
+                const statusCenterTextPlugin = {
+                    id: 'statusCenterText',
+                    afterDraw(chart) {
+                        const dataset = chart.data.datasets?.[0]?.data || [];
+                        const total = dataset.reduce((sum, value) => sum + (Number(value) || 0), 0);
+                        const { ctx, chartArea } = chart;
+                        if (!chartArea) return;
+                        const centerX = (chartArea.left + chartArea.right) / 2;
+                        const centerY = (chartArea.top + chartArea.bottom) / 2;
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#172033';
+                        ctx.font = '700 25px system-ui, sans-serif';
+                        ctx.fillText(String(total), centerX, centerY - 7);
+                        ctx.fillStyle = '#94a3b8';
+                        ctx.font = '700 10px system-ui, sans-serif';
+                        ctx.fillText('JUMLAH', centerX, centerY + 14);
+                        ctx.restore();
+                    }
+                };
+
+                const tooltipOptions = {
+                    backgroundColor: '#172033',
+                    titleColor: '#ffffff',
+                    bodyColor: '#e2e8f0',
+                    padding: 11,
+                    cornerRadius: 10,
+                    displayColors: true,
+                    boxPadding: 4,
+                    usePointStyle: true
+                };
+
                 trendChart = new Chart(trendCtx, {
                     type: 'line',
                     data: { labels: [], datasets: [
-                        { label: 'Aduan Baru', data: [], borderColor: 'rgb(102, 126, 234)', backgroundColor: 'rgba(102, 126, 234, 0.12)', tension: 0.4, fill: true },
-                        { label: 'Selesai', data: [], borderColor: 'rgb(25, 135, 84)', backgroundColor: 'rgba(25, 135, 84, 0.12)', tension: 0.4, fill: true }
+                        {
+                            label: 'Aduan Baru',
+                            data: [],
+                            borderColor: '#6366f1',
+                            backgroundColor: newComplaintGradient,
+                            borderWidth: 2.5,
+                            tension: 0.38,
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBorderWidth: 3,
+                            pointHoverBackgroundColor: '#ffffff'
+                        },
+                        {
+                            label: 'Selesai',
+                            data: [],
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            tension: 0.38,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBorderWidth: 3,
+                            pointHoverBackgroundColor: '#ffffff'
+                        }
                     ]},
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        animation: { duration: 450 },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                align: 'end',
+                                labels: {
+                                    color: '#64748b',
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 7,
+                                    boxHeight: 7,
+                                    padding: 16,
+                                    font: { size: 11, weight: '600' }
+                                }
+                            },
+                            tooltip: tooltipOptions
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                border: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10, weight: '600' } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grace: '15%',
+                                grid: { color: 'rgba(148, 163, 184, 0.16)', drawTicks: false },
+                                border: { display: false },
+                                ticks: { color: '#94a3b8', precision: 0, padding: 10, font: { size: 10 } }
+                            }
+                        }
+                    }
                 });
 
                 statusChart = new Chart(statusCtx, {
                     type: 'doughnut',
                     data: { labels: ['Baru', 'Dalam Proses', 'Selesai', 'Ditolak'], datasets: [{ data: [0,0,0,0], backgroundColor: [
-                        'rgb(13, 110, 253)','rgb(255, 193, 7)','rgb(25, 135, 84)','rgb(220, 53, 69)'], borderWidth: 2, borderColor: '#fff' }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+                        '#3b82f6', '#f59e0b', '#10b981', '#f43f5e'], borderWidth: 0, spacing: 3, borderRadius: 8, hoverOffset: 4 }] },
+                    plugins: [statusCenterTextPlugin],
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '72%',
+                        animation: { duration: 500 },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#64748b',
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 7,
+                                    boxHeight: 7,
+                                    padding: 13,
+                                    font: { size: 10, weight: '600' }
+                                }
+                            },
+                            tooltip: tooltipOptions
+                        }
+                    }
                 });
 
                 sparkCharts.spark1 = createSpark('spark1', [0], 'rgb(13,110,253)', 'rgba(13,110,253,0.12)');

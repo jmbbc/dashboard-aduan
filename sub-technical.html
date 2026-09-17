@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sub Technical</title>
+    <title>Sub Teknikal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <style>
@@ -101,17 +101,18 @@
 
         @media (max-width: 768px) { .sidebar { width: 0; overflow: hidden; } .sidebar.show { width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 16px; } }
     </style>
+    <link rel="stylesheet" href="navigation.css?v=2">
 </head>
 <body>
     <div class="sidebar" id="sidebarNav" role="navigation" aria-label="Menu utama">
         <div class="text-center mb-4">
             <i class="bi bi-cpu fs-1"></i>
-            <h4 class="mt-2">Technical</h4>
+            <h4 class="mt-2">Teknikal</h4>
         </div>
         <nav class="nav flex-column">
-            <div class="nav-item mb-1">
+            <div class="nav-item nav-section nav-section-aduan">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#aduanMenu" aria-expanded="false" aria-controls="aduanMenu">
-                    Aduan
+                    <span class="nav-section-label"><i class="bi bi-chat-left-text-fill nav-section-icon"></i><span>Aduan</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse" id="aduanMenu">
@@ -119,15 +120,15 @@
                     <a class="nav-link ps-4" href="unit-rumah.html">Unit Rumah</a>
                 </div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item nav-section nav-section-teknikal">
                 <button class="nav-link w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#techMenu" aria-expanded="true" aria-controls="techMenu">
-                    Technical
+                    <span class="nav-section-label"><i class="bi bi-tools nav-section-icon"></i><span>Teknikal</span></span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
                 <div class="collapse show" id="techMenu">
-                    <a class="nav-link ps-4" href="technical.html">Dashboard Technical</a>
-                    <a class="nav-link ps-4" href="ppm-monthly-report.html">PPM Monthly Report</a>
-                    <a class="nav-link active ps-4" href="sub-technical.html">Sub Technical</a>
+                    <a class="nav-link ps-4" href="technical.html">Dashboard Teknikal</a>
+                    <a class="nav-link ps-4" href="ppm-monthly-report.html">Laporan Bulanan PPM</a>
+                    <a class="nav-link active ps-4" href="sub-technical.html">Sub Teknikal</a>
                     <a class="nav-link ps-4" href="technical-equipment.html">Status Peralatan</a>
                 </div>
             </div>
@@ -136,10 +137,10 @@
 
     <div class="main-content compact-sub-technical" id="main-content" role="main">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
+            <button class="btn btn-outline-secondary d-md-none me-2" id="sidebarToggle" aria-label="Buka atau tutup menu" aria-controls="sidebarNav" aria-expanded="false"><i class="bi bi-list"></i></button>
             <div>
-                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="technical.html">Technical</a></li><li class="breadcrumb-item active">Sub Technical</li></ol></nav>
-                <h2 class="mb-0">Sub Technical</h2>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb mb-1"><li class="breadcrumb-item"><a href="technical.html">Teknikal</a></li><li class="breadcrumb-item active">Sub Teknikal</li></ol></nav>
+                <h2 class="mb-0">Sub Teknikal</h2>
                 <p class="text-muted small mb-0">Papar semua rekod teknikal dan tapis mengikut kategori</p>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -155,12 +156,12 @@
                         <label for="subTechSort" class="visually-hidden">Susun rekod teknikal</label>
                         <select class="form-select sort-select" id="subTechSort" aria-label="Susun rekod teknikal">
                             <option value="updated">Susun: Kemas Kini Terkini</option>
-                            <option value="due">Susun: Tarikh Due Terdekat</option>
+                            <option value="due">Susun: Tarikh Tamat Terdekat</option>
                             <option value="priority">Susun: Prioriti Tertinggi</option>
                         </select>
-                        <button class="btn btn-outline-secondary filter-btn" type="button" id="subTechReset">Reset</button>
-                        <label for="searchTech" class="visually-hidden">Cari technical</label>
-                        <input type="text" class="form-control search-box" id="searchTech" placeholder="Cari technical..." aria-label="Cari technical" style="width:280px;">
+                        <button class="btn btn-outline-secondary filter-btn" type="button" id="subTechReset">Tetapkan Semula</button>
+                        <label for="searchTech" class="visually-hidden">Cari teknikal</label>
+                        <input type="text" class="form-control search-box" id="searchTech" placeholder="Cari teknikal..." aria-label="Cari teknikal" style="width:280px;">
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-3 small sync-meta">
@@ -176,7 +177,7 @@
                                 <th>Kategori</th>
                                 <th>Aset/Peralatan</th>
                                 <th>PIC</th>
-                                <th>Tarikh Due</th>
+                                <th>Tarikh Tamat</th>
                                 <th>Prioriti</th>
                                 <th>Status</th>
                                 <th>Kemas Kini</th>
@@ -279,7 +280,7 @@
                 refs.filterWrap.innerHTML = types.map(cat => {
                     const active = cat === currentType ? 'active' : '';
                     const pressed = cat === currentType ? 'true' : 'false';
-                    return `<button class="btn btn-outline-primary filter-btn ${active}" data-type="${cat}" aria-pressed="${pressed}">${cat}</button>`;
+                    return `<button class="btn btn-outline-primary filter-btn ${active}" data-type="${cat}" aria-pressed="${pressed}">${formatCategory(cat)}</button>`;
                 }).join('');
 
                 refs.filterWrap.querySelectorAll('button[data-type]').forEach(btn => {
@@ -337,7 +338,7 @@
                     <tr>
                         <td><strong>#${t.id}</strong></td>
                         <td>${t.title}</td>
-                        <td><span class="badge bg-light text-dark border">${t.type}</span></td>
+                        <td><span class="badge bg-light text-dark border">${formatCategory(t.type)}</span></td>
                         <td>${t.asset}</td>
                         <td>${t.owner}</td>
                         <td>${formatDisplayDate(t.due)}</td>
@@ -346,7 +347,7 @@
                         <td>${formatDateTime(t.updatedAt)}</td>
                         <td class="text-nowrap">
                             <button class="btn btn-sm btn-primary" data-action="view" data-id="${t.id}" title="Lihat"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-sm btn-success" data-action="edit" data-id="${t.id}" title="Edit"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-success" data-action="edit" data-id="${t.id}" title="Sunting"><i class="bi bi-pencil"></i></button>
                             <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${t.id}" title="Padam"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
@@ -378,14 +379,46 @@
                 return d.toLocaleString('ms-MY');
             }
 
+            function formatCategory(type) {
+                const labels = {
+                    'Audit/Compliance': 'Audit / Pematuhan',
+                    'Audit & Compliance': 'Audit / Pematuhan',
+                    'License': 'Lesen',
+                    'Repair': 'Pembaikan',
+                    'Maintenance': 'Penyelenggaraan'
+                };
+                return labels[type] || type || '-';
+            }
+
+            function formatStatus(status) {
+                const labels = {
+                    'Open': 'Terbuka',
+                    'In Progress': 'Dalam Proses',
+                    'Completed': 'Selesai',
+                    'Closed': 'Tamat'
+                };
+                return labels[status] || status || '-';
+            }
+
+            function formatPriority(priority) {
+                const labels = {
+                    'High': 'Tinggi',
+                    'Medium': 'Sederhana',
+                    'Low': 'Rendah'
+                };
+                return labels[priority] || priority || '-';
+            }
+
             function getStatusBadge(status) {
+                const displayStatus = formatStatus(status);
                 const map = { 'Terbuka': 'bg-primary', 'Dalam Proses': 'bg-warning text-dark', 'Selesai': 'bg-success', 'Tamat': 'bg-danger' };
-                return `<span class="badge badge-status ${map[status] || 'bg-secondary'}">${status || '-'}</span>`;
+                return `<span class="badge badge-status ${map[displayStatus] || 'bg-secondary'}">${displayStatus}</span>`;
             }
 
             function getPriorityBadge(priority) {
+                const displayPriority = formatPriority(priority);
                 const map = { 'Tinggi': 'bg-danger', 'Sederhana': 'bg-warning text-dark', 'Rendah': 'bg-success' };
-                return `<span class="badge ${map[priority] || 'bg-secondary'}">${priority || '-'}</span>`;
+                return `<span class="badge ${map[displayPriority] || 'bg-secondary'}">${displayPriority}</span>`;
             }
 
             let editingId = null;
@@ -445,13 +478,13 @@
                 document.getElementById('techViewBodyModal').innerHTML = `
                     <div class="row g-3">
                         <div class="col-md-4"><small class="text-muted">ID</small><div class="fw-bold">${data.id}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Tarikh Due</small><div class="fw-bold">${formatDisplayDate(data.due)}</div></div>
-                        <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${data.status}</div></div>
+                        <div class="col-md-4"><small class="text-muted">Tarikh Tamat</small><div class="fw-bold">${formatDisplayDate(data.due)}</div></div>
+                        <div class="col-md-4"><small class="text-muted">Status</small><div class="fw-bold">${formatStatus(data.status)}</div></div>
                         <div class="col-md-6"><small class="text-muted">Perkara</small><div class="fw-bold">${data.title}</div></div>
-                        <div class="col-md-6"><small class="text-muted">Kategori</small><div class="fw-bold">${data.type}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Kategori</small><div class="fw-bold">${formatCategory(data.type)}</div></div>
                         <div class="col-md-6"><small class="text-muted">Aset</small><div class="fw-bold">${data.asset}</div></div>
                         <div class="col-md-6"><small class="text-muted">PIC</small><div class="fw-bold">${data.owner}</div></div>
-                        <div class="col-md-6"><small class="text-muted">Prioriti</small><div class="fw-bold">${data.priority}</div></div>
+                        <div class="col-md-6"><small class="text-muted">Prioriti</small><div class="fw-bold">${formatPriority(data.priority)}</div></div>
                         <div class="col-12"><small class="text-muted">Butiran</small><div class="border rounded p-3 bg-light">${data.notes || '-'}</div></div>
                     </div>`;
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('techViewModalInline')).show();
@@ -573,7 +606,7 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="techViewModalInlineLabel">Butiran Technical</h5>
+                    <h5 class="modal-title" id="techViewModalInlineLabel">Butiran Teknikal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body" id="techViewBodyModal"></div>
@@ -588,7 +621,7 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <form class="modal-content needs-validation" id="techEditForm" novalidate>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="techEditModalLabel">Edit Technical</h5>
+                    <h5 class="modal-title" id="techEditModalLabel">Edit Teknikal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
@@ -605,7 +638,7 @@
                                 <option value="Lesen">Lesen</option>
                                 <option value="Pembaikan">Pembaikan</option>
                                 <option value="Penyelenggaraan">Penyelenggaraan</option>
-                                <option value="Audit/Compliance">Audit/Compliance</option>
+                                <option value="Audit/Compliance">Audit / Pematuhan</option>
                             </select>
                             <div class="invalid-feedback">Pilih kategori.</div>
                         </div>
@@ -620,9 +653,9 @@
                             <div class="invalid-feedback">Isi PIC.</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="editTechDue">Tarikh Due</label>
+                            <label class="form-label" for="editTechDue">Tarikh Tamat</label>
                             <input type="date" class="form-control" id="editTechDue" required>
-                            <div class="invalid-feedback">Pilih tarikh due.</div>
+                            <div class="invalid-feedback">Pilih tarikh tamat.</div>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="editTechPriority">Prioriti</label>

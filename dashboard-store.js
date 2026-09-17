@@ -448,7 +448,19 @@
     }
 
     function normalizeWorkLogs(rows, fallbackDate, fallbackDetails) {
-        const source = Array.isArray(rows) ? rows : [];
+        let source = Array.isArray(rows) ? rows : [];
+        if (typeof rows === 'string' && rows.trim()) {
+            source = rows
+                .split(/\r?\n/)
+                .map((line) => {
+                    const parts = String(line || '').split('|');
+                    if (parts.length < 2) return { date: fallbackDate, note: line };
+                    return {
+                        date: parts.shift().trim(),
+                        note: parts.join('|').trim()
+                    };
+                });
+        }
         const logs = source
             .map((row) => {
                 if (!row || typeof row !== 'object') {
@@ -478,22 +490,43 @@
         return logs;
     }
 
+    function normalizeImageSourceUrl(value) {
+        const source = String(value || '').trim();
+        const driveFileMatch = source.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+        if (driveFileMatch) {
+            return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(driveFileMatch[1])}`;
+        }
+        return source;
+    }
+
     function normalizeImageAttachments(rows) {
-        const source = Array.isArray(rows) ? rows : [];
+        let source = Array.isArray(rows) ? rows : [];
+        if (typeof rows === 'string' && rows.trim()) {
+            const raw = rows.trim();
+            try {
+                const parsed = JSON.parse(raw);
+                source = Array.isArray(parsed) ? parsed : [raw];
+            } catch (error) {
+                source = raw.startsWith('data:image/')
+                    ? [raw]
+                    : raw.split(/,\s*(?=https?:\/\/)/i).filter(Boolean);
+            }
+        }
+
         return source
-            .map((entry) => {
+            .map((entry, index) => {
                 if (typeof entry === 'string') {
-                    const dataUrl = entry.trim();
-                    if (!dataUrl.startsWith('data:image/')) return null;
-                    return { dataUrl, name: 'Gambar', type: '', size: 0, details: '' };
+                    const imageUrl = normalizeImageSourceUrl(entry);
+                    if (!imageUrl.startsWith('data:image/') && !/^https?:\/\//i.test(imageUrl)) return null;
+                    return { dataUrl: imageUrl, name: `Gambar ${index + 1}`, type: '', size: 0, details: '' };
                 }
 
                 if (!entry || typeof entry !== 'object') {
                     return null;
                 }
 
-                const dataUrl = String(entry.dataUrl || entry.url || '').trim();
-                if (!dataUrl.startsWith('data:image/')) {
+                const dataUrl = normalizeImageSourceUrl(entry.dataUrl || entry.url);
+                if (!dataUrl.startsWith('data:image/') && !/^https?:\/\//i.test(dataUrl)) {
                     return null;
                 }
 
@@ -556,7 +589,7 @@
         const complaintDate = normalizeDateOnly(item.date, new Date().toISOString().slice(0, 10));
         const rawDetails = String(item.details || '').trim();
         const workLogs = normalizeWorkLogs(item.workLogs, complaintDate, rawDetails);
-        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
+        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments || item.imageUrls);
         const categoryPair = resolveComplaintCategoryPair(item || {});
 
         return {
@@ -582,7 +615,7 @@
         const dueDate = normalizeDateOnly(item.due, new Date().toISOString().slice(0, 10));
         const rawNotes = String(item.notes ?? item.details ?? '').trim();
         const workLogs = normalizeWorkLogs(item.workLogs, dueDate, rawNotes);
-        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments);
+        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments || item.imageUrls);
         return {
             id: normalizeIdValue(item.id, `TECH-${index + 1}`),
             title: String(item.title || '-'),
