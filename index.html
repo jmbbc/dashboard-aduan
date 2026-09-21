@@ -1303,6 +1303,41 @@
             }
         }
 
+        .sortable-column-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sortable-column-button:hover,
+        .sortable-column-button:focus-visible {
+            color: var(--bs-primary);
+        }
+
+        .sortable-column-button:focus-visible {
+            outline: 2px solid rgba(13, 110, 253, 0.35);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        .sortable-column-button .sort-indicator {
+            font-size: 0.72rem;
+            opacity: 0.55;
+        }
+
+        .sortable-column-button.is-active .sort-indicator {
+            opacity: 1;
+            color: var(--bs-primary);
+        }
+
     </style>
     <link rel="stylesheet" href="navigation.css?v=2">
 </head>
@@ -1772,6 +1807,28 @@
                         <select class="form-select category-select mb-2" id="categoryFilter" aria-label="Tapis kategori">
                             <option value="Semua">Kategori: Semua</option>
                         </select>
+                        <div class="row g-2 mb-2">
+                            <div class="col-7">
+                                <label for="complaintSortField" class="visually-hidden-focusable">Susun mengikut</label>
+                                <select class="form-select" id="complaintSortField" aria-label="Susun aduan mengikut">
+                                    <option value="id">ID Aduan</option>
+                                    <option value="title">Tajuk</option>
+                                    <option value="category">Kategori</option>
+                                    <option value="reporter">Pengadu</option>
+                                    <option value="phone">Telefon</option>
+                                    <option value="unit">Unit</option>
+                                    <option value="date">Tarikh</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <label for="complaintSortDirection" class="visually-hidden-focusable">Arah susunan</label>
+                                <select class="form-select" id="complaintSortDirection" aria-label="Arah susunan aduan">
+                                    <option value="desc">Menurun (Terbaru / Z → A)</option>
+                                    <option value="asc">Menaik (Lama / A → Z)</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="btn-group">
                             <button class="btn btn-outline-primary filter-btn active" data-status="Semua" aria-pressed="true">Semua</button>
                             <button class="btn btn-outline-primary filter-btn" data-status="Baru" aria-pressed="false">Baru</button>
@@ -1786,15 +1843,15 @@
                 <caption id="table-caption" class="visually-hidden-focusable">Senarai Aduan</caption>
                 <thead>
                     <tr>
-                        <th>ID Aduan</th>
-                        <th>Tajuk</th>
-                        <th>Kategori</th>
-                        <th>Pengadu</th>
-                        <th>Telefon</th>
-                        <th>Unit</th>
-                        <th>Tarikh</th>
-                        <th>Status</th>
-                        <th>Tindakan</th>
+                        <th scope="col" aria-sort="descending"><button type="button" class="sortable-column-button is-active" data-sort-key="id">ID Aduan <i class="bi bi-chevron-down sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="title">Tajuk <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="category">Kategori <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="reporter">Pengadu <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="phone">Telefon <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="unit">Unit <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="date">Tarikh <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col"><button type="button" class="sortable-column-button" data-sort-key="status">Status <i class="bi bi-chevron-expand sort-indicator" aria-hidden="true"></i></button></th>
+                        <th scope="col">Tindakan</th>
                     </tr>
                 </thead>
                 <tbody id="complaintsBody"></tbody>
@@ -1840,6 +1897,9 @@
                 mobileComplaintList: document.getElementById('complaintsMobileList'),
                 searchBox: document.getElementById('searchAduan'),
                 categoryFilter: document.getElementById('categoryFilter'),
+                sortField: document.getElementById('complaintSortField'),
+                sortDirection: document.getElementById('complaintSortDirection'),
+                sortButtons: document.querySelectorAll('[data-sort-key]'),
                 unitOptionsList: document.getElementById('inputUnitOptions'),
                 filterButtons: document.querySelectorAll('.filter-btn'),
                 statToday: document.getElementById('statToday'),
@@ -1905,6 +1965,8 @@
             let currentStatus = 'Semua';
             let currentCategory = 'Semua';
             let currentSearch = '';
+            let currentSortKey = 'id';
+            let currentSortDirection = 'desc';
             let editingId = null;
             let viewingId = null;
             let returnToViewAfterSave = false;
@@ -2290,6 +2352,36 @@
                     currentPage = 1;
                     renderTable();
                     updateStatusChart();
+                });
+
+                refs.sortField?.addEventListener('change', (event) => {
+                    currentSortKey = event.target.value || 'id';
+                    currentSortDirection = ['id', 'date'].includes(currentSortKey) ? 'desc' : 'asc';
+                    currentPage = 1;
+                    updateSortControls();
+                    renderTable();
+                });
+
+                refs.sortDirection?.addEventListener('change', (event) => {
+                    currentSortDirection = event.target.value === 'asc' ? 'asc' : 'desc';
+                    currentPage = 1;
+                    updateSortControls();
+                    renderTable();
+                });
+
+                refs.sortButtons.forEach((button) => {
+                    button.addEventListener('click', () => {
+                        const nextKey = button.dataset.sortKey || 'id';
+                        if (currentSortKey === nextKey) {
+                            currentSortDirection = currentSortDirection === 'desc' ? 'asc' : 'desc';
+                        } else {
+                            currentSortKey = nextKey;
+                            currentSortDirection = ['id', 'date'].includes(nextKey) ? 'desc' : 'asc';
+                        }
+                        currentPage = 1;
+                        updateSortControls();
+                        renderTable();
+                    });
                 });
 
 
@@ -2905,23 +2997,47 @@ if (!document.hidden) {
                         ? `${c.id} ${c.title} ${categoryText} ${c.reporter} ${c.phone} ${c.unit} ${c.details} ${workLogText}`.toLowerCase().includes(currentSearch)
                         : true;
                     return statusMatch && categoryMatch && searchMatch;
-                }).sort(compareComplaintIdsLatestFirst);
+                }).sort(compareComplaints);
             }
 
-            function compareComplaintIdsLatestFirst(a, b) {
-                const aId = String(a?.id || '').trim();
-                const bId = String(b?.id || '').trim();
-                const aSequence = aId.match(/^ADU-(\d+)$/i)?.[1] || '';
-                const bSequence = bId.match(/^ADU-(\d+)$/i)?.[1] || '';
-
-                if (aSequence && bSequence && aSequence !== bSequence) {
-                    return bSequence.localeCompare(aSequence, undefined, { numeric: true });
+            function getComplaintSortValue(complaint, key) {
+                if (key === 'id') {
+                    return String(complaint?.id || '').match(/^ADU-(\d+)$/i)?.[1] || String(complaint?.id || '');
                 }
-                if (aSequence !== bSequence) return bSequence ? 1 : -1;
+                if (key === 'category') return formatComplaintCategoryLabel(complaint);
+                if (key === 'date') return new Date(complaint?.date || 0).getTime() || 0;
+                return String(complaint?.[key] || '').trim();
+            }
 
-                const aTime = new Date(a?.updatedAt || a?.date || 0).getTime() || 0;
-                const bTime = new Date(b?.updatedAt || b?.date || 0).getTime() || 0;
-                return bTime - aTime;
+            function compareComplaints(a, b) {
+                const aValue = getComplaintSortValue(a, currentSortKey);
+                const bValue = getComplaintSortValue(b, currentSortKey);
+                const direction = currentSortDirection === 'asc' ? 1 : -1;
+                const comparison = typeof aValue === 'number' && typeof bValue === 'number'
+                    ? aValue - bValue
+                    : String(aValue).localeCompare(String(bValue), 'ms', { numeric: true, sensitivity: 'base' });
+
+                if (comparison !== 0) return comparison * direction;
+                return String(b?.id || '').localeCompare(String(a?.id || ''), 'ms', { numeric: true });
+            }
+
+            function updateSortControls() {
+                if (refs.sortField) refs.sortField.value = currentSortKey;
+                if (refs.sortDirection) refs.sortDirection.value = currentSortDirection;
+
+                refs.sortButtons.forEach((button) => {
+                    const isActive = button.dataset.sortKey === currentSortKey;
+                    const indicator = button.querySelector('.sort-indicator');
+                    button.classList.toggle('is-active', isActive);
+                    button.closest('th')?.setAttribute('aria-sort', isActive
+                        ? (currentSortDirection === 'asc' ? 'ascending' : 'descending')
+                        : 'none');
+                    if (indicator) {
+                        indicator.className = `bi ${isActive
+                            ? (currentSortDirection === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down')
+                            : 'bi-chevron-expand'} sort-indicator`;
+                    }
+                });
             }
 
             function formatComplaintCategoryLabel(complaint) {
