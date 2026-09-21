@@ -2905,7 +2905,23 @@ if (!document.hidden) {
                         ? `${c.id} ${c.title} ${categoryText} ${c.reporter} ${c.phone} ${c.unit} ${c.details} ${workLogText}`.toLowerCase().includes(currentSearch)
                         : true;
                     return statusMatch && categoryMatch && searchMatch;
-                });
+                }).sort(compareComplaintIdsLatestFirst);
+            }
+
+            function compareComplaintIdsLatestFirst(a, b) {
+                const aId = String(a?.id || '').trim();
+                const bId = String(b?.id || '').trim();
+                const aSequence = aId.match(/^ADU-(\d+)$/i)?.[1] || '';
+                const bSequence = bId.match(/^ADU-(\d+)$/i)?.[1] || '';
+
+                if (aSequence && bSequence && aSequence !== bSequence) {
+                    return bSequence.localeCompare(aSequence, undefined, { numeric: true });
+                }
+                if (aSequence !== bSequence) return bSequence ? 1 : -1;
+
+                const aTime = new Date(a?.updatedAt || a?.date || 0).getTime() || 0;
+                const bTime = new Date(b?.updatedAt || b?.date || 0).getTime() || 0;
+                return bTime - aTime;
             }
 
             function formatComplaintCategoryLabel(complaint) {
