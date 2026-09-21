@@ -916,22 +916,40 @@
             }
 
             function normalizeImageAttachmentsForForm(rows) {
-                const source = Array.isArray(rows) ? rows : [];
+                let source = Array.isArray(rows) ? rows : [];
+                if (typeof rows === 'string' && rows.trim()) {
+                    const raw = rows.trim();
+                    source = raw.startsWith('data:image/')
+                        ? [raw]
+                        : raw.split(/,\s*(?=https?:\/\/)/i).filter(Boolean);
+                }
                 return source
-                    .map((entry) => {
-                        if (!entry || typeof entry !== 'object') return null;
-                        const dataUrl = String(entry.dataUrl || entry.url || '').trim();
-                        if (!dataUrl.startsWith('data:image/')) return null;
+                    .map((entry, index) => {
+                        const rawUrl = typeof entry === 'string' ? entry : entry?.dataUrl || entry?.url;
+                        const dataUrl = normalizeDisplayImageUrl(rawUrl);
+                        if (!dataUrl.startsWith('data:image/') && !/^https?:\/\//i.test(dataUrl)) return null;
                         return {
                             dataUrl,
-                            name: String(entry.name || 'Gambar').slice(0, 120),
-                            type: String(entry.type || ''),
-                            size: Number.isFinite(Number(entry.size)) ? Number(entry.size) : 0,
-                            details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
+                            name: String(entry?.name || `Gambar ${index + 1}`).slice(0, 120),
+                            type: String(entry?.type || ''),
+                            size: Number.isFinite(Number(entry?.size)) ? Number(entry.size) : 0,
+                            details: String(entry?.details || entry?.detail || entry?.description || entry?.caption || entry?.note || '').trim().slice(0, 160)
                         };
                     })
                     .filter(Boolean)
                     .slice(0, MAX_ADUAN_IMAGES);
+            }
+
+            function normalizeDisplayImageUrl(value) {
+                const source = String(value || '').trim();
+                const driveFileMatch = source.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+                const driveQueryMatch = source.match(/^https?:\/\/drive\.google\.com\/(?:uc|open).*?[?&]id=([^&#]+)/i);
+                const driveImageMatch = source.match(/^https?:\/\/lh3\.googleusercontent\.com\/d\/([^/?#]+)/i);
+                const driveFileId = driveFileMatch?.[1] || driveQueryMatch?.[1] || driveImageMatch?.[1];
+                if (driveFileId) {
+                    return `https://lh3.googleusercontent.com/d/${encodeURIComponent(decodeURIComponent(driveFileId))}`;
+                }
+                return source;
             }
 
             function renderImagePreview() {
@@ -1059,7 +1077,7 @@
                 formFields.date.value = data.date || new Date().toISOString().slice(0, 10);
                 formFields.status.value = data.status || 'Baru';
                 formFields.details.value = data.details || '';
-                draftImages = normalizeImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments);
+                draftImages = normalizeImageAttachmentsForForm(data.imageAttachments || data.images || data.attachments || data.imageUrls);
                 if (refs.imageInput) refs.imageInput.value = '';
                 clearImageFeedback();
                 renderImagePreview();
