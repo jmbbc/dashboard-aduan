@@ -1557,7 +1557,7 @@
                                         <input type="file" class="form-control" id="inputImageUpload" accept="image/*" multiple>
                                     </div>
                                     <div class="col-md-4 d-flex align-items-center">
-                                        <small class="text-muted">Maks 3 gambar.</small>
+                                        <small class="text-muted">Bilangan gambar tiada had.</small>
                                     </div>
                                 </div>
                                 <div class="small text-danger mt-1 d-none" id="inputImageFeedback"></div>
@@ -2035,7 +2035,6 @@
             let formHasUnsavedChanges = false;
             let allowModalClose = false;
             let draftSaveTimer = null;
-            const MAX_COMPLAINT_IMAGES = 3;
             const MAX_IMAGE_SOURCE_BYTES = 15 * 1024 * 1024;
             const MAX_IMAGE_STORED_BYTES = 800 * 1024;
             const MAX_IMAGE_EDGE = 1280;
@@ -3426,8 +3425,7 @@ if (!document.hidden) {
                             details: String(entry?.details || entry?.detail || entry?.description || entry?.caption || entry?.note || '').trim().slice(0, 160)
                         };
                     })
-                    .filter(Boolean)
-                    .slice(0, MAX_COMPLAINT_IMAGES);
+                    .filter(Boolean);
             }
 
             function normalizeDisplayImageUrl(value) {
@@ -3527,14 +3525,7 @@ if (!document.hidden) {
 
                 clearImageFeedback();
 
-                const availableSlots = MAX_COMPLAINT_IMAGES - draftImages.length;
-                if (availableSlots <= 0) {
-                    showImageFeedback(`Maksimum ${MAX_COMPLAINT_IMAGES} gambar dibenarkan.`);
-                    event.target.value = '';
-                    return;
-                }
-
-                const selectedFiles = files.slice(0, availableSlots);
+                const selectedFiles = files;
                 const issues = [];
 
                 for (const file of selectedFiles) {
@@ -3567,10 +3558,6 @@ if (!document.hidden) {
                     } catch {
                         issues.push(`${file.name}: gagal dibaca.`);
                     }
-                }
-
-                if (files.length > selectedFiles.length) {
-                    issues.push(`Hanya ${availableSlots} gambar tambahan dibenarkan.`);
                 }
 
                 if (issues.length) {
@@ -3838,8 +3825,7 @@ if (!document.hidden) {
                         size: Number(image.size) || 0,
                         details: String(image.details || '').trim().slice(0, 160)
                     }))
-                    .filter((image) => image.dataUrl.startsWith('data:image/') || /^https?:\/\//i.test(image.dataUrl))
-                    .slice(0, MAX_COMPLAINT_IMAGES);
+                    .filter((image) => image.dataUrl.startsWith('data:image/') || /^https?:\/\//i.test(image.dataUrl));
                 return {
                     id,
                     title: formFields.title.value.trim(),

@@ -541,8 +541,7 @@
                     details: String(entry.details || entry.detail || entry.description || entry.caption || entry.note || '').trim().slice(0, 160)
                 };
             })
-            .filter(Boolean)
-            .slice(0, 6);
+            .filter(Boolean);
     }
 
     function firstNonEmptyImageSource(...sources) {

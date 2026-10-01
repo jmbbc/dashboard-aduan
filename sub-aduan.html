@@ -381,7 +381,6 @@
             let viewingId = null;
             let returnToViewAfterSave = false;
             let draftImages = [];
-            const MAX_ADUAN_IMAGES = 3;
             const MAX_ADUAN_IMAGE_BYTES = 350 * 1024;
             const MAIN_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_MAIN_CATEGORY__';
             const SUB_CATEGORY_ADD_NEW_VALUE = '__ADD_NEW_SUB_CATEGORY__';
@@ -936,8 +935,7 @@
                             details: String(entry?.details || entry?.detail || entry?.description || entry?.caption || entry?.note || '').trim().slice(0, 160)
                         };
                     })
-                    .filter(Boolean)
-                    .slice(0, MAX_ADUAN_IMAGES);
+                    .filter(Boolean);
             }
 
             function normalizeDisplayImageUrl(value) {
@@ -989,14 +987,7 @@
 
                 clearImageFeedback();
 
-                const availableSlots = MAX_ADUAN_IMAGES - draftImages.length;
-                if (availableSlots <= 0) {
-                    showImageFeedback(`Maksimum ${MAX_ADUAN_IMAGES} gambar dibenarkan.`);
-                    event.target.value = '';
-                    return;
-                }
-
-                const selectedFiles = files.slice(0, availableSlots);
+                const selectedFiles = files;
                 const issues = [];
 
                 for (const file of selectedFiles) {
@@ -1027,10 +1018,6 @@
                     } catch {
                         issues.push(`${file.name}: gagal dibaca.`);
                     }
-                }
-
-                if (files.length > selectedFiles.length) {
-                    issues.push(`Hanya ${availableSlots} gambar tambahan dibenarkan.`);
                 }
 
                 if (issues.length) {
@@ -1163,8 +1150,7 @@
                                 size: Number(image.size) || 0,
                                 details: String(image.details || '').trim().slice(0, 160)
                             }))
-                            .filter((image) => image.dataUrl.startsWith('data:image/') || /^https?:\/\//i.test(image.dataUrl))
-                            .slice(0, MAX_ADUAN_IMAGES),
+                            .filter((image) => image.dataUrl.startsWith('data:image/') || /^https?:\/\//i.test(image.dataUrl)),
                         imageAttachmentsChanged: true,
                         updatedAt: new Date().toISOString()
                     };
@@ -1375,7 +1361,7 @@
                                         <input type="file" class="form-control" id="editImageUpload" accept="image/*" multiple>
                                     </div>
                                     <div class="col-md-4 d-flex align-items-center">
-                                        <small class="text-muted">Maks 3 gambar, 350KB setiap satu.</small>
+                                        <small class="text-muted">Bilangan gambar tiada had; maksimum 350KB setiap gambar.</small>
                                     </div>
                                 </div>
                                 <div class="small text-danger mt-1 d-none" id="editImageFeedback"></div>
