@@ -545,6 +545,15 @@
             .slice(0, 6);
     }
 
+    function firstNonEmptyImageSource(...sources) {
+        const hasContent = (source) => Array.isArray(source)
+            ? source.length > 0
+            : typeof source === 'string'
+                ? Boolean(source.trim())
+                : Boolean(source && typeof source === 'object');
+        return sources.find(hasContent) || sources.find(Array.isArray) || [];
+    }
+
     function resolveComplaintCategoryPair(item) {
         const categoryTree = loadComplaintCategoryTree();
 
@@ -592,7 +601,7 @@
         const complaintDate = normalizeDateOnly(item.date, new Date().toISOString().slice(0, 10));
         const rawDetails = String(item.details || '').trim();
         const workLogs = normalizeWorkLogs(item.workLogs, complaintDate, rawDetails);
-        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments || item.imageUrls);
+        const imageAttachments = normalizeImageAttachments(firstNonEmptyImageSource(item.imageAttachments, item.images, item.attachments, item.imageUrls));
         const categoryPair = resolveComplaintCategoryPair(item || {});
 
         return {
@@ -619,7 +628,7 @@
         const dueDate = normalizeDateOnly(item.due, new Date().toISOString().slice(0, 10));
         const rawNotes = String(item.notes ?? item.details ?? '').trim();
         const workLogs = normalizeWorkLogs(item.workLogs, dueDate, rawNotes);
-        const imageAttachments = normalizeImageAttachments(item.imageAttachments || item.images || item.attachments || item.imageUrls);
+        const imageAttachments = normalizeImageAttachments(firstNonEmptyImageSource(item.imageAttachments, item.images, item.attachments, item.imageUrls));
         return {
             id: normalizeIdValue(item.id, `TECH-${index + 1}`),
             title: String(item.title || '-'),

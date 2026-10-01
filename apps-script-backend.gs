@@ -34,6 +34,10 @@ function doPost(e) {
       return jsonResponse({ success: deleted, deleted });
     }
 
+    if (type === 'Aduan') {
+      payload.existingImageUrls = getExistingImageUrls(sheet, type, normalizeIdValue(payload.id || ''));
+    }
+
     const row = buildRow(type, payload);
     const result = upsertRowById(sheet, type, row, normalizeIdValue(payload.id || ''));
     return jsonResponse({ success: true, row: row.object, result });
@@ -302,7 +306,11 @@ function deleteRowById(sheet, type, id) {
 function buildRow(type, data) {
   const now = new Date().toISOString();
   const id = normalizeIdValue(data.id || generateId(type));
-  const imageUrls = type === 'PPM' ? [] : uploadImages(data.images || data.imageAttachments || []);
+  const imageUrls = type === 'PPM'
+    ? []
+    : type === 'Aduan' && data.imageAttachmentsChanged !== true
+      ? (Array.isArray(data.existingImageUrls) ? data.existingImageUrls : [])
+      : uploadImages(data.images || data.imageAttachments || []);
   const workLogs = Array.isArray(data.workLogs)
     ? data.workLogs.map((log) => `${log.date || ''} | ${log.note || ''}`).join('\n')
     : '';
@@ -444,6 +452,23 @@ function buildRow(type, data) {
   }
 
   throw new Error('Unsupported type');
+}
+
+function getExistingImageUrls(sheet, type, id) {
+  if (!id) return [];
+
+  const rows = sheet.getDataRange().getValues();
+  if (!rows.length) return [];
+
+  const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, type);
+  const imageIndex = headerKeys.findIndex((header) => header === 'imageUrls');
+  if (imageIndex === -1) return [];
+
+  const rowIndexes = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, type, id);
+  if (!rowIndexes.length) return [];
+
+  const raw = String(rows[dataRowStart - 1 + rowIndexes[0]][imageIndex] || '').trim();
+  return raw.split(/,\s*(?=https?:\/\/)|\r?\n/).map((url) => url.trim()).filter(Boolean);
 }
 
 function uploadImages(images) {
