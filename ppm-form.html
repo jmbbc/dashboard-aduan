@@ -95,7 +95,7 @@
         }
 
         .submission-group {
-            border: 1px solid #dbe2ea;
+            border: 1px solid #000000;
             border-radius: 10px;
             background: #ffffff;
             padding: 0.34rem 0.42rem;
@@ -183,12 +183,17 @@
         .step-pill.current {
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.22);
         }
+        button.step-pill { min-height: 44px; width: 100%; cursor: pointer; font-family: inherit; border-radius: 8px; padding: .25rem .3rem; font-size: .68rem; }
+        button.step-pill:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
 
         .step-pill .loc-name {
-            max-width: 170px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            flex: 1;
+            min-width: 0;
+            max-width: 100%;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            line-height: 1.35;
+            text-align: center;
         }
 
         .loc-sync-symbol {
@@ -719,6 +724,32 @@
             padding: 0.34rem 0.56rem;
         }
 
+        .ppm-step-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .3rem; margin-bottom: .6rem; }
+        .ppm-step-nav button { min-width: 0; min-height: 44px; padding: .4rem .25rem; font-size: .8rem; line-height: 1.25; border-radius: 8px; }
+        .ppm-category-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
+        .ppm-category-grid button { min-height: 44px; padding: .4rem .25rem; font-size: .78rem; border-radius: 8px; }
+        .ppm-category-count { display: block; margin-top: .2rem; font-size: .65rem; line-height: 1.3; }
+        .ppm-category-grid .btn-outline-primary { color: #5b2878; background: #f3eafa; border-color: #b68acb; }
+        .ppm-category-grid .btn-outline-primary:hover { color: #4a1c64; background: #e7d5f2; border-color: #8850a4; }
+        .ppm-category-grid .btn-primary { color: #fff; background: #6b3585; border-color: #6b3585; }
+        .ppm-category-grid .btn-primary:hover { background: #54266c; border-color: #54266c; }
+        #ppmTemplatePicker { background: #fffbf2; }
+        #ppmTemplateChoices .btn-outline-primary { color: #75420b; background: #fff0d6; border-color: #cba46b; }
+        #ppmTemplateChoices .btn-outline-primary:hover { color: #603607; background: #ffe3b4; border-color: #aa7d3d; }
+        #ppmTemplateChoices .btn-primary { color: #fff; background: #8b510e; border-color: #8b510e; }
+        #ppmTemplateChoices .btn-primary:hover { background: #6f3e09; border-color: #6f3e09; }
+        #ppmTemplateChoices button:focus-visible { outline-color: #8b510e; }
+        .ppm-step-nav .btn-outline-primary { color: #165e55; background: #e1f0e9; border-color: #86b3a0; }
+        .ppm-step-nav .btn-outline-primary:hover { color: #104c43; background: #cbe4d7; border-color: #4f8a75; }
+        .ppm-step-nav .btn-primary { color: #fff; background: #246b5b; border-color: #246b5b; }
+        .ppm-step-nav .btn-primary:hover { background: #195244; border-color: #195244; }
+        .ppm-category-grid button:focus-visible { outline: 3px solid #6b3585; outline-offset: 2px; box-shadow: none; }
+        .ppm-step-nav button:focus-visible { outline: 3px solid #246b5b; outline-offset: 2px; box-shadow: none; }
+        @media (max-width: 480px) { .ppm-category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (max-width: 480px) { .ppm-step-nav button { font-size: .7rem; padding: .35rem .15rem; overflow-wrap: normal; } }
+        [hidden] { display: none !important; }
+        .ppm-review { padding: .75rem; border: 1px solid #bfdbfe; border-radius: 10px; margin-bottom: .75rem; background: #eff6ff; }
+
         @media (max-width: 768px) {
             .submission-track {
                 position: static;
@@ -735,11 +766,11 @@
             }
 
             .step-track {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
 
             .step-pill .loc-name {
-                max-width: 130px;
+                max-width: 100%;
             }
 
             .col-status,
@@ -913,8 +944,8 @@
             }
 
             .checklist-table tr:not(.checklist-group-row) td:nth-child(3)::before { content: 'Status'; }
-            .checklist-table tr:not(.checklist-group-row) td:nth-child(4)::before { content: 'Remarks'; }
-            .checklist-table tr.checklist-remark-only td:nth-child(3)::before { content: 'Remarks'; }
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(4)::before { content: 'Catatan'; }
+            .checklist-table tr.checklist-remark-only td:nth-child(3)::before { content: 'Catatan'; }
 
             .status-icon-btn {
                 min-width: 72px;
@@ -964,28 +995,46 @@
             </div>
             <div class="sync-actions">
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="openDraftsBtn">Draf <span class="badge text-bg-secondary" id="draftCountBadge">0</span></button>
-                <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Segerak sekarang</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Update ke server</button>
             </div>
         </section>
 
-        <section class="submission-track" aria-label="Submission status by location">
+        <section class="card ppm-card" aria-labelledby="ppmCategoryTitle">
+            <div class="card-body p-2">
+                <h2 id="ppmCategoryTitle" class="submission-title mb-2">Kategori Senarai Semak</h2>
+                <p class="small text-muted mb-2" id="ppmCategoryCountMonth" aria-live="polite"></p>
+                <select id="categoryField" form="ppmTechnicianForm" aria-label="Kategori Senarai Semak" hidden></select>
+                <div id="ppmCategoryChoices" class="ppm-category-grid" role="group" aria-label="Pilih kategori senarai semak"></div>
+            </div>
+        </section>
+        <section class="card ppm-card" id="ppmTemplatePicker" aria-labelledby="ppmTemplateTitle">
+            <div class="card-body p-2">
+                <h2 id="ppmTemplateTitle" class="submission-title mb-2">Templat Senarai Semak</h2>
+                <p class="small text-muted mb-2">Pilih templat dahulu untuk melihat lokasi pemeriksaan.</p>
+                <div id="ppmTemplateChoices" class="ppm-category-grid"></div>
+            </div>
+        </section>
+        <section class="submission-track" id="ppmLocationPicker" aria-label="Submission status by location" hidden>
+            <p class="small text-muted mb-1">Tekan lokasi untuk buka borangnya, kemudian pilih Seterusnya untuk mula pemeriksaan.</p>
             <div class="submission-head">
                 <p class="submission-title">Status Penghantaran Mengikut Lokasi Blok</p>
-                <span class="badge text-bg-danger submission-summary" id="submissionSummary">0/0 disegerakkan</span>
             </div>
             <div class="submission-groups" id="locationStatusTrack" aria-live="polite"></div>
         </section>
 
         <form id="ppmTechnicianForm" class="needs-validation" novalidate>
+            <nav class="ppm-step-nav" aria-label="Langkah borang PPM" id="ppmStepNav">
+                <button type="button" class="btn btn-primary" data-ppm-step="1">1. Maklumat</button>
+                <button type="button" class="btn btn-outline-primary" data-ppm-step="2">2. Pemeriksaan</button>
+                <button type="button" class="btn btn-outline-primary" data-ppm-step="3">3. Bukti</button>
+                <button type="button" class="btn btn-outline-primary" data-ppm-step="4">4. Semakan</button>
+            </nav>
+            <p id="ppmCompletion" class="small text-muted" aria-live="polite"></p>
             <section class="card ppm-card">
                 <div class="card-header">Langkah 1 - Maklumat Borang</div>
                 <div class="card-body">
                     <div class="row g-2">
-                        <div class="col-6">
-                            <label class="form-label" for="categoryField">Kategori Senarai Semak</label>
-                            <select class="form-select" id="categoryField"></select>
-                        </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <label class="form-label" for="templateType">Templat Senarai Semak</label>
                             <select class="form-select" id="templateType" required>
                                 <option value="bilikSuis" selected>ELEKT - Switch Room</option>
@@ -1072,7 +1121,7 @@
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Langkah 3 - Catatan</div>
+                <div class="card-header">Catatan Pemeriksaan</div>
                 <div class="card-body">
                     <label class="form-label" for="autoRemarkSummary">Ringkasan Automatik (daripada Catatan Item)</label>
                     <textarea class="form-control notes-summary-area" id="autoRemarkSummary" rows="5" readonly></textarea>
@@ -1084,24 +1133,24 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" id="notesNumberBtn">Nombor</button>
                         </div>
                     </div>
-                    <textarea class="form-control notes-input-area" id="technicianNotes" rows="6" placeholder="Add additional notes here..."></textarea>
+                    <textarea class="form-control notes-input-area" id="technicianNotes" rows="6" placeholder="Masukkan catatan tambahan..."></textarea>
                 </div>
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Langkah 4 - Lampiran / Bukti</div>
+                <div class="card-header">Langkah 3 - Lampiran / Bukti</div>
                 <div class="card-body">
                     <div class="upload-block">
                         <label class="form-label" for="pictureUpload">Muat Naik Gambar</label>
-                        <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*">
+                        <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*" multiple>
                         <div class="form-text mb-2">Bilangan gambar tiada had. Gambar dimampatkan secara automatik sebelum disimpan.</div>
-                        <label class="form-label" for="pictureNote">Catatan Gambar</label>
-                        <textarea class="form-control" id="pictureNote" rows="2" placeholder="Add notes regarding the uploaded picture (optional)"></textarea>
+                        <label class="form-label" for="pictureNote" hidden>Catatan Gambar</label>
+                        <textarea class="form-control" id="pictureNote" rows="2" hidden></textarea>
                         <div class="upload-feedback">
                             <span class="upload-status" id="pictureUploadStatus">Tiada gambar dipilih.</span>
                             <div class="upload-actions">
                                 <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" id="clearPictureBtn" disabled>Kosongkan</button>
-                                <button type="button" class="btn btn-sm btn-primary py-0 px-2" id="confirmPictureBtn" disabled>Sahkan Gambar</button>
+                                <button type="button" class="btn btn-sm btn-primary py-0 px-2" id="confirmPictureBtn" disabled hidden>Sahkan Gambar</button>
                             </div>
                         </div>
                         <div class="picture-entry-list" id="pictureEntryList">
@@ -1112,11 +1161,11 @@
             </section>
 
             <section class="card ppm-card">
-                <div class="card-header">Langkah 5 - Pengesahan</div>
+                <div class="card-header">Langkah 4 - Semakan & Pengesahan</div>
                 <div class="card-body">
                     <div class="mb-2">
                         <label class="form-label" for="techDeclaration">Pengesahan Teknikal</label>
-                        <input type="text" class="form-control" id="techDeclaration" placeholder="Full name as confirmation" required>
+                        <input type="text" class="form-control" id="techDeclaration" placeholder="Nama penuh untuk pengesahan" required>
                         <div class="invalid-feedback">Sila masukkan pengesahan teknikal.</div>
                     </div>
                     <div class="form-check">
@@ -1132,6 +1181,8 @@
                 <div class="d-flex gap-2 justify-content-end">
                     <span class="draft-save-state align-self-center" id="draftSaveState" aria-live="polite"></span>
                     <button type="button" class="btn btn-outline-secondary" id="saveDraftBtn">Simpan Draf</button>
+                    <button type="button" class="btn btn-outline-primary" id="ppmPrevStep">Kembali</button>
+                    <button type="button" class="btn btn-primary" id="ppmNextStep">Seterusnya</button>
                     <button type="submit" class="btn btn-primary">Hantar PPM</button>
                 </div>
             </div>
@@ -1146,7 +1197,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-2 text-center bg-light">
-                    <img id="pictureViewerImage" class="img-fluid picture-viewer-image" alt="Picture preview">
+                    <img id="pictureViewerImage" class="img-fluid picture-viewer-image" alt="Pratonton gambar">
                 </div>
             </div>
         </div>
@@ -1846,7 +1897,6 @@
                 inspectionDate: document.getElementById('inspectionDate'),
                 templateDescription: document.getElementById('templateDescription'),
                 locationStatusTrack: document.getElementById('locationStatusTrack'),
-                submissionSummary: document.getElementById('submissionSummary'),
                 technicianName: document.getElementById('technicianName'),
                 verifiedBy: document.getElementById('verifiedBy'),
                 techDeclaration: document.getElementById('techDeclaration'),
@@ -2011,13 +2061,13 @@
                     hasUnsavedDraftChanges = false;
                     if (!options.silent) {
                         const time = new Date(record.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        setDraftSaveState(`Draft saved ${time}`);
+                        setDraftSaveState(`Draf disimpan ${time}`);
                     }
                     refreshDraftCount();
                     return true;
                 } catch (error) {
                     console.warn('Unable to save PPM draft:', error);
-                    setDraftSaveState('Draft save failed');
+                    setDraftSaveState('Draf gagal disimpan');
                     return false;
                 }
             }
@@ -2027,7 +2077,7 @@
                 hasUnsavedDraftChanges = true;
                 pendingDraftRecord = buildDraftRecord();
                 if (!pendingDraftRecord) return;
-                setDraftSaveState('Saving draft...');
+                setDraftSaveState('Menyimpan draf...');
                 window.clearTimeout(draftSaveTimer);
                 draftSaveTimer = window.setTimeout(() => {
                     const record = pendingDraftRecord;
@@ -2068,7 +2118,7 @@
                     applySubmittedSnapshotToForm(draft.snapshot, { applyInspectionDate: false });
                     restorePicturesFromOffline(draft.pictures);
                     const time = new Date(draft.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    setDraftSaveState(`Draft restored ${time}`);
+                    setDraftSaveState(`Draf dipulihkan ${time}`);
                     return true;
                 } catch (error) {
                     console.warn('Unable to restore PPM draft:', error);
@@ -2130,11 +2180,11 @@
                                 <div>
                                     <div class="draft-list-title">${escapeHtml(template.category)} · ${escapeHtml(draft.location || 'No location')}</div>
                                     <div class="draft-list-meta">${escapeHtml(draft.templateKey)} · ${escapeHtml(draft.monthKey || '')} · ${pictureCount} picture${pictureCount === 1 ? '' : 's'}</div>
-                                    <div class="draft-list-meta">Saved ${escapeHtml(formatDraftSavedAt(draft.savedAt))}</div>
+                                    <div class="draft-list-meta">Disimpan ${escapeHtml(formatDraftSavedAt(draft.savedAt))}</div>
                                 </div>
                                 <div class="d-flex gap-1">
                                     <button type="button" class="btn btn-sm btn-primary" data-draft-action="restore" data-draft-id="${escapeHtml(draft.id)}">Resume</button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-draft-action="delete" data-draft-id="${escapeHtml(draft.id)}">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-draft-action="delete" data-draft-id="${escapeHtml(draft.id)}">Buang</button>
                                 </div>
                             </div>
                         </article>
@@ -2161,7 +2211,7 @@
                     restorePicturesFromOffline(draft.pictures);
                     renderSubmissionTrack(draft.templateKey, template);
                     renderCopySourceOptions();
-                    setDraftSaveState(`Draft restored ${formatDraftSavedAt(draft.savedAt)}`);
+                    setDraftSaveState(`Draf dipulihkan ${formatDraftSavedAt(draft.savedAt)}`);
                     hasUnsavedDraftChanges = false;
                     draftManagerModal?.hide();
                     return true;
@@ -2171,7 +2221,7 @@
             }
 
             async function deleteDraftById(draftId) {
-                if (!window.confirm('Delete this unfinished draft from this device?')) return;
+                if (!window.confirm('Buang draf ini daripada peranti?')) return;
                 await window.PPMOfflineStore?.deleteDraft(draftId);
                 await renderDraftManager();
                 await refreshDraftCount();
@@ -2242,7 +2292,7 @@
 
             async function refreshSyncStatus() {
                 if (!window.PPMOfflineStore?.isSupported()) {
-                    updateSyncPanel('Offline storage is unavailable in this browser.', 'error');
+                    updateSyncPanel('Storan offline tidak tersedia dalam browser ini.', 'error');
                     if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = true;
                     return 0;
                 }
@@ -2255,11 +2305,11 @@
                 }
 
                 if (!navigator.onLine) {
-                    updateSyncPanel(`Offline. ${pendingCount} submission${pendingCount === 1 ? '' : 's'} waiting safely on this device.`, 'offline');
+                    updateSyncPanel(`Offline. ${pendingCount} penghantaran tersimpan menunggu internet.`, 'offline');
                 } else if (pendingCount > 0) {
-                    updateSyncPanel(`Online. ${pendingCount} submission${pendingCount === 1 ? '' : 's'} waiting to sync.`, 'online');
+                    updateSyncPanel(`Dalam talian. ${pendingCount} penghantaran menunggu diterima server.`, 'online');
                 } else {
-                    updateSyncPanel('Online. All saved submissions are synced.', 'online');
+                    updateSyncPanel('Dalam talian. Tiada penghantaran tertunda.', 'online');
                 }
                 if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = syncInProgress || !navigator.onLine;
                 return pendingCount;
@@ -2284,7 +2334,7 @@
 
                 syncInProgress = true;
                 if (refs.retrySyncBtn) refs.retrySyncBtn.disabled = true;
-                updateSyncPanel('Syncing saved submissions...', 'online');
+                updateSyncPanel('Menghantar rekod tersimpan...', 'online');
                 let synced = 0;
                 let failed = 0;
 
@@ -2316,7 +2366,7 @@
                             synced += 1;
                         } catch (error) {
                             entry.status = 'failed';
-                            entry.lastError = String(error?.message || error || 'Sync failed');
+                            entry.lastError = String(error?.message || error || 'Penghantaran gagal');
                             await window.PPMOfflineStore.putOutbox(entry);
                             markLocationSyncState(entry.templateKey, entry.monthKey, entry.location, 'failed', entry.lastError);
                             failed += 1;
@@ -2339,7 +2389,7 @@
 
                 const selectedPicture = refs.pictureUpload?.files?.[0] || null;
                 if (!selectedPicture) {
-                    refs.pictureUploadStatus.textContent = customMessage || 'No picture selected.';
+                    refs.pictureUploadStatus.textContent = customMessage || 'Tiada gambar dipilih.';
                     refs.clearPictureBtn.disabled = true;
                     refs.confirmPictureBtn.disabled = true;
                     return;
@@ -2508,7 +2558,7 @@
                 const summaryLines = collectRemarkSummaryLines();
                 refs.autoRemarkSummary.value = summaryLines.length > 0
                     ? summaryLines.map((line) => `- ${line}`).join('\n')
-                    : '- No NG item remarks entered yet.';
+                    : '- Belum ada catatan item NG.';
             }
 
             function validateNgRemarkRequirements() {
@@ -2564,7 +2614,7 @@
 
                     const targetRemarkField = remarkFields.find((field) => !field.disabled) || remarkFields[0] || null;
                     if (targetRemarkField && typeof targetRemarkField.setCustomValidity === 'function') {
-                        targetRemarkField.setCustomValidity('Remarks is required when status is NG.');
+                        targetRemarkField.setCustomValidity('Catatan diperlukan apabila status NG.');
                     }
 
                     if (!firstMissingRemarkField) {
@@ -2682,14 +2732,14 @@
                 }
 
                 if (confirmedPictureEntries.length === 0 && existingEvidence.length === 0) {
-                    refs.pictureEntryList.innerHTML = '<div class="picture-entry-empty">No confirmed picture yet.</div>';
+                    refs.pictureEntryList.innerHTML = '<div class="picture-entry-empty">Belum ada gambar ditambah.</div>';
                     return;
                 }
 
                 refs.pictureEntryList.innerHTML = confirmedPictureEntries.map((entry, index) => {
                     const noteText = entry.note
                         ? escapeHtml(entry.note)
-                        : '<span class="text-muted">No note provided.</span>';
+                        : '<span class="text-muted">Tiada catatan.</span>';
 
                     return `
                         <div class="picture-entry-row">
@@ -2699,15 +2749,16 @@
                                     alt="${escapeHtml(entry.fileName)}"
                                     class="picture-entry-thumb is-clickable"
                                     data-preview-picture-index="${index}"
-                                    title="Click to view larger image"
+                                    title="Tekan untuk melihat gambar"
                                 >
                             </div>
                             <div>
                                 <div class="picture-entry-head">
                                     <div class="picture-entry-meta">Picture ${index + 1} | ${escapeHtml(entry.fileName)} | ${escapeHtml(entry.fileSize)}</div>
-                                    <button type="button" class="btn btn-sm btn-outline-danger picture-entry-remove" data-remove-picture-index="${index}">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger picture-entry-remove" data-remove-picture-index="${index}">Buang</button>
                                 </div>
-                                <div class="picture-entry-note">${noteText}</div>
+                                <label class="small" for="pictureNote_${index}">Catatan gambar ${index + 1}</label>
+                                <textarea class="form-control" id="pictureNote_${index}" data-picture-note="${index}" rows="2">${escapeHtml(entry.note || '')}</textarea>
                             </div>
                         </div>
                     `;
@@ -2746,7 +2797,7 @@
             async function confirmSelectedPictureEntry() {
                 const selectedPicture = refs.pictureUpload?.files?.[0] || null;
                 if (!selectedPicture) {
-                    updatePictureInputState('Please choose a picture first.');
+                    updatePictureInputState('Sila pilih gambar dahulu.');
                     return;
                 }
 
@@ -2808,7 +2859,7 @@
                 }
 
                 renderConfirmedPictureEntries();
-                updatePictureInputState('Picture deleted.');
+                updatePictureInputState('Gambar dibuang.');
                 scheduleDraftSave();
             }
 
@@ -3312,7 +3363,7 @@
 
                 const previousSelection = String(refs.copyFromLocationSelect.value || '');
                 refs.copyFromLocationSelect.innerHTML = [
-                    '<option value="">Select source location</option>',
+                    '<option value="">Pilih lokasi sumber</option>',
                     ...sourceLocations.map((location) => `<option value="${escapeHtml(location)}">${escapeHtml(location)}</option>`)
                 ].join('');
 
@@ -3336,7 +3387,7 @@
 
                 const snapshot = getSubmittedFormSnapshot(templateKey, monthKey, sourceLocation);
                 if (!snapshot) {
-                    alert('No submitted data found for the selected source location in this month.');
+                    alert('Tiada rekod dihantar bagi lokasi sumber pada bulan ini.');
                     return;
                 }
 
@@ -3346,7 +3397,7 @@
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
 
-                alert(`Copied submitted values from ${sourceLocation} to current location.`);
+                alert(`Data disalin dari ${sourceLocation} ke lokasi semasa.`);
             }
 
             function markLocationSyncState(templateKey, monthKey, location, syncStatus, lastError = '') {
@@ -3364,6 +3415,7 @@
                 };
 
                 writeSubmissionTracker(tracker);
+                renderCategoryChoices();
             }
 
             function getMonthKeyFromInspectionDate() {
@@ -3396,7 +3448,7 @@
             }
 
             function renderSubmissionTrack(templateKey, template, options = {}) {
-                if (!refs.locationStatusTrack || !refs.submissionSummary) {
+                if (!refs.locationStatusTrack) {
                     return;
                 }
 
@@ -3420,7 +3472,7 @@
                     if (templateKey !== 'waterPump') {
                         return [{
                             key: 'all-locations',
-                            title: 'All Locations',
+                            title: 'Semua Lokasi',
                             locations,
                             defaultOpen: true
                         }];
@@ -3476,7 +3528,7 @@
                     const groupPills = group.locations.map((location) => {
                         const locationState = submissionMap[location] || null;
                         const hasLocationState = Boolean(locationState);
-                        const syncStatus = typeof locationState === 'object'
+                        const syncStatus = locationState && typeof locationState === 'object'
                             ? String(locationState.syncStatus || 'synced')
                             : (locationState ? 'synced' : 'pending');
                         const submitted = syncStatus === 'synced';
@@ -3493,29 +3545,28 @@
                         const currentClass = location === selectedLocation ? 'current' : '';
                         const pillLabel = formatSubmissionPillLabel(templateKey, location);
                         const syncLabel = submitted
-                            ? 'Synced'
-                            : (syncStatus === 'failed' ? 'Sync failed' : (hasLocationState ? 'Waiting to sync' : 'Not submitted'));
+                            ? 'Diterima server'
+                            : (syncStatus === 'failed' ? 'Penghantaran gagal' : (hasLocationState ? 'Menunggu penghantaran' : 'Belum dihantar'));
                         const syncSymbol = submitted ? '✓' : (syncStatus === 'failed' ? '!' : (hasLocationState ? '↻' : '○'));
 
                         return `
-                            <span class="step-pill ${statusClass} ${currentClass}" title="${escapeHtml(`${location} - ${syncLabel}`)}" aria-label="${escapeHtml(`${location}: ${syncLabel}`)}">
+                            <button type="button" data-ppm-location="${escapeHtml(location)}" class="step-pill ${statusClass} ${currentClass}" title="${escapeHtml(`${location} - ${syncLabel}`)}" aria-label="${escapeHtml(`${location}: ${syncLabel}`)}" aria-pressed="${location === selectedLocation}">
                                 <span class="loc-sync-symbol" aria-hidden="true">${syncSymbol}</span>
                                 <span class="loc-name">${escapeHtml(pillLabel)}</span>
-                            </span>
+                            </button>
                         `;
                     }).join('');
 
                     const groupSummaryClass = groupSubmittedCount === group.locations.length && group.locations.length > 0
                         ? 'badge text-bg-success submission-group-summary'
                         : 'badge text-bg-danger submission-group-summary';
-                    const shouldOpen = !forceCollapse && openGroupKeys.includes(group.key);
+                    const shouldOpen = group.defaultOpen || openGroupKeys.includes(group.key);
                     const openAttr = shouldOpen ? ' open' : '';
 
                     return `
                         <details class="submission-group" data-group-key="${group.key}"${openAttr}>
                             <summary>
                                 <span class="submission-group-title">${escapeHtml(group.title)}</span>
-                                <span class="${groupSummaryClass}">${groupSubmittedCount}/${group.locations.length} synced</span>
                             </summary>
                             <div class="step-track submission-group-track">
                                 ${groupPills}
@@ -3526,10 +3577,6 @@
 
                 refs.locationStatusTrack.innerHTML = groupsHtml || '<div class="step-pill pending"><span class="loc-name">No locations configured</span></div>';
 
-                refs.submissionSummary.textContent = `${submittedCount}/${locations.length} synced`;
-                refs.submissionSummary.className = submittedCount === locations.length && locations.length > 0
-                    ? 'badge text-bg-success submission-summary'
-                    : 'badge text-bg-danger submission-summary';
             }
 
             function buildStatusOptions(statusOptions) {
@@ -3795,7 +3842,7 @@
                     return;
                 }
 
-                refs.civilWallNgReasonFeedback.textContent = String(message || '').trim() || 'Please select at least one code.';
+                refs.civilWallNgReasonFeedback.textContent = String(message || '').trim() || 'Sila pilih sekurang-kurangnya satu kod.';
                 refs.civilWallNgReasonFeedback.classList.remove('d-none');
             }
 
@@ -4288,6 +4335,40 @@
                 return filteredTemplateKey || initialTemplate.key;
             }
 
+            function renderCategoryChoices() {
+                const labels = { Electrical: 'Elektrikal', Mechanical: 'Mekanikal', 'Fire Fighting': 'Kebakaran', Civil: 'Sivil', Plumbing: 'Paip' };
+                const monthKey = getMonthKeyFromInspectionDate();
+                const tracker = readSubmissionTracker();
+                document.getElementById('ppmCategoryCountMonth').textContent = `Borang diterima server · Bulan ${monthKey || 'belum dipilih'}`;
+                document.getElementById('ppmCategoryChoices').innerHTML = getTemplateCategories().map((category) => {
+                    const selected = refs.categoryField.value === category;
+                    let received = 0;
+                    let total = 0;
+                    Object.entries(TEMPLATE_CONFIG).filter(([, template]) => template.category === category).forEach(([key, template]) => {
+                        const locations = [...new Set(template.locations || [])];
+                        total += locations.length;
+                        locations.forEach((location) => {
+                            const state = tracker?.[key]?.[monthKey]?.[location];
+                            if (state && (typeof state !== 'object' || (state.syncStatus || 'synced') === 'synced')) received += 1;
+                        });
+                    });
+                    return `<button type="button" class="btn ${selected ? 'btn-primary' : 'btn-outline-primary'}" data-ppm-category="${escapeHtml(category)}" aria-pressed="${selected}" aria-label="${escapeHtml(labels[category] || category)}: ${received} daripada ${total} borang diterima"><span>${escapeHtml(labels[category] || category)}</span><span class="ppm-category-count">${received}/${total} diterima</span></button>`;
+                }).join('');
+            }
+
+            function renderTemplateChoices() {
+                const options = Array.from(refs.templateType.options).filter((option) => TEMPLATE_CONFIG[option.value]?.category === refs.categoryField.value);
+                document.getElementById('ppmTemplateChoices').innerHTML = options.map((option) => `<button type="button" class="btn ${option.value === refs.templateType.value ? 'btn-primary' : 'btn-outline-primary'}" data-ppm-template="${escapeHtml(option.value)}" aria-pressed="${option.value === refs.templateType.value}">${escapeHtml(option.textContent)}</button>`).join('');
+            }
+            function updateSelectionVisibility() {
+                const template = Boolean(TEMPLATE_CONFIG[refs.templateType.value]);
+                document.getElementById('ppmLocationPicker').hidden = !template;
+                refs.form.hidden = !template || !refs.locationSelect.value;
+                renderTemplateChoices();
+                const summary = document.getElementById('ppmChosenSummary');
+                if (summary) summary.textContent = `${refs.templateType.selectedOptions[0]?.textContent || ''} · ${refs.locationSelect.value}`;
+            }
+
             function renderStep2ScopeNote(template) {
                 if (!refs.step2ScopeNote) {
                     return;
@@ -4317,6 +4398,7 @@
                     refs.categoryField.value = template.category;
                 }
 
+                renderCategoryChoices();
                 refs.referenceNo.value = template.referenceNo;
                 refs.frequencyField.value = template.frequency;
                 refs.locationLabel.textContent = template.locationLabel;
@@ -4342,15 +4424,46 @@
                 refs.inspectionDate.value = `${yyyy}-${mm}-${dd}`;
             }
 
-            refs.inspectionDate?.addEventListener('change', () => {
+            let contextDraftBeforeChange = null;
+            let contextFieldBeforeChange = null;
+            const contextFields = ['inspectionDate', 'categoryField', 'templateType', 'locationSelect'];
+            refs.form.addEventListener('focusin', (event) => {
+                if (!contextFields.includes(event.target.id)) return;
+                contextDraftBeforeChange = buildDraftRecord();
+                contextFieldBeforeChange = { field: event.target, value: event.target.value };
+            });
+            async function saveBeforeContextChange() {
+                if (picturesProcessing) {
+                    if (contextFieldBeforeChange) contextFieldBeforeChange.field.value = contextFieldBeforeChange.value;
+                    alert('Sila tunggu gambar selesai diproses sebelum menukar maklumat borang.');
+                    return false;
+                }
+                window.clearTimeout(draftSaveTimer);
+                const record = pendingDraftRecord || contextDraftBeforeChange;
+                pendingDraftRecord = null;
+                if (record && !(await persistDraftRecord(record))) {
+                    if (contextFieldBeforeChange) contextFieldBeforeChange.field.value = contextFieldBeforeChange.value;
+                    alert('Draf belum dapat disimpan. Pertukaran dibatalkan supaya data pemeriksaan kekal.');
+                    return false;
+                }
+                contextDraftBeforeChange = null;
+                return true;
+            }
+
+            refs.inspectionDate?.addEventListener('change', async () => {
+                if (!(await saveBeforeContextChange())) return;
+                renderCategoryChoices();
                 const templateKey = refs.templateType?.value || 'bilikSuis';
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
-                restoreBestDataForCurrentContext();
+                await restoreBestDataForCurrentContext();
+                contextDraftBeforeChange = buildDraftRecord();
+                refreshPPMReview();
             });
 
-            refs.categoryField?.addEventListener('change', (event) => {
+            async function changePPMCategory(event) {
+                if (!(await saveBeforeContextChange())) return;
                 const selectedCategory = String(event.target?.value || '').trim();
                 const currentTemplateKey = String(refs.templateType?.value || '').trim();
                 const nextTemplateKey = filterTemplateOptionsByCategory(selectedCategory, currentTemplateKey);
@@ -4359,12 +4472,38 @@
                     return;
                 }
 
-                applyTemplate(nextTemplateKey);
-                renderCopySourceOptions();
-                restoreBestDataForCurrentContext();
+                refs.templateType.value = '';
+                refs.locationSelect.value = '';
+                clearAllConfirmedPictureEntries();
+                existingEvidence = [];
+                removedEvidenceUrls = [];
+                clearFormValuesForUnsubmittedContext();
+                renderCategoryChoices();
+                updateSelectionVisibility();
+            }
+            refs.categoryField?.addEventListener('change', changePPMCategory);
+            let categoryShortcutBusy = false;
+            document.getElementById('ppmCategoryChoices').addEventListener('click', async (event) => {
+                const button = event.target.closest('[data-ppm-category]');
+                if (!button || categoryShortcutBusy || locationShortcutBusy) return;
+                const category = button.dataset.ppmCategory;
+                if (category === refs.categoryField.value) return;
+                contextDraftBeforeChange = buildDraftRecord();
+                contextFieldBeforeChange = { field: refs.categoryField, value: refs.categoryField.value };
+                categoryShortcutBusy = true;
+                document.querySelectorAll('[data-ppm-category]').forEach((entry) => { entry.disabled = true; });
+                try {
+                    refs.categoryField.value = category;
+                    await changePPMCategory({ target: refs.categoryField });
+                    showPPMStep(1);
+                } finally {
+                    categoryShortcutBusy = false;
+                    renderCategoryChoices();
+                }
             });
 
-            refs.templateType?.addEventListener('change', (event) => {
+            refs.templateType?.addEventListener('change', async (event) => {
+                if (!(await saveBeforeContextChange())) return;
                 const selectedTemplate = TEMPLATE_CONFIG[String(event.target?.value || '').trim()];
                 if (selectedTemplate?.category && refs.categoryField?.value !== selectedTemplate.category) {
                     refs.categoryField.value = selectedTemplate.category;
@@ -4373,15 +4512,72 @@
 
                 applyTemplate(event.target.value);
                 renderCopySourceOptions();
-                restoreBestDataForCurrentContext();
+                await restoreBestDataForCurrentContext();
+                contextDraftBeforeChange = buildDraftRecord();
+                refreshPPMReview();
             });
 
-            refs.locationSelect?.addEventListener('change', () => {
+            document.getElementById('ppmTemplateChoices').addEventListener('click', async (event) => {
+                const button = event.target.closest('[data-ppm-template]');
+                if (!button || categoryShortcutBusy || locationShortcutBusy) return;
+                const key = button.dataset.ppmTemplate;
+                if (key === refs.templateType.value) return;
+                contextDraftBeforeChange = buildDraftRecord();
+                if (!(await saveBeforeContextChange())) return;
+                applyTemplate(key);
+                refs.locationSelect.value = '';
+                clearAllConfirmedPictureEntries();
+                existingEvidence = [];
+                removedEvidenceUrls = [];
+                clearFormValuesForUnsubmittedContext();
+                renderSubmissionTrack(key, TEMPLATE_CONFIG[key]);
+                updateSelectionVisibility();
+            });
+
+            refs.locationSelect?.addEventListener('change', async () => {
+                if (!(await saveBeforeContextChange())) return;
                 const templateKey = refs.templateType?.value || 'bilikSuis';
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
                 renderSubmissionTrack(templateKey, template);
                 renderCopySourceOptions();
-                restoreBestDataForCurrentContext();
+                await restoreBestDataForCurrentContext();
+                contextDraftBeforeChange = buildDraftRecord();
+                refreshPPMReview();
+            });
+
+            let locationShortcutBusy = false;
+            refs.locationStatusTrack?.addEventListener('click', async (event) => {
+                const button = event.target.closest('button[data-ppm-location]');
+                if (!button || locationShortcutBusy) return;
+                const location = button.dataset.ppmLocation;
+                if (!Array.from(refs.locationSelect.options).some((option) => option.value === location)) return;
+                if (location === refs.locationSelect.value) {
+                    showPPMStep(1);
+                    document.getElementById('ppmStepNav').scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    return;
+                }
+                contextDraftBeforeChange = buildDraftRecord();
+                contextFieldBeforeChange = { field: refs.locationSelect, value: refs.locationSelect.value };
+                locationShortcutBusy = true;
+                refs.locationSelect.disabled = true;
+                refs.locationStatusTrack.querySelectorAll('button[data-ppm-location]').forEach((entry) => { entry.disabled = true; });
+                try {
+                    if (!(await saveBeforeContextChange())) return;
+                    refs.locationSelect.value = location;
+                    renderCopySourceOptions();
+                    await restoreBestDataForCurrentContext();
+                    contextDraftBeforeChange = buildDraftRecord();
+                    const templateKey = refs.templateType.value;
+                    renderSubmissionTrack(templateKey, TEMPLATE_CONFIG[templateKey]);
+                    showPPMStep(1);
+                    setDraftSaveState(`Lokasi dipilih: ${location}`);
+                    document.getElementById('ppmStepNav').scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    document.getElementById('ppmNextStep').focus({ preventScroll: true });
+                } finally {
+                    locationShortcutBusy = false;
+                    refs.locationSelect.disabled = false;
+                    refs.locationStatusTrack.querySelectorAll('button[data-ppm-location]').forEach((entry) => { entry.disabled = false; });
+                }
             });
 
             refs.copyFromLocationSelect?.addEventListener('change', () => {
@@ -4538,7 +4734,7 @@
                     .filter((entry) => CIVIL_NG_REASON_CODES.includes(entry));
 
                 if (selectedCodes.length === 0) {
-                    showCivilWallReasonFeedback('Please select at least one code.');
+                    showCivilWallReasonFeedback('Sila pilih sekurang-kurangnya satu kod.');
                     return;
                 }
 
@@ -4633,8 +4829,36 @@
                 }
             });
 
-            refs.pictureUpload?.addEventListener('change', () => {
-                updatePictureInputState();
+            let picturesProcessing = false;
+            refs.pictureEntryList?.addEventListener('input', (event) => {
+                const index = event.target.dataset.pictureNote;
+                if (index === undefined || !confirmedPictureEntries[Number(index)]) return;
+                confirmedPictureEntries[Number(index)].note = event.target.value;
+                scheduleDraftSave();
+            });
+            refs.pictureUpload?.addEventListener('change', async () => {
+                const files = Array.from(refs.pictureUpload.files || []);
+                picturesProcessing = true;
+                refs.pictureUpload.disabled = true;
+                try {
+                    for (const file of files) {
+                        updatePictureInputState('Memampatkan dan menyimpan gambar...');
+                        try {
+                            if (!file.type.startsWith('image/')) throw new Error('Format gambar tidak disokong');
+                            const blob = await compressPicture(file);
+                            confirmedPictureEntries.push({ blob, previewUrl: URL.createObjectURL(blob), fileName: file.name.replace(/\.[^.]+$/, '') + '.jpg', fileSize: formatFileSize(blob.size), mimeType: blob.type, note: '' });
+                        } catch (error) {
+                            alert(`${file.name}: gagal ditambah. ${error.message || ''}`);
+                        }
+                    }
+                    clearUnconfirmedPictureInput();
+                    renderConfirmedPictureEntries();
+                    await saveCurrentDraft();
+                    updatePictureInputState(`${confirmedPictureEntries.length} gambar baharu ditambah.`);
+                } finally {
+                    picturesProcessing = false;
+                    refs.pictureUpload.disabled = false;
+                }
             });
 
             refs.confirmPictureBtn?.addEventListener('click', async () => {
@@ -4671,19 +4895,20 @@
             refs.pictureViewerModal?.addEventListener('hidden.bs.modal', () => {
                 if (refs.pictureViewerImage) {
                     refs.pictureViewerImage.removeAttribute('src');
-                    refs.pictureViewerImage.alt = 'Picture preview';
+                    refs.pictureViewerImage.alt = 'Pratonton gambar';
                 }
             });
 
             refs.saveDraftBtn?.addEventListener('click', async () => {
+                if (picturesProcessing) { alert('Sila tunggu gambar selesai diproses.'); return; }
                 if ((refs.pictureUpload?.files?.length || 0) > 0) {
-                    alert('Please click “Confirm Picture” before saving the draft so the picture is stored offline.');
+                    alert('Sila tunggu gambar selesai ditambah sebelum menyimpan draf.');
                     return;
                 }
                 const saved = await saveCurrentDraft();
                 alert(saved
-                    ? 'Draft saved safely on this device. You can close the form and continue later.'
-                    : 'Draft could not be saved on this device. Please keep this page open and check browser storage settings.');
+                    ? 'Draf disimpan pada peranti ini. Anda boleh sambung kemudian.'
+                    : 'Draf gagal disimpan. Kekalkan halaman ini terbuka dan semak storan browser.');
             });
 
             const structuralFieldIds = new Set([
@@ -4740,6 +4965,9 @@
             refs.form?.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+                if (picturesProcessing) { alert('Sila tunggu gambar selesai diproses.'); return; }
+                const invalid = refs.form.querySelector(':invalid');
+                if (invalid) { showPPMStepFor(invalid); invalid.focus(); }
 
                 const incomplete = Array.from(refs.checklistBody.querySelectorAll('.civil-wall-status-wrap, .ff-wet2-status-wrap')).flatMap((wrapper) => {
                     return Array.from(wrapper.querySelectorAll('input[type="hidden"][name^="checkStatus_"]')).filter((field) => /checkStatus_\d+_/.test(field.name) && !['OK', 'NG'].includes(field.value)).map((field) => ({ wrapper, field }));
@@ -4748,6 +4976,7 @@
                     const first = incomplete[0];
                     const rows = [...new Set(incomplete.map(({ wrapper }) => wrapper.dataset.rowNumber))];
                     alert(`Pemeriksaan belum lengkap pada item ${rows.join(', ')}. Sila periksa setiap subitem sebelum hantar.`);
+                    showPPMStepFor(first.wrapper);
                     first.wrapper.scrollIntoView({ block: 'center' });
                     first.wrapper.querySelector('button')?.focus();
                     return;
@@ -4759,7 +4988,7 @@
                     refs.form.classList.add('was-validated');
 
                     if (ngRemarkValidation.missingRows.length > 0) {
-                        alert(`Please fill remarks for NG status at row(s): ${ngRemarkValidation.missingRows.join(', ')}.`);
+                        alert(`Sila isi catatan untuk status NG pada item: ${ngRemarkValidation.missingRows.join(', ')}.`);
                         ngRemarkValidation.firstMissingRemarkField?.focus();
                         ngRemarkValidation.firstMissingRemarkField?.reportValidity?.();
                     }
@@ -4768,7 +4997,7 @@
                 }
 
                 if ((refs.pictureUpload?.files?.length || 0) > 0) {
-                    alert('Please click "Confirm Picture" so the selected picture is added to the final list before submitting.');
+                    alert('Sila tunggu gambar selesai ditambah sebelum menghantar.');
                     return;
                 }
 
@@ -4778,7 +5007,7 @@
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
 
                 if (!window.PPMOfflineStore?.isSupported()) {
-                    alert('Offline storage is unavailable in this browser. Please use a current version of Chrome, Safari, or Edge.');
+                    alert('Storan offline tidak tersedia dalam browser ini. Sila gunakan versi terkini Chrome, Safari atau Edge.');
                     return;
                 }
 
@@ -4811,33 +5040,119 @@
                     renderCopySourceOptions();
                     clearAllConfirmedPictureEntries();
                     clearUnconfirmedPictureInput();
-                    setDraftSaveState('Submission saved on device');
+                    setDraftSaveState('Penghantaran disimpan pada peranti');
 
                     if (!navigator.onLine) {
                         await refreshSyncStatus();
-                        alert('Saved offline on this device. It will sync automatically when internet returns.');
+                        alert('Disimpan pada peranti ini. Penghantaran akan dicuba apabila internet kembali dan borang ini dibuka.');
                         return;
                     }
 
                     const result = await syncPendingSubmissions();
                     if (result.failed > 0) {
-                        alert('Saved safely on this device, but the online sync failed. Use “Sync now” when the connection is stable.');
+                        alert('Disimpan pada peranti ini, tetapi penghantaran gagal. Tekan “Update ke server” apabila sambungan stabil.');
                     } else {
-                        alert('PPM submission synced successfully.');
+                        alert('Penghantaran PPM diterima server.');
                     }
                 } catch (error) {
                     console.warn('Unable to queue PPM submission:', error);
-                    updateSyncPanel('Could not save this submission on the device.', 'error');
-                    alert('The submission could not be saved. Please use Save Draft and try again.');
+                    updateSyncPanel('Penghantaran tidak dapat disimpan pada peranti.', 'error');
+                    alert('Penghantaran tidak dapat disimpan. Sila simpan draf dan cuba semula.');
                 } finally {
                     if (submitButton) submitButton.disabled = false;
                 }
             });
 
+            let currentPPMStep = 1;
+            const ppmSections = Array.from(refs.form.querySelectorAll(':scope > section'));
+            const sectionSteps = [1, 2, 2, 3, 4];
+            const review = document.createElement('div');
+            review.className = 'ppm-review';
+            ppmSections[4].querySelector('.card-body').prepend(review);
+
+            function showPPMStepFor(element) {
+                const index = ppmSections.findIndex((section) => section.contains(element));
+                if (index >= 0) showPPMStep(sectionSteps[index]);
+            }
+            function refreshPPMReview() {
+                const statuses = Array.from(refs.checklistBody.querySelectorAll('[name^="checkStatus_"]'));
+                const names = [...new Set(statuses.map((field) => field.name))];
+                const values = collectChecklistFieldValues();
+                const complete = names.filter((name) => String(values[name] || '').trim()).length;
+                document.getElementById('ppmCompletion').textContent = `${complete}/${names.length} status pemeriksaan lengkap`;
+                const ng = names.filter((name) => values[name] === 'NG' && /^checkStatus_\d+$/.test(name)).map((name) => name.replace('checkStatus_', ''));
+                review.innerHTML = `<strong>Semakan sebelum hantar</strong><p class="mb-1">${escapeHtml(refs.templateType.selectedOptions[0]?.textContent || '')} · ${escapeHtml(refs.locationSelect.value)} · ${escapeHtml(refs.inspectionDate.value)}</p><p class="mb-1">${existingEvidence.length} bukti tersimpan, ${confirmedPictureEntries.length} gambar baharu. Item NG: ${escapeHtml(ng.join(', ') || 'Tiada')}.</p>`;
+                const incompleteRows = Array.from(refs.checklistBody.querySelectorAll('tr')).filter((row) => {
+                    if (row.classList.contains('checklist-group-row')) return false;
+                    return Boolean(row.querySelector(':invalid')) || Array.from(row.querySelectorAll('input[type="hidden"][name^="checkStatus_"]')).some((field) => /checkStatus_\d+_/.test(field.name) && !['OK', 'NG'].includes(field.value));
+                });
+                const message = document.createElement('p');
+                message.className = 'mt-2 mb-2';
+                if (incompleteRows.length) {
+                    message.textContent = `Masih ada ${incompleteRows.length} item belum lengkap.`;
+                    review.append(message);
+                    const button = document.createElement('button');
+                    button.type = 'button'; button.className = 'btn btn-outline-primary';
+                    button.textContent = 'Sambung Pemeriksaan';
+                    button.addEventListener('click', () => {
+                        const row = incompleteRows[0];
+                        showPPMStep(2);
+                        const field = row.querySelector(':invalid') || row.querySelector('button');
+                        field?.focus();
+                        row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    });
+                    review.append(button);
+                } else {
+                    message.textContent = refs.form.checkValidity()
+                        ? 'Pemeriksaan lengkap dan sedia dihantar.'
+                        : 'Pemeriksaan lengkap. Sila lengkapkan maklumat dan pengesahan sebelum hantar.';
+                    review.append(message);
+                }
+            }
+            function showPPMStep(step) {
+                updateSelectionVisibility();
+                currentPPMStep = step;
+                ppmSections.forEach((section, index) => { section.hidden = sectionSteps[index] !== step; });
+                document.querySelectorAll('[data-ppm-step]').forEach((button) => {
+                    const active = Number(button.dataset.ppmStep) === step;
+                    button.className = active ? 'btn btn-primary' : 'btn btn-outline-primary';
+                    if (active) button.setAttribute('aria-current', 'step'); else button.removeAttribute('aria-current');
+                });
+                document.getElementById('ppmPrevStep').hidden = step === 1;
+                document.getElementById('ppmNextStep').hidden = step === 4;
+                refs.form.querySelector('button[type="submit"]').hidden = step !== 4;
+                validateNgRemarkRequirements();
+                refreshPPMReview();
+            }
+            document.getElementById('ppmStepNav').addEventListener('click', (event) => { const button = event.target.closest('[data-ppm-step]'); if (button) showPPMStep(Number(button.dataset.ppmStep)); });
+            document.getElementById('ppmPrevStep').addEventListener('click', () => showPPMStep(Math.max(1, currentPPMStep - 1)));
+            document.getElementById('ppmNextStep').addEventListener('click', () => {
+                validateNgRemarkRequirements();
+                const invalid = ppmSections.filter((section, index) => sectionSteps[index] === currentPPMStep).flatMap((section) => Array.from(section.querySelectorAll(':invalid')))[0];
+                if (invalid) { refs.form.classList.add('was-validated'); invalid.focus(); invalid.reportValidity(); return; }
+                showPPMStep(Math.min(4, currentPPMStep + 1));
+            });
+            refs.form.addEventListener('input', refreshPPMReview);
+            refs.form.addEventListener('change', refreshPPMReview);
+            showPPMStep(1);
+
+            const templateFieldGroup = refs.templateType.closest('.col-12');
+            refs.templateType.setAttribute('form', 'ppmTechnicianForm');
+            refs.templateType.hidden = true;
+            document.getElementById('ppmTemplatePicker').append(refs.templateType);
+            templateFieldGroup.remove();
+            const chosenSummary = document.createElement('p');
+            chosenSummary.className = 'small text-muted mb-2';
+            chosenSummary.id = 'ppmChosenSummary';
+            ppmSections[0].querySelector('.card-body').prepend(chosenSummary);
+            refs.form.addEventListener('input', () => { chosenSummary.textContent = `${refs.templateType.selectedOptions[0]?.textContent || ''} · ${refs.locationSelect.value}`; });
             initDefaultDates();
             purgeOldSubmittedSnapshots();
             const initialTemplateKey = initializeCategoryAndTemplateFilters();
             applyTemplate(initialTemplateKey);
+            refs.templateType.value = '';
+            refs.locationSelect.value = '';
+            updateSelectionVisibility();
             renderConfirmedPictureEntries();
             updatePictureInputState();
             refreshSyncStatus();
@@ -4849,25 +5164,27 @@
                     .then(() => navigator.serviceWorker.ready)
                     .then(() => {
                         if (refs.offlineCacheBadge) {
-                            refs.offlineCacheBadge.textContent = 'Offline Ready';
+                            refs.offlineCacheBadge.textContent = 'Sedia Offline';
                             refs.offlineCacheBadge.className = 'badge text-bg-success';
                         }
                     })
                     .catch((error) => {
                         console.warn('PPM offline cache registration failed:', error);
                         if (refs.offlineCacheBadge) {
-                            refs.offlineCacheBadge.textContent = 'Offline Cache Failed';
+                            refs.offlineCacheBadge.textContent = 'Persediaan Offline Gagal';
                             refs.offlineCacheBadge.className = 'badge text-bg-danger';
                         }
                     });
             } else if (refs.offlineCacheBadge) {
-                refs.offlineCacheBadge.textContent = 'Offline Unsupported';
+                refs.offlineCacheBadge.textContent = 'Offline Tidak Disokong';
                 refs.offlineCacheBadge.className = 'badge text-bg-danger';
             }
 
-            refreshPPMFromBackend().finally(() => {
+            refreshPPMFromBackend().finally(async () => {
+                renderCategoryChoices();
                 renderCopySourceOptions();
-                restoreBestDataForCurrentContext();
+                await restoreBestDataForCurrentContext();
+                refreshPPMReview();
                 syncPendingSubmissions();
             });
         });
