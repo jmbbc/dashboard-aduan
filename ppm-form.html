@@ -785,6 +785,7 @@
 
         .sync-panel {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 0.55rem;
@@ -811,13 +812,18 @@
 
         .sync-status-main {
             display: flex;
+            flex: 1 1 160px;
             align-items: center;
             gap: 0.4rem;
             min-width: 0;
         }
 
         .sync-help {
-            margin-top: 0.08rem;
+            flex-basis: 100%;
+            margin-top: 0;
+            padding-top: .35rem;
+            border-top: 1px solid #dbe2ea;
+            line-height: 1.45;
             color: #64748b;
             font-size: 0.68rem;
         }
@@ -1007,13 +1013,13 @@
                 <span class="sync-dot" aria-hidden="true"></span>
                 <div>
                     <span id="syncStatusText">Menyemak sambungan dan penghantaran tertunda...</span>
-                    <div class="sync-help">Buka borang ini sekali dalam talian sebelum memasuki kawasan tanpa liputan.</div>
                 </div>
             </div>
             <div class="sync-actions">
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="openDraftsBtn">Draf <span class="badge text-bg-secondary" id="draftCountBadge">0</span></button>
                 <button type="button" class="btn btn-sm btn-outline-primary" id="retrySyncBtn">Update ke server</button>
             </div>
+            <div class="sync-help">Untuk kegunaan offline, buka borang dengan internet dahulu dan tunggu status “Sedia Offline”.</div>
         </section>
 
         <section class="card ppm-card" aria-labelledby="ppmCategoryTitle">
