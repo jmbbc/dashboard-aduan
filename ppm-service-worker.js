@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'ppm-technician-v5';
+const CACHE_NAME = 'ppm-technician-v7';
 const CORE_ASSETS = [
     './ppm-form.html',
     './backend-config.js',

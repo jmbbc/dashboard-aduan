@@ -37,6 +37,9 @@ function doPost(e) {
     if (type === 'Aduan') {
       payload.existingImageUrls = getExistingImageUrls(sheet, type, normalizeIdValue(payload.id || ''));
     }
+    if (type === 'PPM') {
+      payload.existingChecklistFieldValues = getExistingPPMChecklist(sheet, normalizeIdValue(payload.id || ''));
+    }
 
     const row = buildRow(type, payload);
     const result = upsertRowById(sheet, type, row, normalizeIdValue(payload.id || ''));
@@ -388,7 +391,11 @@ function buildRow(type, data) {
   }
 
   if (type === 'PPM') {
-    const evidence = uploadPPMEvidence(data.images || [], id);
+    const removed = new Set(Array.isArray(data.removedEvidenceUrls) ? data.removedEvidenceUrls : []);
+    const previous = data.existingChecklistFieldValues || {};
+    const existingEvidence = Array.isArray(previous.__evidence) ? previous.__evidence : (previous.__imageUrls || []).map((url) => ({ url }));
+    const uploaded = uploadPPMEvidence(data.images || [], id);
+    const evidence = Array.from(new Map([...existingEvidence.filter((item) => item.url && !removed.has(item.url)), ...uploaded].map((item) => [item.url, item])).values());
     const ppmImageUrls = evidence.map((item) => item.url).filter(Boolean);
     let checklistFieldValues = {};
     try {
@@ -403,10 +410,8 @@ function buildRow(type, data) {
 
     // Keep PPM evidence URLs inside the existing JSON column so current sheets
     // remain backward compatible and do not require a column migration.
-    if (ppmImageUrls.length > 0) {
-      checklistFieldValues.__imageUrls = ppmImageUrls;
-      checklistFieldValues.__evidence = evidence;
-    }
+    checklistFieldValues.__imageUrls = ppmImageUrls;
+    checklistFieldValues.__evidence = evidence;
 
     return {
       values: [
@@ -452,6 +457,18 @@ function buildRow(type, data) {
   }
 
   throw new Error('Unsupported type');
+}
+
+function getExistingPPMChecklist(sheet, id) {
+  if (!id) return {};
+  const rows = sheet.getDataRange().getValues();
+  const { headerKeys, dataRowStart } = getEffectiveHeaderKeys(rows, 'PPM');
+  const column = headerKeys.indexOf('checklistFieldValues');
+  const matches = findRowIndexesById(rows.slice(dataRowStart - 1), headerKeys, 'PPM', id);
+  if (column < 0 || !matches.length) return {};
+  const raw = rows[dataRowStart - 1 + matches[0]][column];
+  if (!raw) return {};
+  return JSON.parse(String(raw));
 }
 
 function getExistingImageUrls(sheet, type, id) {
@@ -553,7 +570,7 @@ function uploadPPMEvidence(images, submissionId) {
         digest
       };
     } catch (error) {
-      return null;
+      throw new Error('Gagal menyimpan bukti PPM: ' + error.message);
     }
   }).filter(Boolean);
 }

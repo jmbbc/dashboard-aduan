@@ -1094,7 +1094,7 @@
                     <div class="upload-block">
                         <label class="form-label" for="pictureUpload">Muat Naik Gambar</label>
                         <input type="file" class="form-control mb-2" id="pictureUpload" accept="image/*">
-                        <div class="form-text mb-2">Maksimum 6 gambar disahkan dan jumlah 8 MB selepas pemampatan.</div>
+                        <div class="form-text mb-2">Bilangan gambar tiada had. Gambar dimampatkan secara automatik sebelum disimpan.</div>
                         <label class="form-label" for="pictureNote">Catatan Gambar</label>
                         <textarea class="form-control" id="pictureNote" rows="2" placeholder="Add notes regarding the uploaded picture (optional)"></textarea>
                         <div class="upload-feedback">
@@ -1909,8 +1909,8 @@
             const CIVIL_NG_REASON_CODES = ['P', 'T', 'B', 'LS'];
             const TECHNICIAN_NOTES_DEFAULT_BULLETS = ['- ', '- ', '- ', '- ', '- '].join('\n');
             const confirmedPictureEntries = [];
-            const MAX_PICTURES = 6;
-            const MAX_TOTAL_PICTURE_BYTES = 8 * 1024 * 1024;
+            let existingEvidence = [];
+            let removedEvidenceUrls = [];
             const MAX_IMAGE_DIMENSION = 1600;
             const IMAGE_QUALITY = 0.78;
             let pendingDraftRecord = null;
@@ -1987,10 +1987,6 @@
                     mimeType: entry.mimeType || entry.blob?.type || 'image/jpeg',
                     note: entry.note || ''
                 })).filter((entry) => entry.blob instanceof Blob);
-            }
-
-            function getConfirmedPictureBytes() {
-                return confirmedPictureEntries.reduce((total, entry) => total + Number(entry?.blob?.size || 0), 0);
             }
 
             function buildDraftRecord() {
@@ -2306,7 +2302,13 @@
                                 ...entry.payload,
                                 images: await picturesForBackend(entry.pictures)
                             };
-                            await submitPPMToBackend(payload);
+                            const result = await submitPPMToBackend(payload);
+                            if (result.row) {
+                                mergePPMRowsToLocalStore([result.row]);
+                                if (getCurrentContext().id === entry.id && !hasUnsavedDraftChanges) {
+                                    restoreExistingEvidence({ checklistFieldValues: parseChecklistFieldValues(result.row.checklistFieldValues) });
+                                }
+                            }
                             await window.PPMOfflineStore.deleteOutbox(entry.id);
                             await window.PPMOfflineStore.deleteDraft(entry.id);
                             refreshDraftCount();
@@ -2679,7 +2681,7 @@
                     return;
                 }
 
-                if (confirmedPictureEntries.length === 0) {
+                if (confirmedPictureEntries.length === 0 && existingEvidence.length === 0) {
                     refs.pictureEntryList.innerHTML = '<div class="picture-entry-empty">No confirmed picture yet.</div>';
                     return;
                 }
@@ -2709,8 +2711,37 @@
                             </div>
                         </div>
                     `;
-                }).join('');
+                }).join('') + existingEvidence.map((entry, index) => `
+                    <div class="picture-entry-row">
+                        <div class="picture-entry-media"><a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(evidencePreviewUrl(entry.url))}" alt="${escapeHtml(entry.name || 'Bukti sedia ada')}" class="picture-entry-thumb" loading="lazy"></a></div>
+                        <div><div class="picture-entry-head"><span class="picture-entry-meta">Bukti tersimpan ${index + 1}</span><button type="button" class="btn btn-sm btn-outline-danger" data-remove-existing-evidence="${index}">Buang</button></div><div class="picture-entry-note">${escapeHtml(entry.note || '')}</div></div>
+                    </div>`).join('');
             }
+
+            function evidencePreviewUrl(url) {
+                const match = String(url).match(/\/file\/d\/([^/?#]+)/) || String(url).match(/[?&]id=([^&#]+)/);
+                return match ? `https://lh3.googleusercontent.com/d/${encodeURIComponent(match[1])}` : url;
+            }
+
+            function restoreExistingEvidence(snapshot) {
+                const fields = snapshot?.checklistFieldValues || {};
+                const entries = snapshot?.existingEvidence || fields.__evidence || (fields.__imageUrls || []).map((url) => ({ url }));
+                existingEvidence = entries.filter((entry) => /^https?:\/\//i.test(entry?.url || ''));
+                removedEvidenceUrls = Array.isArray(snapshot?.removedEvidenceUrls) ? [...snapshot.removedEvidenceUrls] : [];
+                renderConfirmedPictureEntries();
+            }
+
+            refs.pictureEntryList?.addEventListener('click', (event) => {
+                const button = event.target.closest('[data-remove-existing-evidence]');
+                if (!button) return;
+                const index = Number(button.dataset.removeExistingEvidence);
+                if (!existingEvidence[index]) return;
+                if (!window.confirm('Buang pautan bukti ini daripada rekod selepas penghantaran berjaya?')) return;
+                removedEvidenceUrls.push(existingEvidence[index].url);
+                existingEvidence.splice(index, 1);
+                renderConfirmedPictureEntries();
+                scheduleDraftSave();
+            });
 
             async function confirmSelectedPictureEntry() {
                 const selectedPicture = refs.pictureUpload?.files?.[0] || null;
@@ -2719,19 +2750,9 @@
                     return;
                 }
 
-                if (confirmedPictureEntries.length >= MAX_PICTURES) {
-                    updatePictureInputState(`Maximum ${MAX_PICTURES} pictures per submission.`);
-                    return;
-                }
-
                 if (refs.confirmPictureBtn) refs.confirmPictureBtn.disabled = true;
                 updatePictureInputState('Optimising picture for offline storage...');
                 const compressedPicture = await compressPicture(selectedPicture);
-                if (getConfirmedPictureBytes() + Number(compressedPicture?.size || 0) > MAX_TOTAL_PICTURE_BYTES) {
-                    if (refs.pictureUpload) refs.pictureUpload.value = '';
-                    updatePictureInputState('Picture not added: confirmed pictures would exceed the 8 MB total limit.');
-                    return;
-                }
                 const previewUrl = URL.createObjectURL(compressedPicture);
                 const pictureNote = String(refs.pictureNote?.value || '').trim();
                 const originalBaseName = String(selectedPicture.name || `picture-${confirmedPictureEntries.length + 1}`)
@@ -2978,6 +2999,8 @@
 
             function collectSubmittedFormSnapshot() {
                 return {
+                    existingEvidence: existingEvidence.map((entry) => ({ ...entry })),
+                    removedEvidenceUrls: [...removedEvidenceUrls],
                     inspectionDate: String(refs.inspectionDate?.value || ''),
                     technicianName: String(refs.technicianName?.value || ''),
                     verifiedBy: String(refs.verifiedBy?.value || ''),
@@ -3100,6 +3123,7 @@
 
             function buildPPMPayload(templateKey, monthKey, location) {
                 return {
+                    removedEvidenceUrls: [...removedEvidenceUrls],
                     id: buildPPMSubmissionId(templateKey, monthKey, location),
                     type: 'PPM',
                     templateKey: String(templateKey || ''),
@@ -3214,6 +3238,7 @@
                 }
 
                 clearFormValuesForUnsubmittedContext();
+                if (options.restoreEvidence !== false) restoreExistingEvidence(snapshot);
 
                 const applyInspectionDate = options.applyInspectionDate === true;
 
@@ -3250,6 +3275,9 @@
             }
 
             function restoreSubmittedDataForCurrentContext() {
+                existingEvidence = [];
+                removedEvidenceUrls = [];
+                renderConfirmedPictureEntries();
                 const templateKey = String(refs.templateType?.value || 'bilikSuis');
                 const monthKey = getMonthKeyFromInspectionDate();
                 const location = String(refs.locationSelect?.value || '').trim();
@@ -3312,7 +3340,7 @@
                     return;
                 }
 
-                applySubmittedSnapshotToForm(snapshot, { applyInspectionDate: true });
+                applySubmittedSnapshotToForm(snapshot, { applyInspectionDate: true, restoreEvidence: false });
 
                 const template = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.bilikSuis;
                 renderSubmissionTrack(templateKey, template);
@@ -4712,6 +4740,18 @@
             refs.form?.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+
+                const incomplete = Array.from(refs.checklistBody.querySelectorAll('.civil-wall-status-wrap, .ff-wet2-status-wrap')).flatMap((wrapper) => {
+                    return Array.from(wrapper.querySelectorAll('input[type="hidden"][name^="checkStatus_"]')).filter((field) => /checkStatus_\d+_/.test(field.name) && !['OK', 'NG'].includes(field.value)).map((field) => ({ wrapper, field }));
+                });
+                if (incomplete.length) {
+                    const first = incomplete[0];
+                    const rows = [...new Set(incomplete.map(({ wrapper }) => wrapper.dataset.rowNumber))];
+                    alert(`Pemeriksaan belum lengkap pada item ${rows.join(', ')}. Sila periksa setiap subitem sebelum hantar.`);
+                    first.wrapper.scrollIntoView({ block: 'center' });
+                    first.wrapper.querySelector('button')?.focus();
+                    return;
+                }
 
                 const ngRemarkValidation = validateNgRemarkRequirements();
 
