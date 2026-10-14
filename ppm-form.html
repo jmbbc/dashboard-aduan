@@ -729,6 +729,10 @@
         .ppm-category-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
         .ppm-category-grid button { min-height: 44px; padding: .4rem .25rem; font-size: .78rem; border-radius: 8px; }
         .ppm-category-count { display: block; margin-top: .2rem; font-size: .65rem; line-height: 1.3; }
+        .ppm-form-context { background: #eef5f1; border-left: 3px solid #246b5b; padding: .65rem .75rem; border-radius: 6px; margin-bottom: .75rem; color: #254b40; font-weight: 600; }
+        .ppm-form-meta { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .85rem; }
+        .ppm-form-meta dt { font-size: .72rem; font-weight: 500; color: #64748b; margin-bottom: .15rem; }
+        .ppm-form-meta dd { font-size: .85rem; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
         .ppm-category-grid .btn-outline-primary { color: #5b2878; background: #f3eafa; border-color: #b68acb; }
         .ppm-category-grid .btn-outline-primary:hover { color: #4a1c64; background: #e7d5f2; border-color: #8850a4; }
         .ppm-category-grid .btn-primary { color: #fff; background: #6b3585; border-color: #6b3585; }
@@ -948,10 +952,23 @@
             .checklist-table tr.checklist-remark-only td:nth-child(3)::before { content: 'Catatan'; }
 
             .status-icon-btn {
-                min-width: 72px;
-                min-height: 44px;
+                min-width: 44px;
+                min-height: 36px;
+                padding: .25rem .35rem;
                 justify-content: center;
             }
+            .status-icon-group { display: flex; gap: .3rem; width: fit-content; }
+            .checklist-table tr:not(.checklist-group-row) { display: grid; grid-template-columns: 1.6rem 5.8rem minmax(0, 1fr); column-gap: .4rem; padding: .4rem; margin-bottom: .35rem; }
+            .checklist-table tr:not(.checklist-group-row) td:first-child { float: none; width: auto; grid-column: 1; padding: .15rem 0; }
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(2) { grid-column: 2 / -1; padding: .15rem 0; min-height: 0; }
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(3) { grid-column: 1 / 3; }
+            .checklist-table tr:not(.checklist-group-row) td:nth-child(4) { grid-column: 3; }
+            .checklist-table tr.checklist-remark-only td:nth-child(3),
+            .checklist-table tr:has(.civil-wall-status-wrap) td:nth-child(3),
+            .checklist-table tr:has(.ff-wet2-status-wrap) td:nth-child(3),
+            .checklist-table tr:has(.civil-wall-status-wrap) td:nth-child(4),
+            .checklist-table tr:has(.ff-wet2-status-wrap) td:nth-child(4) { grid-column: 1 / -1; }
+            .checklist-table .form-control, .checklist-table .form-select { font-size: .75rem; padding: .3rem .4rem; min-height: 36px; }
 
             .checklist-group-row {
                 display: block;
@@ -1057,27 +1074,23 @@
 
                         <div class="w-100"></div>
 
-                        <div class="col-6">
-                            <label class="form-label" for="frequencyField">Kekerapan</label>
-                            <input type="text" class="form-control" id="frequencyField" readonly>
+                        <div class="col-12">
+                            <dl class="ppm-form-meta">
+                                <div><dt>Kekerapan</dt><dd id="ppmFrequencyDisplay">—</dd></div>
+                                <div><dt>No. Rujukan</dt><dd id="ppmReferenceDisplay">—</dd></div>
+                            </dl>
+                            <input type="hidden" id="frequencyField">
+                            <input type="hidden" id="referenceNo">
+                            <label id="locationLabel" for="locationSelect" hidden>Lokasi Blok</label>
+                            <select id="locationSelect" required hidden></select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <label class="form-label" for="inspectionDate">Tarikh</label>
                             <input type="date" class="form-control" id="inspectionDate" required>
                             <div class="invalid-feedback">Sila pilih tarikh.</div>
                         </div>
 
                         <div class="w-100"></div>
-
-                        <div class="col-6">
-                            <label class="form-label" for="referenceNo">No. Rujukan</label>
-                            <input type="text" class="form-control" id="referenceNo" readonly>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label" id="locationLabel" for="locationSelect">Lokasi Blok</label>
-                            <select class="form-select" id="locationSelect" required></select>
-                            <div class="invalid-feedback">Sila pilih lokasi.</div>
-                        </div>
 
                         <div class="w-100"></div>
 
@@ -4367,6 +4380,9 @@
                 renderTemplateChoices();
                 const summary = document.getElementById('ppmChosenSummary');
                 if (summary) summary.textContent = `${refs.templateType.selectedOptions[0]?.textContent || ''} · ${refs.locationSelect.value}`;
+                const frequencyLabels = { Monthly: 'Bulanan', Weekly: 'Mingguan', Daily: 'Harian', Quarterly: 'Setiap 3 bulan', Yearly: 'Tahunan', Annually: 'Tahunan' };
+                document.getElementById('ppmFrequencyDisplay').textContent = frequencyLabels[refs.frequencyField.value] || refs.frequencyField.value || '—';
+                document.getElementById('ppmReferenceDisplay').textContent = refs.referenceNo.value || '—';
             }
 
             function renderStep2ScopeNote(template) {
@@ -5142,7 +5158,7 @@
             document.getElementById('ppmTemplatePicker').append(refs.templateType);
             templateFieldGroup.remove();
             const chosenSummary = document.createElement('p');
-            chosenSummary.className = 'small text-muted mb-2';
+            chosenSummary.className = 'ppm-form-context';
             chosenSummary.id = 'ppmChosenSummary';
             ppmSections[0].querySelector('.card-body').prepend(chosenSummary);
             refs.form.addEventListener('input', () => { chosenSummary.textContent = `${refs.templateType.selectedOptions[0]?.textContent || ''} · ${refs.locationSelect.value}`; });
