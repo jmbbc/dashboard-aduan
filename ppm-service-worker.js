@@ -1,10 +1,11 @@
 'use strict';
 
-const CACHE_NAME = 'ppm-technician-v15';
+const CACHE_NAME = 'ppm-technician-v17';
 const CORE_ASSETS = [
     './ppm-form.html',
     './backend-config.js',
     './ppm-offline-store.js',
+    './ppm-report-templates.js?v=20261019-2',
     './ppm-progress.js?v=20261019-6',
     './ppm-progress.css?v=20261019-6',
     './manifest.webmanifest',
@@ -48,6 +49,8 @@ self.addEventListener('fetch', (event) => {
     if (url.hostname === 'script.google.com' || url.hostname.endsWith('.googleusercontent.com')) return;
 
     if (request.mode === 'navigate') {
+        // Do not replace the offline technician form with a report/dashboard page.
+        if (!url.pathname.endsWith('/ppm-form.html')) return;
         event.respondWith((async () => {
             try {
                 const response = await fetch(request);
