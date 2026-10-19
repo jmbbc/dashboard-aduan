@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#1d4ed8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="ppm-progress.css?v=20261019-6">
     <link rel="icon" href="ppm-icon.svg" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
@@ -1026,6 +1027,23 @@
             <div class="sync-help">Untuk kegunaan offline, buka borang dengan internet dahulu dan tunggu status “Sedia Offline”.</div>
         </section>
 
+        <details class="ppm-progress" id="ppmProgress" open>
+            <summary>Progress Penghantaran PPM</summary>
+            <p class="small text-muted mb-1">Status borang yang telah diterima server.</p>
+            <div class="ppm-progress-controls">
+                <label for="ppmProgressYear"><span class="visually-hidden">Tahun</span><select class="form-select" id="ppmProgressYear"></select></label>
+            </div>
+            <div class="ppm-progress-pager" aria-label="Pilih tempoh enam bulan">
+                <button type="button" id="ppmProgressPrev" aria-label="Sebelum: Januari hingga Jun">‹ Sebelum</button>
+                <strong id="ppmProgressPeriod" aria-live="polite"></strong>
+                <button type="button" id="ppmProgressNext" aria-label="Seterusnya: Julai hingga Disember">Seterusnya ›</button>
+            </div>
+            <div class="ppm-progress-desktop"><table id="ppmProgressTable" class="ppm-progress-table" aria-label="Progress kategori mengikut bulan"></table></div>
+            <div class="ppm-progress-legend"><span class="complete">Lengkap</span><span class="partial">Sebahagian</span><span class="empty">Belum diterima</span><span class="future">Belum tiba</span></div>
+            <p class="small text-muted mb-1">Draf dan penghantaran tertunda tidak dikira. Tekan kategori untuk lihat lokasi belum diterima.</p>
+            <p class="small text-muted mb-0" id="ppmProgressUpdated" aria-live="polite"></p>
+            <div id="ppmProgressDetail" class="ppm-progress-detail" tabindex="-1" hidden></div>
+        </details>
         <section class="card ppm-card" aria-labelledby="ppmCategoryTitle">
             <div class="card-body p-2">
                 <h2 id="ppmCategoryTitle" class="submission-title mb-2">Kategori Senarai Semak</h2>
@@ -1283,6 +1301,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="backend-config.js"></script>
     <script src="ppm-offline-store.js"></script>
+    <script src="ppm-progress.js?v=20261019-6"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const TEMPLATE_CONFIG = {
@@ -2376,6 +2395,7 @@
                                 images: await picturesForBackend(entry.pictures)
                             };
                             const result = await submitPPMToBackend(payload);
+                            window.PPMProgress?.acceptRow(result.row);
                             if (result.row) {
                                 mergePPMRowsToLocalStore([result.row]);
                                 if (getCurrentContext().id === entry.id && !hasUnsavedDraftChanges) {
@@ -3293,6 +3313,7 @@
             async function refreshPPMFromBackend() {
                 try {
                     const rows = await fetchBackendData('PPM');
+                    window.PPMProgress?.setRows(rows);
                     if (Array.isArray(rows) && rows.length) {
                         mergePPMRowsToLocalStore(rows);
                     }
@@ -5173,6 +5194,7 @@
             ppmSections[0].querySelector('.card-body').prepend(chosenSummary);
             refs.form.addEventListener('input', () => { chosenSummary.textContent = `${refs.templateType.selectedOptions[0]?.textContent || ''} · ${refs.locationSelect.value}`; });
             initDefaultDates();
+            window.PPMProgress?.init({ templates: TEMPLATE_CONFIG });
             purgeOldSubmittedSnapshots();
             const initialTemplateKey = initializeCategoryAndTemplateFilters();
             applyTemplate(initialTemplateKey);
