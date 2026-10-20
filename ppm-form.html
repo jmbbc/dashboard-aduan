@@ -12,6 +12,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
     <style>
+        .ppm-receipt { border: 1px solid #247565; border-radius: 12px; padding: 12px; background: #edf8f3; margin-bottom: 12px; }
+        .ppm-receipt[data-state="pending"], .ppm-receipt[data-state="failed"] { background: #fff7e6; border-color: #ae7417; }
+        .ppm-receipt[data-state="error"] { background: #fff1f1; border-color: #bb4141; }
+        .ppm-receipt p { margin: 4px 0; overflow-wrap: anywhere; }
+        .ppm-submit-dialog { width: min(440px, calc(100% - 24px)); max-height: calc(100dvh - 32px); border: 0; border-radius: 18px; padding: 24px; color: #24372f; box-shadow: 0 16px 60px #102b3540; }
+        .ppm-submit-dialog::backdrop { background: #142c39a6; }
+        .ppm-submit-symbol { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: #dff3e9; color: #17654d; font-size: 28px; margin-bottom: 12px; }
+        .ppm-submit-dialog[data-state="pending"] .ppm-submit-symbol, .ppm-submit-dialog[data-state="failed"] .ppm-submit-symbol { background: #fff0cc; color: #885a0d; }
+        .ppm-submit-dialog[data-state="error"] .ppm-submit-symbol { background: #ffe0e0; color: #a52c2c; }
+        .ppm-submit-dialog h2 { font-size: 1.3rem; margin-bottom: 8px; }
+        .ppm-submit-details { background: #f3f5f4; border-radius: 10px; padding: 12px; margin: 16px 0; overflow-wrap: anywhere; }
+        .ppm-submit-details p { margin: 3px 0; }
+        .ppm-submit-actions { display: grid; gap: 8px; }
+        .ppm-submit-actions .btn { white-space: normal; padding: 10px; }
         body {
             background: #f5f7fb;
             color: #1f2937;
@@ -1068,7 +1082,12 @@
         </section>
 
         <form id="ppmTechnicianForm" class="needs-validation" novalidate>
-            <a id="acceptedReportLink" class="btn btn-outline-success mb-2" hidden>Lihat Laporan / PDF</a>
+            <div id="submissionReceipt" class="ppm-receipt" role="status" hidden>
+                <strong id="submissionReceiptTitle"></strong>
+                <p id="submissionReceiptContext"></p>
+                <p id="submissionReceiptMessage"></p>
+                <a id="acceptedReportLink" class="btn btn-sm btn-outline-success mt-1" hidden>Lihat Laporan / PDF</a>
+            </div>
             <nav class="ppm-step-nav" aria-label="Langkah borang PPM" id="ppmStepNav">
                 <button type="button" class="btn btn-primary" data-ppm-step="1">1. Maklumat</button>
                 <button type="button" class="btn btn-outline-primary" data-ppm-step="2">2. Pemeriksaan</button>
@@ -1231,6 +1250,27 @@
         </form>
     </main>
 
+    <dialog id="ppmSubmitDialog" class="ppm-submit-dialog" aria-labelledby="ppmSubmitTitle" aria-describedby="ppmSubmitMessage">
+        <div id="ppmSubmitSymbol" class="ppm-submit-symbol" aria-hidden="true"></div>
+        <div role="status" aria-live="polite" aria-atomic="true">
+            <h2 id="ppmSubmitTitle"></h2>
+            <p id="ppmSubmitMessage" class="mb-0"></p>
+        </div>
+        <div class="ppm-submit-details">
+            <p id="ppmSubmitTemplate"></p>
+            <p><strong>Lokasi:</strong> <span id="ppmSubmitLocation"></span></p>
+            <p><strong>Bulan:</strong> <span id="ppmSubmitMonth"></span></p>
+            <p class="small" id="ppmSubmitRecord"></p>
+            <p class="small" id="ppmSubmitTime"></p>
+        </div>
+        <div class="ppm-submit-actions">
+            <a id="ppmSubmitReport" class="btn btn-success" hidden>Lihat Laporan / PDF</a>
+            <button id="ppmSubmitRetry" type="button" class="btn btn-warning" hidden>Cuba hantar semula</button>
+            <button id="ppmSubmitLocations" type="button" class="btn btn-outline-success" hidden>Pilih lokasi seterusnya</button>
+            <button id="ppmSubmitClose" type="button" class="btn btn-outline-secondary" hidden>Kembali ke borang</button>
+        </div>
+    </dialog>
+
     <div class="modal fade" id="pictureViewerModal" tabindex="-1" aria-labelledby="pictureViewerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -1388,6 +1428,73 @@
             let pendingDraftRecord = null;
             let draftSaveTimer = null;
             let syncInProgress = false;
+            let submissionBusy = false;
+            let submissionReceipt = null;
+            const submitDialog = document.getElementById('ppmSubmitDialog');
+            const submitMessages = {
+                saving: ['Menyimpan borang…', 'Sila tunggu. Borang dan gambar sedang disimpan pada peranti.', '…'],
+                sending: ['Menghantar ke server…', 'Borang telah disimpan pada peranti. Sedang menunggu pengesahan server.', '↻'],
+                received: ['Borang diterima server', 'Penghantaran selesai. Anda boleh melihat laporan atau memilih lokasi seterusnya.', '✓'],
+                pending: ['Disimpan pada peranti', 'Server belum mengesahkan penerimaan. Buka borang ini apabila internet tersedia; penghantaran akan dicuba semula secara automatik.', '↻'],
+                failed: ['Penerimaan belum disahkan', 'Salinan borang dan gambar masih disimpan pada peranti ini. Cuba hantar semula apabila sambungan stabil.', '!'],
+                error: ['Borang belum disimpan', 'Penghantaran tidak dapat disimpan pada peranti. Maklumat masih dalam borang. Kembali ke borang, simpan draf dan cuba semula.', '!']
+            };
+            function showSubmissionResult(state, open = false) {
+                if (!submissionReceipt) return;
+                submissionReceipt.state = state;
+                const [title, message, symbol] = submitMessages[state];
+                const busy = state === 'saving' || state === 'sending';
+                const received = state === 'received';
+                submitDialog.dataset.state = state;
+                submitDialog.setAttribute('aria-busy', String(busy));
+                document.getElementById('ppmSubmitTitle').textContent = title;
+                document.getElementById('ppmSubmitMessage').textContent = message;
+                document.getElementById('ppmSubmitSymbol').textContent = symbol;
+                document.getElementById('ppmSubmitTemplate').textContent = submissionReceipt.templateName;
+                document.getElementById('ppmSubmitLocation').textContent = submissionReceipt.location;
+                document.getElementById('ppmSubmitMonth').textContent = submissionReceipt.monthKey;
+                document.getElementById('ppmSubmitRecord').textContent = `ID: ${submissionReceipt.id}`;
+                if (received) submissionReceipt.receivedAt = submissionReceipt.receivedAt || new Date().toLocaleString('ms-MY');
+                document.getElementById('ppmSubmitTime').textContent = received ? `Disahkan server: ${submissionReceipt.receivedAt}` : '';
+                const reportUrl = `ppm-reports.html?id=${encodeURIComponent(submissionReceipt.id)}`;
+                const report = document.getElementById('ppmSubmitReport');
+                report.href = reportUrl;
+                report.hidden = !received;
+                document.getElementById('ppmSubmitRetry').hidden = !['pending', 'failed'].includes(state);
+                document.getElementById('ppmSubmitLocations').hidden = busy || state === 'error';
+                document.getElementById('ppmSubmitClose').hidden = busy;
+                const banner = document.getElementById('submissionReceipt');
+                banner.dataset.state = state;
+                banner.hidden = busy || submissionReceipt.edited || getCurrentContext().id !== submissionReceipt.id;
+                document.getElementById('submissionReceiptTitle').textContent = title;
+                document.getElementById('submissionReceiptContext').textContent = `${submissionReceipt.templateName} · ${submissionReceipt.location} · ${submissionReceipt.monthKey}`;
+                document.getElementById('submissionReceiptMessage').textContent = message;
+                const reportLink = document.getElementById('acceptedReportLink');
+                reportLink.href = reportUrl;
+                reportLink.dataset.recordId = received ? submissionReceipt.id : '';
+                reportLink.hidden = !received || submissionReceipt.edited;
+                if (open && !submitDialog.open) submitDialog.showModal();
+            }
+            submitDialog.addEventListener('cancel', (event) => {
+                if (['saving', 'sending'].includes(submissionReceipt?.state)) event.preventDefault();
+            });
+            document.getElementById('ppmSubmitClose').addEventListener('click', () => submitDialog.close());
+            document.getElementById('ppmSubmitLocations').addEventListener('click', () => {
+                submitDialog.close();
+                showPPMStep(1);
+                document.getElementById('ppmLocationPicker').scrollIntoView({ block: 'start', behavior: 'smooth' });
+                refs.locationStatusTrack.querySelector('button[data-ppm-location]')?.focus({ preventScroll: true });
+            });
+            async function refreshSubmissionResult() {
+                if (!submissionReceipt || submissionReceipt.state === 'received') return;
+                const queued = await window.PPMOfflineStore.getOutbox(submissionReceipt.id);
+                showSubmissionResult(queued?.status === 'failed' ? 'failed' : 'pending');
+            }
+            document.getElementById('ppmSubmitRetry').addEventListener('click', async () => {
+                showSubmissionResult('sending');
+                try { await syncPendingSubmissions(); await refreshSubmissionResult(); }
+                catch { showSubmissionResult('pending'); }
+            });
             let isRestoringOfflineState = false;
             let hasUnsavedDraftChanges = false;
             const pictureViewerModal = refs.pictureViewerModal
@@ -1775,7 +1882,10 @@
                                 images: await picturesForBackend(entry.pictures)
                             };
                             const result = await submitPPMToBackend(payload);
-                            if (getCurrentContext().id === entry.id) {
+                            const latestQueued = await window.PPMOfflineStore.getOutbox(entry.id);
+                            if (latestQueued && latestQueued.createdAt !== entry.createdAt) continue;
+                            if (submissionReceipt?.id === entry.id && submissionReceipt.queueCreatedAt === entry.createdAt) showSubmissionResult('received');
+                            if (getCurrentContext().id === entry.id && !(submissionReceipt?.id === entry.id && submissionReceipt.edited)) {
                                 const reportLink = document.getElementById('acceptedReportLink');
                                 reportLink.href = `ppm-reports.html?id=${encodeURIComponent(entry.id)}`;
                                 reportLink.dataset.recordId = entry.id;
@@ -1794,6 +1904,8 @@
                             markLocationSyncState(entry.templateKey, entry.monthKey, entry.location, 'synced');
                             synced += 1;
                         } catch (error) {
+                            const latestQueued = await window.PPMOfflineStore.getOutbox(entry.id);
+                            if (latestQueued && latestQueued.createdAt !== entry.createdAt) continue;
                             entry.status = 'failed';
                             entry.lastError = String(error?.message || error || 'Penghantaran gagal');
                             await window.PPMOfflineStore.putOutbox(entry);
@@ -3792,7 +3904,8 @@
             }
             function updateSelectionVisibility() {
                 const reportLink = document.getElementById('acceptedReportLink');
-                if (reportLink) reportLink.hidden = reportLink.dataset.recordId !== getCurrentContext().id;
+                if (reportLink) reportLink.hidden = reportLink.dataset.recordId !== getCurrentContext().id || Boolean(submissionReceipt?.edited);
+                document.getElementById('submissionReceipt').hidden = !submissionReceipt || submissionReceipt.edited || submissionReceipt.id !== getCurrentContext().id || ['saving', 'sending'].includes(submissionReceipt.state);
                 const template = Boolean(TEMPLATE_CONFIG[refs.templateType.value]);
                 document.getElementById('ppmLocationPicker').hidden = !template;
                 refs.form.hidden = !template || !refs.locationSelect.value;
@@ -4400,6 +4513,7 @@
             refs.form?.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
+                if (submissionBusy) return;
                 if (picturesProcessing) { alert('Sila tunggu gambar selesai diproses.'); return; }
                 const invalid = refs.form.querySelector(':invalid');
                 if (invalid) { showPPMStepFor(invalid); invalid.focus(); }
@@ -4448,6 +4562,10 @@
 
                 const submitButton = refs.form.querySelector('button[type="submit"]');
                 if (submitButton) submitButton.disabled = true;
+                submissionBusy = true;
+                submissionReceipt = { ...getCurrentContext(), templateName: refs.templateType.selectedOptions[0]?.textContent || templateKey };
+                showSubmissionResult('saving', true);
+                let queuedOnDevice = false;
 
                 try {
                     const payload = buildPPMPayload(templateKey, monthKey, location);
@@ -4465,7 +4583,9 @@
                         lastError: ''
                     };
 
+                    submissionReceipt.queueCreatedAt = outboxRecord.createdAt;
                     await window.PPMOfflineStore.putOutbox(outboxRecord);
+                    queuedOnDevice = true;
                     markLocationSyncState(templateKey, monthKey, location, 'pending');
                     saveSubmittedFormSnapshot(templateKey, monthKey, location);
                     await window.PPMOfflineStore.deleteDraft(context.id);
@@ -4479,24 +4599,30 @@
 
                     if (!navigator.onLine) {
                         await refreshSyncStatus();
-                        alert('Disimpan pada peranti ini. Penghantaran akan dicuba apabila internet kembali dan borang ini dibuka.');
+                        showSubmissionResult('pending');
                         return;
                     }
 
-                    const result = await syncPendingSubmissions();
-                    if (result.failed > 0) {
-                        alert('Disimpan pada peranti ini, tetapi penghantaran gagal. Tekan “Update ke server” apabila sambungan stabil.');
-                    } else {
-                        alert('Penghantaran PPM diterima server.');
-                    }
+                    showSubmissionResult('sending');
+                    await syncPendingSubmissions();
+                    await refreshSubmissionResult();
                 } catch (error) {
                     console.warn('Unable to queue PPM submission:', error);
-                    updateSyncPanel('Penghantaran tidak dapat disimpan pada peranti.', 'error');
-                    alert('Penghantaran tidak dapat disimpan. Sila simpan draf dan cuba semula.');
+                    if (submissionReceipt.state !== 'received') showSubmissionResult(queuedOnDevice ? 'pending' : 'error');
                 } finally {
+                    submissionBusy = false;
                     if (submitButton) submitButton.disabled = false;
                 }
             });
+
+            function hideReceiptAfterEdit() {
+                if (submissionReceipt?.id !== getCurrentContext().id) return;
+                submissionReceipt.edited = true;
+                document.getElementById('submissionReceipt').hidden = true;
+                document.getElementById('acceptedReportLink').hidden = true;
+            }
+            refs.form.addEventListener('input', hideReceiptAfterEdit);
+            refs.form.addEventListener('change', hideReceiptAfterEdit);
 
             let currentPPMStep = 1;
             const ppmSections = Array.from(refs.form.querySelectorAll(':scope > section'));
